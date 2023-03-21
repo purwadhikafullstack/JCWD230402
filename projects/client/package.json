@@ -27,7 +27,7 @@
     "react-redux": "latest",
     "react-router-dom": "latest",
     "react-scripts": "5.0.1",
-    "tailwinds":"latest",
+    "tailwindcss":"latest",
     "sass":"latest",
     "web-vitals": "^2.1.4"
   },
