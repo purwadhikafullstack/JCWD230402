@@ -1,0 +1,6 @@
+export { default as Navbar } from './Navbar'
+export { default as HomeContainer } from './HomeContainer'
+export { default as Carousel } from './Carousel'
+export { default as ScrollProduct} from './ScrollProduct'
+export { default as Footer} from './Footer'
+export {default as Product} from './Product'
