@@ -1,0 +1,32 @@
+
+.main{
+	box-shadow: 5px 20px 50px #000;
+}
+#chk{
+	display: none;
+}
+.singuplbl{
+	transition: ease-in-out;
+}
+.authbtn{
+	transition: .2s ease-in;
+
+}
+.login{
+	border-radius: 60% / 10%;
+	transform: translateY(-180px);
+	transition: .8s ease-in-out;
+}
+.login .loginlbl{
+	transform: scale(.6);
+}
+
+#chk:checked ~ .login{
+	transform: translateY(-500px);
+}
+#chk:checked ~ .login label{
+	transform: scale(1);	
+}
+#chk:checked ~ .signup label{
+	transform: scale(.6);
+}

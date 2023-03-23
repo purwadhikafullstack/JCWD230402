@@ -2,17 +2,18 @@ require("dotenv/config");
 const express = require("express");
 const cors = require("cors");
 const { join } = require("path");
-
 const PORT = process.env.PORT || 8000;
 const app = express();
+const bearerToken = require ('express-bearer-token');
 app.use(
   cors({
-    origin: [
-      process.env.WHITELISTED_DOMAIN &&
-        process.env.WHITELISTED_DOMAIN.split(","),
-    ],
+    // origin: [
+    //   process.env.WHITELISTED_DOMAIN &&
+    //     process.env.WHITELISTED_DOMAIN.split(","),
+    // ],
   })
 );
+app.use(bearerToken())
 
 app.use(express.json());
 
@@ -20,6 +21,8 @@ app.use(express.json());
 
 // ===========================
 // NOTE : Add your routes here
+const authRouter = require('./Routers/authRouter');
+app.use('/auth',authRouter);
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);
