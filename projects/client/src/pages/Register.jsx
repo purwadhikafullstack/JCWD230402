@@ -40,7 +40,7 @@ function Register() {
 
                 <div className='flex flex-col gap-2'>
                     <label htmlFor="" className='font-semibold text-emerald-300'>Email</label>
-                    <input onChange={(e) => setEmail(e.target.value)} type="text" placeholder='Your Email' className='rounded-xl px-2 bg-transparent border border-emerald-300 text-white outline-none hover:scale-105 duration-300' />
+                    <input onChange={(e) => setEmail(e.target.value)} type="email" placeholder='Your Email' className='rounded-xl px-2 bg-transparent border border-emerald-300 text-white outline-none hover:scale-105 duration-300' />
                 </div>
 
                 <button type='button' className='text-[#1BFD9C] bg-transparent font-bold border border-[#1BFD9C] rounded-xl w-1/2 mx-auto mt-4 hover:bg-[#1BFD9C] hover:border-white hover:text-black duration-500 hover:scale-110' onClick={onBtnRegis}>Sign Up</button>

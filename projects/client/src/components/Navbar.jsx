@@ -16,7 +16,7 @@ function Navbar() {
         setShowMenu(false)
     }
 
-    const statusId = 2
+    const statusId = 4
 
     return (
         <header className='navbar fixed z-50 w-full top-0 left-0 p-3 px-4 md:p-6 md:px-16 bg-bgglass backdrop-blur border-b-2 border-b-bgglass' >

@@ -34,6 +34,7 @@ function Verification() {
           }
         })
         console.log('ini res dari verify', res)
+        navigate("/login");
       }
       else {
         alert("password not match")

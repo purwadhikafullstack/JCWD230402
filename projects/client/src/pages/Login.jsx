@@ -36,7 +36,7 @@ function Login() {
                 console.log("data from LOGIN", res.data);
 
                 alert("Login Successfull");
-                localStorage.setItem("", res.data.token);
+                localStorage.setItem("GadgetHouse Login", res.data.token);
                 dispatch(loginAction(res.data));
                 navigate("/");
             }
@@ -54,7 +54,7 @@ function Login() {
 
                 <div className='flex flex-col gap-2'>
                     <label htmlFor="" className='font-semibold text-emerald-300'>Email</label>
-                    <input onChange={(e) => setEmail(e.target.value)} type="text" placeholder='Your Email' className='rounded-xl px-2 bg-transparent border border-emerald-300 text-white outline-none hover:scale-105 duration-300' />
+                    <input onChange={(e) => setEmail(e.target.value)} type="email" placeholder='Your Email' className='rounded-xl px-2 bg-transparent border border-emerald-300 text-white outline-none hover:scale-105 duration-300' />
                 </div>
 
                 <div className='flex flex-col gap-2'>
@@ -65,7 +65,7 @@ function Login() {
                     </div>
                 </div>
 
-                <button type='button' className='text-[#1BFD9C] bg-transparent font-bold border border-[#1BFD9C] rounded-xl w-1/2 mx-auto mt-4 hover:bg-[#1BFD9C] hover:border-white hover:text-black duration-500 hover:scale-110' onClick={onBtnLogin}>Sign Up</button>
+                <button type='button' className='text-[#1BFD9C] bg-transparent font-bold border border-[#1BFD9C] rounded-xl w-1/2 mx-auto mt-4 hover:bg-[#1BFD9C] hover:border-white hover:text-black duration-500 hover:scale-110' onClick={onBtnLogin}>Sign In</button>
                 <p className='text-center font-bold text-white'>-- or Sign in with --</p>
                 <div className='flex justify-evenly py-2'>
                     <button className='bg-slate-200 border-2 border-[#1BFD9C] w-10 h-10 py-1 rounded-[100%] cursor-pointer hover:scale-110 duration-500'><FcGoogle className='m-auto' /></button>
