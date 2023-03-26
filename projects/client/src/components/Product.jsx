@@ -1,90 +1,141 @@
-import React from "react";
-import "./Product.css"
-import {FcSmartphoneTablet} from 'react-icons/fc'
+import React, { useState } from "react";
+import { FcSmartphoneTablet } from 'react-icons/fc'
+import { BsFillExclamationCircleFill, BsFillCartPlusFill } from 'react-icons/bs'
+import { categories } from "../utils/data";
+import { useMotionValue, useTransform, motion } from 'framer-motion';
+import { Link } from "react-router-dom";
+import phoneA from '../img/Iphone14.png'
 
 
 function Product() {
+  const [filter, setFilter] = useState();
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotateX = useTransform(y, [-100, 100], [30, -30]);
+  const rotateY = useTransform(x, [-100, 100], [-30, 30]);
 
 
   return (
     <section className="w-full my-6" id="menu">
-    <div className="w-full flex flex-col items-center justify-center">
-      <p className="text-2xl font-semibold capitalize text-blue-400 relative before:absolute before:rounded-lg before:content before:w-16 before:h-1 before:-bottom-2 before:left-0 before:bg-gradient-to-tr from-orange-400 to-orange-600 transition-all ease-in-out duration-100 mr-auto">
-        Our Product
-      </p>
+      <div className="w-full flex flex-col items-center justify-center">
+        <p className="text-2xl font-semibold capitalize text-[#1BFD9C] relative underline transition-all ease-in-out duration-100 mr-auto">
+          Our Product
+        </p>
 
-      <div className="w-full flex items-center justify-start lg:justify-center gap-8 py-6">
-        {categories &&
-          categories.map((category) => (
-            <motion.div
-              whileTap={{ scale: 0.75 }}
-              key={category.id}
-              className={`group ${
-                filter === category.urlParamName ? "bg-yellow-300" : "bg-red-300"
-              } w-24 min-w-[94px] h-28 cursor-pointer rounded-lg drop-shadow-xl flex flex-col gap-3 items-center justify-center hover:bg-blue-200 `}
-              onClick={() => setFilter(category.urlParamName)}
-            >
-              <div
-                className={`w-10 h-10 rounded-full shadow-lg ${
-                  filter === category.urlParamName
+        <div className="w-full flex items-center justify-start lg:justify-center gap-8 py-6">
+          {categories &&
+            categories.map((category) => (
+              <motion.div
+                whileTap={{ scale: 0.75 }}
+                key={category.id}
+                className={`group ${filter === category.urlParamName ? "bg-yellow-300" : "bg-bgglass"
+                  } w-24 min-w-[94px] h-28 cursor-pointer rounded-lg drop-shadow-xl flex flex-col gap-3 items-center justify-center hover:scale-105 duration-500 `}
+                onClick={() => setFilter(category.urlParamName)}
+              >
+                <div
+                  className={`w-10 h-10 rounded-full shadow-lg ${filter === category.urlParamName
                     ? "bg-white"
                     : "bg-green-400"
-                } group-hover:bg-white flex items-center justify-center`}
-              >
-                <FcSmartphoneTablet
-                  className={`${
-                    filter === category.urlParamName
-                      ? "text-black"
+                    } group-hover:bg-white flex items-center justify-center`}
+                >
+                  <FcSmartphoneTablet
+                    className={`${filter === category.urlParamName
+                      ? "text-emerald-400"
                       : "text-white"
-                  } group-hover:text-black text-lg`}
-                />
-              </div>
-              <p
-                className={`text-sm ${
-                  filter === category.urlParamName
+                      } group-hover:text-emerald-400 text-lg`}
+                  />
+                </div>
+                <p
+                  className={`text-sm ${filter === category.urlParamName
                     ? "text-white"
-                    : "text-textColor"
-                } group-hover:text-white`}
-              >
-                {category.name}
-              </p>
-            </motion.div>
-          ))}
-      </div>
-    </div>
-
-    <div class="container page-wrapper">
-  <div class="page-inner">
-    <div class="row">
-      <div class="el-wrapper">
-        <div class="box-up">
-          <img class="img" src="http://code.slicecrowd.com/labs/4/images/t-shirt.png" alt="" />
-          <div class="img-info">
-            <div class="info-inner">
-              <span class="p-name">I feel like Pablo</span>
-              <span class="p-company">Yeezy</span>
-            </div>
-            <div class="a-size">Available sizes : <span class="size">S , M , L , XL</span></div>
-          </div>
-        </div>
-
-        <div class="box-down">
-          <div class="h-bg">
-            <div class="h-bg-inner"></div>
-          </div>
-
-          <a class="cart" href="#">
-            <span class="price">$120</span>
-            <span class="add-to-cart">
-              <span class="txt">Add in cart</span>
-            </span>
-          </a>
+                    : "text-emerald-400"
+                    } group-hover:text-white`}
+                >
+                  {category.name}
+                </p>
+              </motion.div>
+            ))}
         </div>
       </div>
-    </div>
-  </div>
-</div>
-</section>
+
+
+<div className="flex flex-wrap">
+      <div style={{ perspective: 2000 }}>
+        {/* card */}
+        <motion.div
+          style={{ x, y, rotateX, rotateY, z: 100 }}
+          drag
+          dragElastic={0.15}
+          dragConstraints={{ top: 0, left: 0, right: 0, bottom: 0 }}
+          whileTap={{ cursor: 'grabbing' }}
+          className='w-[250px] mx-8 my-8 bg-bgglass rounded-[30px] shadow-sm shadow-white border-white px-3 py-4 cursor-grab hover:scale-105 relative'
+        >
+
+          {/* card image */}
+          <motion.div
+            style={{ x, y, rotateX, rotateY, z: 100000 }}
+            className='absolute top-[-60px] -right-28 w-[350px]'
+          >
+            <img src={phoneA} className='' alt='' draggable='false' />
+          </motion.div>
+          {/* card title */}
+          <h1 className='text-2xl mb-6 font-extrabold'>Iphone14</h1>
+          {/* card subtitle */}
+          <p className='max-w-[300px] text-[#000000] mb-6'>
+            Description
+          </p>
+          {/* btn & price wrapper */}
+          <div className='flex items-center justify-between'>
+            {/* card Info */}
+            <button type="button" className="text-[#1BFD9C] text-3xl hover:scale-105 duration-300 cursor-pointer"><BsFillExclamationCircleFill /></button>
+            <button className='bg-[#1BFD9C] hover:bg-[#67f7b9] hover:scale-105 duration-500 text-black text-sm font-medium py-2 px-2 rounded-2xl'>
+              <BsFillCartPlusFill />
+            </button>
+            <div className='text-[24px] font-bold text-[#000000]'>$495.00</div>
+          </div>
+        </motion.div>
+      </div>
+
+
+      <div style={{ perspective: 2000 }}>
+        {/* card */}
+        <motion.div
+          style={{ x, y, rotateX, rotateY, z: 100 }}
+          drag
+          dragElastic={0.18}
+          dragConstraints={{ top: 0, left: 0, right: 0, bottom: 0 }}
+          whileTap={{ cursor: 'grabbing' }}
+          className='w-[250px] mx-8 my-8 bg-bgglass rounded-[30px] shadow-sm shadow-white border-white px-3 py-4 cursor-grab hover:scale-105 relative'
+        >
+
+          {/* card image */}
+          <motion.div
+            style={{ x, y, rotateX, rotateY, z: 100000 }}
+            className='absolute top-[-60px] -right-28 w-[350px]'
+          >
+            <img src={phoneA} className='' alt='' draggable='false' />
+          </motion.div>
+          {/* card title */}
+          <h1 className='text-2xl mb-6 font-extrabold'>Iphone14</h1>
+          {/* card subtitle */}
+          <p className='max-w-[300px] text-[#000000] mb-6'>
+            Description
+          </p>
+          {/* btn & price wrapper */}
+          <div className='flex items-center justify-between'>
+            {/* card Info */}
+            <button type="button" className="text-[#1BFD9C] text-3xl hover:scale-105 duration-300 cursor-pointer"><BsFillExclamationCircleFill /></button>
+            <button className='bg-[#1BFD9C] hover:bg-[#67f7b9] hover:scale-105 duration-500 text-black text-sm font-medium py-2 px-2 rounded-2xl'>
+              <BsFillCartPlusFill />
+            </button>
+            <div className='text-[24px] font-bold text-[#000000]'>$495.00</div>
+          </div>
+        </motion.div>
+      </div>
+
+
+      </div>
+    </section>
   )
 }
 
