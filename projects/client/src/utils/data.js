@@ -8,14 +8,14 @@ export const heroData = [
       id: 1,
       name: "Iphone",
       decp: "Iphone14",
-      price: "1000",
+      price: "1400",
       imageSrc: I1,
     },
     {
       id: 2,
       name: "Watch",
       decp: "New Edition",
-      price: "200",
+      price: "499",
       imageSrc: F1,
     },
     {
@@ -29,7 +29,7 @@ export const heroData = [
       id: 4,
       name: "Charger",
       decp: "Wireless",
-      price: "5.25",
+      price: "120",
       imageSrc: Fi1,
     },
   ];

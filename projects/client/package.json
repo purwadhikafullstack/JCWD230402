@@ -9,16 +9,16 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
+    "@chakra-ui/icons": "latest",
+    "@chakra-ui/react": "latest",
+    "@emotion/react": "latest",
+    "@emotion/styled": "latest",
+    "@reduxjs/toolkit": "latest",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.27.2",
-    "@chakra-ui/icons": "latest",
-    "@chakra-ui/react": "latest",
     "chart.js": "latest",
-    "@emotion/react": "latest",
-    "@emotion/styled": "latest",
-    "@reduxjs/toolkit": "latest",
     "framer-motion": "latest",
     "react": "^18.2.0",
     "react-chartjs-2": "latest",
@@ -27,8 +27,9 @@
     "react-redux": "latest",
     "react-router-dom": "latest",
     "react-scripts": "5.0.1",
-    "tailwindcss":"latest",
-    "sass":"latest",
+    "react-toastify": "^9.1.2",
+    "sass": "latest",
+    "tailwindcss": "latest",
     "web-vitals": "^2.1.4"
   },
   "eslintConfig": {

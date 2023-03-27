@@ -3,18 +3,18 @@ import { heroData } from '../utils/data.js'
 import heroBg2 from '../img/heroBg2.png'
 function HomeContainer() {
     return (
-        <section id="home" className='grid grid-cols-1 md:grid-cols-2 gap-2 w-full'>
+        <section id="home" className='grid grid-cols-1 md:grid-cols-2 gap-2 w-full pt-20'>
             <div className="py-2 flex-1 flex flex-col items-start  justify-center gap-4">
-                <div className=' flex  items-center justify-center gap-2 bg-green-200 px-4 py-1 rounded-full'>
-                    <p className='text-green-600 text-medium font-semibold'>eGadget</p>
+                <div className=' flex  items-center justify-center gap-2 bg-zinc-800 px-4 py-1 rounded-full'>
+                    <p className='text-[#1BFD9C] text-medium font-semibold'>GadgetHouse</p>
                     <div className='w-8 h-8 rounded-full overflow-hidden drop-shadow-xl'>
                         <img src="https://keluhkesah.com/wp-content/uploads/2021/06/6.-Pengertian-Gadget-Jenisnya-Dan-Contohnya.jpg" className='w-full h-full object-contain bg-white' alt="" />
                     </div>
                 </div>
-                <p className='text-[2.5rem] lg:text-[4rem] font-bold tracking-wide text-gray-600'>The Biggest Warehouse in <span className='text-green-600  text:-[4rem] lg:text-[5rem]'>Your Town</span>
+                <p className='text-[2.5rem] lg:text-[4rem] font-bold tracking-wide text-white'>Your Biggest Gadget Warehouse in <span className='text-[#1BFD9C]  text:-[4rem] lg:text-[5rem]'>Town</span>
                 </p>
-                <p className='text-medium text-gray-500 text-center md:text-left md:w-[80%]'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum impedit quod maiores repudiandae! Minima quas alias quo necessitatibus odio nemo doloremque optio accusantium, laudantium error, quod obcaecati! Praesentium, amet. Dolor.</p>
-                <button className='bg-gradient-to-br from-green-400 to-green-500 w-full md:w-auto px-4 py-2  rounded-lg hover:shadow-lg transition-all ease-in-out duration-100'>Order Now</button>
+                <p className='text-medium text-white text-center md:text-left md:w-[80%]'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum impedit quod maiores repudiandae! Minima quas alias quo necessitatibus odio nemo doloremque optio accusantium, laudantium error, quod obcaecati! Praesentium, amet. Dolor.</p>
+                <button type='button' className='bg-emerald-400 w-full md:w-auto px-4 py-2 font-bold hover:text-white rounded-lg hover:scale-110 duration-500'>Order Now</button>
             </div>
             <div className="py-2 flex-1 flex items-center relative">
                 <img className='ml-auto h-[420px] w-full lg:w-[400px] lg:h-[650px] rounded-xl' src={heroBg2} alt="" />
@@ -24,11 +24,11 @@ function HomeContainer() {
                         heroData.map((n) => (
                             <div
                                 key={n.id}
-                                className="  lg:w-[150px]  p-4 bg-[rgba(256,256,256,0.4)] backdrop-blur-md rounded-3xl flex flex-col items-center justify-center drop-shadow-lg"
+                                className="  lg:w-[150px]  p-4 bg-bgglass backdrop-blur rounded-3xl flex flex-col items-center justify-center drop-shadow-lg hover:scale-105 duration-500"
                             >
                                 <img
                                     src={n.imageSrc}
-                                    className="w-20 lg:w-40 -mt-10 lg:-mt-20 hover:scale-110"
+                                    className="w-20 lg:w-56 -mt-10 lg:-mt-20 z-40 hover:scale-110 duration-500"
                                     alt="I1"
                                 />
                                 <p className="text-medium lg:text-xl font-semibold text-black mt-2 lg:mt-4">
@@ -39,8 +39,8 @@ function HomeContainer() {
                                     {n.decp}
                                 </p>
 
-                                <p className="text-sm font-semibold text-gray-700">
-                                    <span className="text-xs text-red-600">$</span> {n.price}
+                                <p className="text-sm font-semibold text-white">
+                                    <span className="text-sm text-red-600 font-bold">$</span> {n.price}
                                 </p>
                             </div>
                         ))}

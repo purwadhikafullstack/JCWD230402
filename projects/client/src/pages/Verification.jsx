@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { Await, NavLink, useParams } from 'react-router-dom'
 import { API_URL } from '../helper'
 import axios from 'axios'
 import { HiEye, HiEyeOff } from 'react-icons/hi'
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-function ResetPassword() {
+function Verification() {
   const param = useParams()
   const [password, setPassword] = useState("")
   const [confirmationpassword, setConfirmationPassword] = useState("")
@@ -22,12 +22,33 @@ function ResetPassword() {
       setVisible("password")
     }
   }
-  const Resetbtn = async () => { }
+
+  const verify = async () => {
+    try {
+      if (password === confirmationpassword) {
+        let res = await axios.patch(`${API_URL}/auth/customer/verify`, {
+          password, confirmationpassword
+        }, {
+          headers: {
+            'Authorization': `Bearer ${param.token}`
+          }
+        })
+        console.log('ini res dari verify', res)
+      }
+      else {
+        alert("password not match")
+      }
+    } catch (error) {
+      console.log(error)
+      alert(error.response.data.error[0].msg)
+    }
+  }
+
   return (
     <section className='form bg-bgglass rounded-[20px] shadow-sm shadow-yellow-50 box-border w-[320px] p-5 mt-24 mb-8 m-auto hover:scale-105 duration-500'>
       <div className='flex flex-col gap-3'>
-        <h1 className='text-white font-bold text-3xl text-center'>Reset Password</h1>
-        <h1 className='text-white font-bold text-lg '>Make your new Password</h1>
+        <h1 className='text-white font-bold text-3xl text-center'>Verification</h1>
+        <h1 className='text-white font-bold text-lg '>Make your Password</h1>
 
         <div className='flex flex-col gap-2'>
           <label htmlFor="" className='font-semibold text-emerald-300'>Password</label>
@@ -46,11 +67,11 @@ function ResetPassword() {
           <p className='text-sm text-white'> Min <span className='text-orange-400'>8 character</span>  have a <span className='text-orange-400'>capitalize</span>  and a <span className='text-orange-400'>number</span>  </p>
         </div>
 
-        <button type='button' className='text-[#1BFD9C] bg-transparent font-bold border border-[#1BFD9C] rounded-xl w-1/2 mx-auto mt-4 hover:bg-[#1BFD9C] hover:border-white hover:text-black duration-500 hover:scale-110' onClick={Resetbtn}>Reset</button>
-
+        <button type='button' className='text-[#1BFD9C] bg-transparent font-bold border border-[#1BFD9C] rounded-xl w-1/2 mx-auto mt-4 hover:bg-[#1BFD9C] hover:border-white hover:text-black duration-500 hover:scale-110' onClick={verify}>Sign Up</button>
+        
       </div>
     </section>
   )
 }
 
-export default ResetPassword
+export default Verification
