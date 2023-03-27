@@ -16,26 +16,26 @@ function ScrollProduct({ data, }) {
 
   const scrollLeft = () => {
     document.getElementById("content").scrollLeft -= 200;
-}
-const scrollRight = () => {
+  }
+  const scrollRight = () => {
     document.getElementById("content").scrollLeft += 200;
-}
+  }
 
   return (
 
     <section className="w-full my-6 rounded-3xl px-4">
       <div className="w-full flex items-center justify-between relative">
-        <p className="text-2xl text-[#1BFD9C] py-4 font-semibold capitalize text-headingColor underline">
+        <p className="text-2xl text-[#1BFD9C] py-4 font-semibold capitalize text-headingColor">
           Hot offering
         </p>
         <div className="absolute right-0 top-5 ">
-        <button onClick={scrollLeft} className="p-2 m-2 rounded-full bg-emerald-400 hover:bg-emerald-500 hover:scale-105 duration-500 cursor-pointer">
-          <FiChevronLeft className="text-white" />
-        </button>
-        <button onClick={scrollRight} className="p-2 m-2 rounded-full bg-emerald-400 hover:bg-emerald-500 hover:scale-105 duration-500 cursor-pointer">
-          <FiChevronRight className="text-white" />
-        </button>
-      </div>
+          <button onClick={scrollLeft} className="p-2 m-2 rounded-full bg-emerald-400 hover:bg-emerald-300 hover:scale-110 duration-500 cursor-pointer">
+            <FiChevronLeft className="text-white hover:text-black duration-500" />
+          </button>
+          <button onClick={scrollRight} className="p-2 m-2 rounded-full bg-emerald-400 hover:bg-emerald-300 hover:scale-110 duration-500 cursor-pointer">
+            <FiChevronRight className="text-white hover:text-black duration-500" />
+          </button>
+        </div>
       </div>
       <div ref={scrollProduct} id="content" className='gap-3 flex items-center justify-start overflow-x-hidden scroll-smooth  scrollbar-hide'>
         <div
@@ -58,7 +58,7 @@ const scrollRight = () => {
               className="w-10 h-8 px-2 md:w-8 md:h-8 rounded-full bg-emerald-400 flex items-center justify-center cursor-pointer hover:shadow-md hover:scale-110 duration-500 -mt-8"
             // onClick={() => setItems([...cartItems, item])}
             >
-              <MdShoppingBasket className="text-white" />
+              <MdShoppingBasket className="text-white hover:text-black duration-500" />
             </motion.div>
           </div>
 
@@ -77,7 +77,7 @@ const scrollRight = () => {
           </div>
         </div>
 
-       
+
 
 
 
