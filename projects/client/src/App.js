@@ -53,7 +53,6 @@ function App() {
             <Route path='/request' element={<RequestPassword />} />
             <Route path='/reset' element={<ResetPassword />} />
             <Route path='/verify/:token' element={<Verification />} />
-            <Route path='/dashboard' element={<Dashboard />} />
           </Routes>
         </main>
         <Footer />
