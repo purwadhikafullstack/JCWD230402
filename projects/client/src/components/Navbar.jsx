@@ -2,9 +2,10 @@ import React, { useState } from 'react'
 import { FaShoppingBasket, FaUserCircle } from 'react-icons/fa'
 import { motion } from 'framer-motion'
 import { NavLink, Link } from 'react-router-dom'
+import Logo from './Logo'
+import "./Navbar.css"
 
 function Navbar() {
-    const login = () => { }
     const [showMenu, setShowMenu] = useState(false);
 
     const toggleMenu = () => {
@@ -15,15 +16,15 @@ function Navbar() {
         setShowMenu(false)
     }
 
-    const roleId = null
+    const statusId = 2
 
     return (
-        <header className='sticky z-50 w-screen p-3 px-4 md:p-6 md:px-16 bg- bg-[rgba(233,228,228,0.4)] backdrop-blur-md' >
+        <header className='navbar fixed z-50 w-full top-0 left-0 p-3 px-4 md:p-6 md:px-16 bg-bgglass backdrop-blur border-b-2 border-b-bgglass' >
             {/*Desktop & Tablet*/}
             <div className='flex w-full h-full px-4 items-center justify-between'>
-                <NavLink to='/' className='flex items-center gap-2'>
-                    <h2>Logo</h2>
-                    <p className='text-xl font-bold text-white'>e<span className='text-emerald-500'>Gadget</span></p>
+                <NavLink to='/' className='flex items-center gap-10'>
+                    <Logo />
+                    <p className='text-xl font-bold text-white'>Gadget<span className='text-[#1BFD9C]'>House</span></p>
                 </NavLink>
                 {
                     <div className='flex items-center gap-8'>
@@ -32,94 +33,97 @@ function Navbar() {
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: 200 }}
                             className='hidden md:flex items-center gap-8'>
-                            <li className='text-xl text-gray-700 hover:text-blue-600 duration-100 transition-all ease-in-out cursor-pointer'><NavLink to='/'>Home</NavLink></li>
-                            <li className='text-xl text-gray-700 hover:text-blue-600 duration-100 transition-all ease-in-out cursor-pointer'>Product</li>
-                            <li className='text-xl text-gray-700 hover:text-blue-600 duration-100 transition-all ease-in-out cursor-pointer'>About Us</li>
-                            <li className='text-xl text-gray-700 hover:text-blue-600 duration-100 transition-all ease-in-out cursor-pointer'>Service</li>
+                            <li className='text-xl text-[#1BFD9C] hover:text-[#82ffc9] hover:text-lg duration-500 transition-all ease-in-out cursor-pointer'><NavLink to='/'>Home</NavLink></li>
+                            <li className='text-xl text-[#1BFD9C] hover:text-[#82ffc9] hover:text-lg duration-500 transition-all ease-in-out cursor-pointer'>Product</li>
+                            <li className='text-xl text-[#1BFD9C] hover:text-[#82ffc9] hover:text-lg duration-500 transition-all ease-in-out cursor-pointer'><NavLink>About Us</NavLink></li>
+                            <li className='text-xl text-[#1BFD9C] hover:text-[#82ffc9] hover:text-lg duration-500 transition-all ease-in-out cursor-pointer'>Service</li>
                         </motion.ul>
                         <div className='relative flex items-center justify-center '>
-                            <FaShoppingBasket className='text-gray-600 text-2xl  cursor-pointer' />
-                            <div className=' absolute -top-2 -right-4  w-5 h-5 rounded-full bg-red-400 flex items-center justify-center'>
+                            <FaShoppingBasket className='text-[#1BFD9C] hover:text-[#82ffc9] hover:text-xl duration-500 text-2xl  cursor-pointer' />
+                            <div className=' absolute -top-3 -right-4  w-5 h-5 rounded-full bg-red-400 flex items-center justify-center animate-bounce'>
                                 <p className=' text-xs text-white font-semibold'>2</p>
                             </div>
                         </div>
                         <div className='relative'>
-                            <button> <FaUserCircle className='text-2xl text-gray-600 cursor-pointer ' onClick={toggleMenu} />
-                                {roleId == 1 ?
-                                    <div className={`absolute flex flex-col px-2 items-center text-start bg-[rgba(256,256,256,0.4)] backdrop-blur-md w-[130px] md:w-[150px] h-[350px] md:h-[370px] gap-2 top-8 bottom-0 py-8 duration-500 rounded-3xl ${showMenu ? "-right-6 md-right-12" : "right-[-250px]"}`} >
+                            <button> <FaUserCircle className='text-2xl text-white cursor-pointer ' onClick={toggleMenu} />
+                                {statusId == 1 ?
+                                    <div className={`absolute flex flex-col px-2 items-center text-start bg-bgglass backdrop-blur w-[130px] md:w-[150px] h-[350px] md:h-[370px] gap-2 top-8 bottom-0 py-8 duration-500 rounded-3xl ${showMenu ? "-right-6 md:-right-10" : "right-[-250px]"}`} >
                                         <ul className='flex flex-col gap-4'>
                                             <li>
-                                                <FaUserCircle className='text-2xl text-gray-600 cursor-pointer ' onClick={hideMenu} />
+                                                <FaUserCircle className='text-2xl text-white cursor-pointer ' onClick={hideMenu} />
                                             </li>
                                             <li>
-                                                <NavLink className='text-xs md:text-base text-black font-medium' onClick={hideMenu}>User Management</NavLink>
+                                                <NavLink className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={hideMenu}>User Management</NavLink>
                                             </li>
                                             <li>
-                                                <NavLink className='text-xs md:text-base text-black font-medium' onClick={hideMenu}>Product</NavLink>
+                                                <NavLink className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={hideMenu}>Product</NavLink>
                                             </li>
                                             <li>
-                                                <NavLink className='text-xs md:text-base text-black font-medium' onClick={hideMenu}>Category</NavLink>
+                                                <NavLink className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={hideMenu}>Category</NavLink>
                                             </li>
                                             <li>
-                                                <NavLink className='text-xs md:text-base text-black font-medium' onClick={hideMenu}>Warehouse</NavLink>
+                                                <NavLink className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={hideMenu}>Warehouse</NavLink>
                                             </li>
                                             <li>
-                                                <NavLink className='text-xs md:text-base text-black font-medium' onClick={hideMenu}>Order</NavLink>
+                                                <NavLink className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500  text-smfont-medium' onClick={hideMenu}>Order</NavLink>
                                             </li>
                                             <li>
-                                                <NavLink className='text-xs md:text-base text-black font-medium' onClick={hideMenu}>Reports</NavLink>
+                                                <NavLink className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={hideMenu}>Reports</NavLink>
                                             </li>
                                         </ul>
                                         <div className='flex flex-col gap-2 w-full'>
                                             <span className='border-b-2 p-auto border-gray'></span>
-                                            <button className='bg-emerald-300 hover:bg-emerald-400 px-1 rounded-lg font-bold text-white hover:text-black'>Log Out</button>
+                                            <button type='button' className='bg-emerald-300 hover:bg-emerald-400 px-1 rounded-lg font-bold text-white hover:text-black hover:scale-105 duration-500'>Log Out</button>
                                         </div>
                                     </div> :
 
-                                    roleId == 2 ? <div className={`absolute flex flex-col px-2 items-center text-start bg-[rgba(256,256,256,0.4)] backdrop-blur-md w-[110px] md:w-[130px] h-[220px] md:h-[250px] gap-2 top-8 bottom-0 py-4 duration-500 rounded-3xl ${showMenu ? "-right-6" : "right-[-200px]"}`} >
+                                    statusId == 3 ? <div className={`absolute flex flex-col px-2 items-center text-start bg-bgglass backdrop-blur w-[110px] md:w-[130px] h-[220px] md:h-[250px] gap-2 top-8 bottom-0 py-4 duration-500 rounded-3xl ${showMenu ? "-right-6" : "right-[-250px]"}`} >
                                         <ul className='flex flex-col gap-4'>
                                             <li>
-                                                <FaUserCircle className='text-2xl text-gray-600 cursor-pointer ' onClick={hideMenu} />
+                                                <FaUserCircle className='text-2xl text-white cursor-pointer ' onClick={hideMenu} />
                                             </li>
                                             <li>
-                                                <NavLink className='text-xs md:text-base text-black font-medium' onClick={hideMenu}>Profile</NavLink>
+                                                <NavLink className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={hideMenu}>Profile</NavLink>
                                             </li>
                                             <li>
-                                                <NavLink className='text-xs md:text-base text-black font-medium' onClick={hideMenu}>Product</NavLink>
+                                                <NavLink className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={hideMenu}>Product</NavLink>
                                             </li>
                                             <li>
-                                                <NavLink className='text-xs md:text-base text-black font-medium' onClick={hideMenu}>Category</NavLink>
+                                                <NavLink className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={hideMenu}>Category</NavLink>
                                             </li>
                                         </ul>
                                         <div className='flex flex-col gap-2'>
                                             <span className='border-b-2 p-1 border-gray'></span>
-                                            <button className='bg-emerald-300 hover:bg-emerald-400 px-1 rounded-lg font-bold text-white hover:text-black'>Log Out</button>
+                                            <button type='button' className='bg-emerald-300 hover:bg-emerald-400 px-1 rounded-lg font-bold text-white hover:text-black hover:scale-105 duration-500'>Log Out</button>
                                         </div>
                                     </div> :
 
-                                        roleId == 3 ? <div className={`absolute flex flex-col px-2 items-center text-start bg-[rgba(256,256,256,0.4)] backdrop-blur-md w-[110px] md:w-[130px] h-[220px] md:h-[230px] gap-2 top-8 bottom-0 py-4 duration-500 rounded-3xl ${showMenu ? "-right-6" : "right-[-200px]"}`} >
+                                        statusId == 2 ? <div className={`absolute flex flex-col px-2 items-center text-start bg-bgglass backdrop-blur w-[110px] md:w-[130px] h-[270px] md:h-[270px] gap-2 top-8 bottom-0 py-4 duration-500 rounded-3xl ${showMenu ? "-right-6" : "right-[-250px]"}`} >
                                             <ul className='flex flex-col gap-4'>
                                                 <li>
-                                                    <FaUserCircle className='text-2xl text-gray-600 cursor-pointer ' onClick={hideMenu} />
+                                                    <FaUserCircle className='text-2xl text-white cursor-pointer ' onClick={hideMenu} />
                                                 </li>
                                                 <li>
-                                                    <NavLink className='text-xs md:text-base text-black font-medium' onClick={hideMenu}>Profile</NavLink>
+                                                    <NavLink className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={hideMenu}>Profile</NavLink>
                                                 </li>
                                                 <li>
-                                                    <NavLink className='text-xs md:text-base text-black font-medium' onClick={hideMenu}>Cart</NavLink>
+                                                    <NavLink className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={hideMenu}>Cart</NavLink>
                                                 </li>
                                                 <li>
-                                                    <NavLink className='text-xs md:text-base text-black font-medium' onClick={hideMenu}>Orders</NavLink>
+                                                    <NavLink className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={hideMenu}>Orders</NavLink>
+                                                </li>
+                                                <li>
+                                                    <NavLink className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={hideMenu} to='/request'>Reset Password</NavLink>
                                                 </li>
                                             </ul>
                                             <div className='flex flex-col gap-2'>
                                                 <span className='border-b-2 p-1 border-gray'></span>
-                                                <button className='bg-emerald-300 hover:bg-emerald-400 px-1 rounded-lg font-bold text-white hover:text-black'>Log Out</button>
+                                                <button type='button' className='bg-emerald-300 hover:bg-emerald-400 px-1 rounded-lg font-bold text-white hover:text-black hover:scale-105 duration-500'>Log Out</button>
                                             </div>
-                                        </div> : <div className={`absolute flex flex-col px-2 items-center text-start bg-[rgba(256,256,256,0.4)] backdrop-blur-md w-[120px] h-[80px] gap-2 top-8 bottom-0 py-4 duration-500 rounded-3xl ${showMenu ? "-right-6" : "right-[-200px]"}`} >
+                                        </div> : <div className={`absolute flex flex-col px-2 items-center text-start bg-bgglass backdrop-blur w-[120px] h-[80px] gap-2 top-8 bottom-0 py-4 duration-500 rounded-3xl ${showMenu ? "-right-6" : "right-[-250px]"}`} >
                                             <div className='flex flex-col gap-2'>
-                                                <button className='bg-emerald-300 hover:bg-emerald-400 px-1 rounded-lg font-bold text-white hover:text-black'><NavLink to='/Login'>Login</NavLink></button>
-                                                <button className='bg-emerald-300 hover:bg-emerald-400 px-1 rounded-lg font-bold text-white hover:text-black'><NavLink to='/Login'>Register</NavLink></button>
+                                                <button className='bg-emerald-300 hover:bg-emerald-400 px-1 rounded-lg font-bold text-white hover:text-black hover:scale-105 duration-500' type='button'><NavLink to='/login'>Login</NavLink></button>
+                                                <button className='bg-emerald-300 hover:bg-emerald-400 px-1 rounded-lg font-bold text-white hover:text-black hover:scale-105 duration-500' type='button'><NavLink to='/register'>Register</NavLink></button>
                                             </div>
                                         </div>
                                 }

@@ -2,7 +2,13 @@
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
-    extend: {},
+    backgroundImage: {
+      'bg': "url('../src/img/bghex.avif')"},
+    extend: {
+      colors:{
+        'bgglass': "rgba(255, 255, 255, .1)",
+      }
+    },
   },
   plugins: [],
 }
