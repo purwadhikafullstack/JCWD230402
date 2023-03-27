@@ -16,7 +16,7 @@ function RequestPassword() {
 
         <div className='flex flex-col gap-2'>
           <label htmlFor="" className='font-semibold text-emerald-300'>Email</label>
-          <input onChange={(e) => setEmail(e.target.value)} type="text" placeholder='Your Email' className='rounded-xl px-2 bg-transparent border border-emerald-300 text-white outline-none hover:scale-105 duration-300' />
+          <input onChange={(e) => setEmail(e.target.value)} type="email" placeholder='Your Email' className='rounded-xl px-2 bg-transparent border border-emerald-300 text-white outline-none hover:scale-105 duration-300' />
           <p className='text-white text-xs'>You will receive an email confirmation after send request</p>
         </div>
 
