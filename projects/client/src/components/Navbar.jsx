@@ -75,76 +75,76 @@ function Navbar(props) {
                             </div>
                         </div>
 
-                    </div> 
-                //     :
-                //     roleId === 3 ?
-                //     <div className='flex gap-4'>
-                    
-                //         <button> <FaUserCircle className='text-2xl text-white cursor-pointer ' onClick={toggleMenu} /></button>
-                //         <div className={`absolute flex flex-col px-2 items-center text-start bg-bgglass backdrop-blur w-[110px] md:w-[130px] h-[220px] md:h-[250px] gap-2 top-[55px] md:top-[78px] bottom-0 py-4 duration-500 rounded-3xl ${showMenu ? "right-2 md:right-10" : "right-[-250px]"}`} >
-                //             <ul className='flex flex-col gap-4'>
-                //                 <li>
-                //                     <FaUserCircle className='text-2xl text-white cursor-pointer ' onClick={hideMenu} />
-                //                 </li>
-                //                 <li>
-                //                     <NavLink className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={hideMenu}>Profile</NavLink>
-                //                 </li>
-                //                 <li>
-                //                     <NavLink className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={hideMenu}>Product</NavLink>
-                //                 </li>
-                //                 <li>
-                //                     <NavLink className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={hideMenu}>Category</NavLink>
-                //                 </li>
-                //             </ul>
-                //             <div className='flex flex-col gap-2'>
-                //                 <span className='border-b-2 p-1 border-gray'></span>
-                //                 <button type='button' className='bg-emerald-300 hover:bg-emerald-400 px-1 rounded-lg font-bold text-white hover:text-black hover:scale-105 duration-500'>Log Out</button>
-                //             </div>
-                //         </div> 
+                    </div>
+                        //     :
+                        //     roleId === 3 ?
+                        //     <div className='flex gap-4'>
 
-                //     </div> 
-                //     :
-                //     roleId === 4 ?
+                        //         <button> <FaUserCircle className='text-2xl text-white cursor-pointer ' onClick={toggleMenu} /></button>
+                        //         <div className={`absolute flex flex-col px-2 items-center text-start bg-bgglass backdrop-blur w-[110px] md:w-[130px] h-[220px] md:h-[250px] gap-2 top-[55px] md:top-[78px] bottom-0 py-4 duration-500 rounded-3xl ${showMenu ? "right-2 md:right-10" : "right-[-250px]"}`} >
+                        //             <ul className='flex flex-col gap-4'>
+                        //                 <li>
+                        //                     <FaUserCircle className='text-2xl text-white cursor-pointer ' onClick={hideMenu} />
+                        //                 </li>
+                        //                 <li>
+                        //                     <NavLink className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={hideMenu}>Profile</NavLink>
+                        //                 </li>
+                        //                 <li>
+                        //                     <NavLink className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={hideMenu}>Product</NavLink>
+                        //                 </li>
+                        //                 <li>
+                        //                     <NavLink className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={hideMenu}>Category</NavLink>
+                        //                 </li>
+                        //             </ul>
+                        //             <div className='flex flex-col gap-2'>
+                        //                 <span className='border-b-2 p-1 border-gray'></span>
+                        //                 <button type='button' className='bg-emerald-300 hover:bg-emerald-400 px-1 rounded-lg font-bold text-white hover:text-black hover:scale-105 duration-500'>Log Out</button>
+                        //             </div>
+                        //         </div> 
 
-                //     <div className='flex gap-4'>
-                    
-                //     <button> <FaUserCircle className='text-2xl text-white cursor-pointer ' onClick={toggleMenu} /></button>
-                //     <div className={`absolute flex flex-col px-2 items-center text-start bg-bgglass backdrop-blur w-[130px] md:w-[150px] h-[350px] md:h-[370px] gap-2 top-[55px] md:top-[78px] bottom-0 py-4 duration-500 rounded-3xl ${showMenu ? "right-2 md:right-10" : "right-[-250px]"}`} >
-                //     <ul className='flex flex-col gap-4'>
-                //                 <li>
-                //                     <FaUserCircle className='text-2xl text-white cursor-pointer ' onClick={hideMenu} />
-                //                 </li>
-                //                 <li>
-                //                     <NavLink className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={hideMenu}>User Management</NavLink>
-                //                 </li>
-                //                 <li>
-                //                     <NavLink className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={hideMenu}>Product</NavLink>
-                //                 </li>
-                //                 <li>
-                //                     <NavLink className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={hideMenu}>Category</NavLink>
-                //                 </li>
-                //                 <li>
-                //                     <NavLink className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={hideMenu}>Warehouse</NavLink>
-                //                 </li>
-                //                 <li>
-                //                     <NavLink className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={hideMenu}>Order</NavLink>
-                //                 </li>
-                //                 <li>
-                //                     <NavLink className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={hideMenu}>Reports</NavLink>
-                //                 </li>
-                //             </ul>
-                //         <div className='flex flex-col gap-2'>
-                //             <span className='border-b-2 p-1 border-gray'></span>
-                //             <button type='button' className='bg-emerald-300 hover:bg-emerald-400 px-1 rounded-lg font-bold text-white hover:text-black hover:scale-105 duration-500'>Log Out</button>
-                //         </div>
-                //     </div> 
+                        //     </div> 
+                        //     :
+                        //     roleId === 4 ?
 
-                // </div>
-                        : 
+                        //     <div className='flex gap-4'>
+
+                        //     <button> <FaUserCircle className='text-2xl text-white cursor-pointer ' onClick={toggleMenu} /></button>
+                        //     <div className={`absolute flex flex-col px-2 items-center text-start bg-bgglass backdrop-blur w-[130px] md:w-[150px] h-[350px] md:h-[370px] gap-2 top-[55px] md:top-[78px] bottom-0 py-4 duration-500 rounded-3xl ${showMenu ? "right-2 md:right-10" : "right-[-250px]"}`} >
+                        //     <ul className='flex flex-col gap-4'>
+                        //                 <li>
+                        //                     <FaUserCircle className='text-2xl text-white cursor-pointer ' onClick={hideMenu} />
+                        //                 </li>
+                        //                 <li>
+                        //                     <NavLink className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={hideMenu}>User Management</NavLink>
+                        //                 </li>
+                        //                 <li>
+                        //                     <NavLink className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={hideMenu}>Product</NavLink>
+                        //                 </li>
+                        //                 <li>
+                        //                     <NavLink className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={hideMenu}>Category</NavLink>
+                        //                 </li>
+                        //                 <li>
+                        //                     <NavLink className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={hideMenu}>Warehouse</NavLink>
+                        //                 </li>
+                        //                 <li>
+                        //                     <NavLink className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={hideMenu}>Order</NavLink>
+                        //                 </li>
+                        //                 <li>
+                        //                     <NavLink className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={hideMenu}>Reports</NavLink>
+                        //                 </li>
+                        //             </ul>
+                        //         <div className='flex flex-col gap-2'>
+                        //             <span className='border-b-2 p-1 border-gray'></span>
+                        //             <button type='button' className='bg-emerald-300 hover:bg-emerald-400 px-1 rounded-lg font-bold text-white hover:text-black hover:scale-105 duration-500'>Log Out</button>
+                        //         </div>
+                        //     </div> 
+
+                        // </div>
+                        :
                         <div className=' flex gap-2 md:gap-8'>
-                        <button className='text-white text-xs md:text-base bg-emerald-400 px-2 md:px-5 py-1 rounded-3xl font-semibold hover:text-black hover:bg-emerald-300 hover:scale-110 duration-500'><NavLink to='/login'>Login</NavLink></button>
-                        <button className='text-white text-xs md:text-base bg-emerald-400 px-2 md:px-3 py-1 rounded-3xl font-semibold hover:text-black hover:bg-emerald-300 hover:scale-110 duration-500'><NavLink to='/register'>Register</NavLink></button>
-                    </div>}
+                            <button className='text-white text-xs md:text-base bg-emerald-400 px-2 md:px-5 py-1 rounded-3xl font-semibold hover:text-black hover:bg-emerald-300 hover:scale-110 duration-500'><NavLink to='/login'>Login</NavLink></button>
+                            <button className='text-white text-xs md:text-base bg-emerald-400 px-2 md:px-3 py-1 rounded-3xl font-semibold hover:text-black hover:bg-emerald-300 hover:scale-110 duration-500'><NavLink to='/register'>Register</NavLink></button>
+                        </div>}
 
 
 

@@ -4,6 +4,8 @@ import { MdShoppingBasket } from "react-icons/md";
 import { FiChevronRight, FiChevronLeft } from "react-icons/fi";
 import Iphone14 from '../img/IphoneA.png'
 import NotFound from "../img/NotFound.svg";
+import { useSelector } from 'react-redux'
+import { useNavigate } from "react-router-dom";
 
 function ScrollProduct({ data, }) {
   const [scrollValue, setScrollValue] = useState(0);
@@ -20,6 +22,15 @@ function ScrollProduct({ data, }) {
   const scrollRight = () => {
     document.getElementById("content").scrollLeft += 200;
   }
+
+  const addcart = () => {
+    if (statusId != 2) {
+      navigate('/login')
+    } else { navigate('/register') }
+  }
+
+  const statusId = useSelector((state) => state.authReducer.statusId);
+  const navigate = useNavigate();
 
   return (
 
