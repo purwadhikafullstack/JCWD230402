@@ -1,8 +1,33 @@
-import React from 'react'
+import React, {useState} from 'react'
 import Logo from './Logo'
+import axios from "axios";
+import { API_URL } from '../helper';
 
 function Footer() {
-  cosnt statusId = 1
+    // const dispatch = useDispatch();
+    // const navigate = useNavigate();
+    const [email, setEmail] = useState("");
+    // const [password, setPassword] = React.useState("");
+
+    const onBtnRegis = async () => {
+        try {
+            let res = await axios.post(`${API_URL}/auth/customer/register`, { 
+                email: email,
+            }
+            );
+            console.log("ini dari btn regis",res);
+            if (res.data.success) {
+                alert(res.data.message);
+            }
+        } catch (error) {
+            console.log("error",error);
+            alert(error.response.data.error[0].msg);
+
+        }
+
+    }
+
+  const roleId = 1
   return (
     <footer aria-label="Site Footer" className="bg-bgglass border-t-2 border-t-bgglass">
       {roleId === 1 || roleId === 2 ?
@@ -35,14 +60,14 @@ function Footer() {
                   <div
                     className="border border-[#1BFD9C] rounded-xl p-2 focus-within:ring dark:border-gray-800 sm:flex sm:items-center sm:gap-4"
                   >
-                    <input
+                    <input onChange={(e) => setEmail(e.target.value)}
                       type="email"
                       id="UserEmail"
                       placeholder="Your Email"
                       className="w-full border-none focus:border-transparent focus:ring-transparent dark:bg-gray-900 dark:text-white sm:text-sm"
                     />
 
-                    <button
+                    <button onClick={onBtnRegis}
                       className="mt-1 w-full bg-teal-500 px-6 py-3 text-sm font-bold uppercase tracking-wide text-white transition-none hover:bg-teal-600 sm:mt-0 sm:w-auto sm:flex-shrink-0"
                     >
                       Sign Up

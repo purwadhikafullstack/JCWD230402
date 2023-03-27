@@ -1,97 +1,89 @@
 import React from 'react'
+import {MdGroups2, MdCategory, MdWarehouse, MdShoppingCart} from 'react-icons/md'
+import {TbReportSearch} from 'react-icons/tb'
 
 function Sidebar() {
 
-
-    function dropdown() {
-      document.querySelector("#submenu").classList.toggle("hidden");
-      document.querySelector("#arrow").classList.toggle("rotate-0");
-    }
-    dropdown();
-
-    function openSidebar() {
-      document.querySelector(".sidebar").classList.toggle("hidden");
-    }
-
   return (
-    <section class="bg-blue-600">
-    <span
-      class="absolute text-white text-4xl top-5 left-4 cursor-pointer"
-      onclick="openSidebar()"
-    >
-      <i class="bi bi-filter-left px-2 bg-gray-900 rounded-md"></i>
-    </span>
-    <div
-      class="sidebar fixed top-0 bottom-0 lg:left-0 p-2 w-[300px] overflow-y-auto text-center bg-gray-900"
-    >
-      <div class="text-gray-100 text-xl">
-        <div class="p-2.5 mt-1 flex items-center">
-          <i class="bi bi-app-indicator px-2 py-1 rounded-md bg-blue-600"></i>
-          <h1 class="font-bold text-gray-200 text-[15px] ml-3">TailwindCSS</h1>
-          <i
-            class="bi bi-x cursor-pointer ml-28 lg:hidden"
-            onclick="openSidebar()"
-          ></i>
-        </div>
-        <div class="my-2 bg-gray-600 h-[1px]"></div>
-      </div>
-      <div
-        class="p-2.5 flex items-center rounded-md px-4 duration-300 cursor-pointer bg-gray-700 text-white"
-      >
-        <i class="bi bi-search text-sm"></i>
-        <input
-          type="text"
-          placeholder="Search"
-          class="text-[15px] ml-4 w-full bg-transparent focus:outline-none"
-        />
-      </div>
-      <div
-        class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white"
-      >
-        <i class="bi bi-house-door-fill"></i>
-        <span class="text-[15px] ml-4 text-gray-200 font-bold">Home</span>
-      </div>
-      <div
-        class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white"
-      >
-        <i class="bi bi-bookmark-fill"></i>
-        <span class="text-[15px] ml-4 text-gray-200 font-bold">Bookmark</span>
-      </div>
-      <div class="my-4 bg-gray-600 h-[1px]"></div>
-      <div
-        class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white"
-        onclick="dropdown()"
-      >
-        <i class="bi bi-chat-left-text-fill"></i>
-        <div class="flex justify-between w-full items-center">
-          <span class="text-[15px] ml-4 text-gray-200 font-bold">Chatbox</span>
-          <span class="text-sm rotate-180" id="arrow">
-            <i class="bi bi-chevron-down"></i>
-          </span>
-        </div>
-      </div>
-      <div
-        class="text-left text-sm mt-2 w-4/5 mx-auto text-gray-200 font-bold"
-        id="submenu"
-      >
-        <h1 class="cursor-pointer p-2 hover:bg-blue-600 rounded-md mt-1">
-          Social
-        </h1>
-        <h1 class="cursor-pointer p-2 hover:bg-blue-600 rounded-md mt-1">
-          Personal
-        </h1>
-        <h1 class="cursor-pointer p-2 hover:bg-blue-600 rounded-md mt-1">
-          Friends
-        </h1>
-      </div>
-      <div
-        class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white"
-      >
-        <i class="bi bi-box-arrow-in-right"></i>
-        <span class="text-[15px] ml-4 text-gray-200 font-bold">Logout</span>
-      </div>
+   
+  <div class="sticky flex flex-col top-0 left-0 w-64 bg-bgglass h-full border-r mt-[74px]">
+    <div class="flex items-center justify-center h-14 border-b">
+      <h1 className='text-[#1BFD9C] font-bold'>Admin Dashboard</h1>
     </div>
-    </section>
+    <div class="overflow-y-auto overflow-x-hidden flex-grow">
+      <ul class="flex flex-col py-4 space-y-1">
+        <li>
+          <a href="#" class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-white text-white hover:text-[#1BFD9C] border-l-4 border-transparent hover:border-indigo-500 pr-6">
+            <span class="inline-flex justify-center items-center ml-4">
+              <MdGroups2 className='text-xl' />
+            </span>
+            <span class="ml-2 text-sm tracking-wide truncate">User Management</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-white text-white hover:text-[#1BFD9C] border-l-4 border-transparent hover:border-indigo-500 pr-6">
+            <span class="inline-flex justify-center items-center ml-4">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
+            </span>
+            <span class="ml-2 text-sm tracking-wide truncate">Product</span>
+            
+          </a>
+        </li>
+        <li>
+          <a href="#" class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-white text-white hover:text-[#1BFD9C] border-l-4 border-transparent hover:border-indigo-500 pr-6">
+            <span class="inline-flex justify-center items-center ml-4">
+              <MdCategory className='text-xl' />
+            </span>
+            <span class="ml-2 text-sm tracking-wide truncate">Category</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-white text-white hover:text-[#1BFD9C] border-l-4 border-transparent hover:border-indigo-500 pr-6">
+            <span class="inline-flex justify-center items-center ml-4">
+              <MdWarehouse />
+            </span>
+            <span class="ml-2 text-sm tracking-wide truncate">Warehouse</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-white text-white hover:text-[#1BFD9C] border-l-4 border-transparent hover:border-indigo-500 pr-6">
+            <span class="inline-flex justify-center items-center ml-4">
+              <MdShoppingCart />
+            </span>
+            <span class="ml-2 text-sm tracking-wide truncate">Order</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-white text-white hover:text-[#1BFD9C] border-l-4 border-transparent hover:border-indigo-500 pr-6">
+            <span class="inline-flex justify-center items-center ml-4">
+             <TbReportSearch />
+            </span>
+            <span class="ml-2 text-sm tracking-wide truncate">Report</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-white text-white hover:text-[#1BFD9C] border-l-4 border-transparent hover:border-indigo-500 pr-6">
+            <span class="inline-flex justify-center items-center ml-4">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+            </span>
+            <span class="ml-2 text-sm tracking-wide truncate">Settings</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-white text-white hover:text-[#1BFD9C] border-l-4 border-transparent hover:border-indigo-500 pr-6">
+            <span class="inline-flex justify-center items-center ml-4">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+            </span>
+            <span class="ml-2 text-sm tracking-wide truncate">Logout</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
 
   
   )
