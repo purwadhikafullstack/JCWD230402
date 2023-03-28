@@ -30,7 +30,7 @@ module.exports = {
                 const uuid = uuidv4();
                 const { email } = req.body
 
-                let register = await model.customer.create({ email, uuid, statusId:1 });
+                let register = await model.customer.create({ email, uuid, statusId: 1 });
 
                 let token = createToken({
                     uuid: register.dataValues.uuid,
@@ -97,10 +97,10 @@ module.exports = {
                     req.body.password = bcrypt.hashSync(req.body.password, salt)
 
                     let verification = await model.customer.update(
-                        { password: req.body.password, statusId:2 },
+                        { password: req.body.password, statusId: 2 },
 
                         { where: { uuid: req.decript.uuid } }
-                      );
+                    );
                     return res.status(200).send({
                         success: true,
                         message: "your Account is now verified",
@@ -125,80 +125,80 @@ module.exports = {
         }
     },
 
+    login: async (req, res, next) => {
+        try {
+            console.log("data from req", req.body);
 
-    // login: async (res, req, next) => {
-    //     try {
-    //         console.log("data from req", req.body);
+            let get = await model.customer.findAll({
+                where:
+                    { email: req.body.email }
+            })
+            console.log("for get user login", get)
+            if (get.length > 0) {
+                let check = bcrypt.compareSync(req.body.password, get[0].dataValues.password);
 
-    //         let get = await model.customer.findAll({
-    //             where: ({ email: req.body.email }),
-    //         });
-    //         console.log("for get user login", get)
-    //         if (get.length > 0) {
-    //             let check = bcrypt.compareSync(req.body.password, get[0].dataValues.password);
+                if (check) {
+                    let { uuid, name, email, phone, gender, profileImage, statusId } = get[0].dataValues;
+                    let token = createToken({ uuid });
+                    return res.status(200).send({
+                        success: true,
+                        message: "login success",
+                        name: name,
+                        email: email,
+                        phone: phone,
+                        gender: gender,
+                        profileImage: profileImage,
+                        statusId: statusId,
+                        token: token
+                    })
+                } else {
+                    res.status(400).send({
+                        success: false,
+                        message: "Login fail email or password wrong"
+                    })
+                }
+            } else {
+                res.status(404).send({
+                    success: false,
+                    message: "Account not found"
+                })
+            }
 
-    //             if (check) {
-    //                 let { uuid, name, email, phone, gender, profileImage, statusId } = get[0].dataValues;
-    //                 let token = createToken({ uuid });
-    //                 return res.status(200).send({
-    //                     success: true,
-    //                     message: "login success",
-    //                     name: name,
-    //                     email: email,
-    //                     phone: phone,
-    //                     gender: gender,
-    //                     profileImage : profileImage,
-    //                     statusId: statusId,
-    //                     token: token
-    //                 })
-    //             } else {
-    //                 res.status(400).send({
-    //                     success: false,
-    //                     message: "Login fail email or password wrong"
-    //                 })
-    //             }
-    //         } else {
-    //             res.status(404).send({
-    //                 success: false,
-    //                 message: "Account not found"
-    //             })
-    //         }
+        } catch (error) {
+            console.log(error);
+            next(error)
+        }
+    },
 
-    //     } catch (error) {
-    //         console.log(error);
-    //         next(error)
-    //     }
-    // },
+    keepLogin: async (req, res, next) => {
+        try {
+            console.log("Decript token:", req.decript);
+            let get = await model.customer.findAll({
+                where: {
+                    uuid: req.decript.uuid
+                }
+            });
 
-    // keepLogin: async (req, res, next) => {
-    //     try {
-    //         console.log("Decrypt token:", req.decrypt);
-    //         let get = await model.customer.findAll({
-    //             where: {
-    //                 uuid: req.decrypt.uuid
-    //             }
-    //         });
+            console.log("Data from get[0].dataValues", get[0].dataValues);
 
-    //         console.log("Data from get[0].dataValues", get[0].dataValues);
+            let {uuid, name, email, phone, gender, profileImage, statusId} = get[0].dataValues
+            let token = createToken({uuid},"1h");
 
-    //         let {uuid, name, email, phone, gender, profileImage statusId} = get[0].dataValues
-    //         let token = createToken({uuid});
-
-    //         return res.status(200).send({
-    //             success: true,
-    //             message: "login success",
-    //               name: name,
-    //                     email: email,
-    //                     phone: phone,
-    //                     gender: gender,
-    //                     profileImage : profileImage,
-    //                     statusId: statusId,
-    //                     token: token
-    //         });
-    //     } catch (error) {
-    //         console.log(error);
-    //         next(error);
-    //     }
-    // },
+            return res.status(200).send({
+                success: true,
+                message: "login success",
+                  name: name,
+                        email: email,
+                        phone: phone,
+                        gender: gender,
+                        profileImage : profileImage,
+                        statusId: statusId,
+                        token: token
+            });
+        } catch (error) {
+            console.log(error);
+            next(error);
+        }
+    },
 }
 

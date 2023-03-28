@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { FcSmartphoneTablet } from 'react-icons/fc'
-import { BsFillExclamationCircleFill, BsFillCartPlusFill } from 'react-icons/bs'
+import { BsFillCartPlusFill } from 'react-icons/bs'
+import { HiOutlineExclamationCircle } from 'react-icons/hi'
 import { categories } from "../utils/data";
 import { useMotionValue, useTransform, motion } from 'framer-motion';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import phoneA from '../img/Iphone14.png'
+import { useSelector } from 'react-redux'
+
 
 
 function Product() {
@@ -14,11 +17,21 @@ function Product() {
   const rotateX = useTransform(y, [-100, 100], [30, -30]);
   const rotateY = useTransform(x, [-100, 100], [-30, 30]);
 
+  const statusId = useSelector((state) => state.authReducer.statusId);
+  const navigate = useNavigate();
+
+
+  const addcart = () => {
+    if (statusId != 2) {
+      navigate('/login')
+    } else { navigate('/register') }
+  }
+
 
   return (
     <section className="w-full my-6" id="menu">
       <div className="w-full flex flex-col items-center justify-center">
-        <p className="text-2xl font-semibold capitalize text-[#1BFD9C] relative underline transition-all ease-in-out duration-100 mr-auto">
+        <p className="text-2xl font-semibold capitalize text-[#1BFD9C] relative transition-all ease-in-out duration-100 mr-auto">
           Our Product
         </p>
 
@@ -59,79 +72,45 @@ function Product() {
       </div>
 
 
-<div className="flex flex-wrap">
-      <div style={{ perspective: 2000 }}>
-        {/* card */}
-        <motion.div
-          style={{ x, y, rotateX, rotateY, z: 100 }}
-          drag
-          dragElastic={0.15}
-          dragConstraints={{ top: 0, left: 0, right: 0, bottom: 0 }}
-          whileTap={{ cursor: 'grabbing' }}
-          className='w-[250px] mx-8 my-8 bg-bgglass rounded-[30px] shadow-sm shadow-white border-white px-3 py-4 cursor-grab hover:scale-105 relative'
-        >
-
-          {/* card image */}
+      <div className="flex flex-wrap">
+        <div style={{ perspective: 2000 }}>
+          {/* card */}
           <motion.div
-            style={{ x, y, rotateX, rotateY, z: 100000 }}
-            className='absolute top-[-60px] -right-28 w-[350px]'
+            style={{ x, y, rotateX, rotateY, z: 100 }}
+            drag
+            dragElastic={0.15}
+            dragConstraints={{ top: 0, left: 0, right: 0, bottom: 0 }}
+            whileTap={{ cursor: 'grabbing' }}
+            className='w-[250px] mx-8 my-8 bg-bgglass rounded-[30px] shadow-sm shadow-white border-white px-3 py-4 cursor-grab hover:scale-105 relative'
           >
-            <img src={phoneA} className='' alt='' draggable='false' />
+
+            {/* card image */}
+            <motion.div
+              style={{ x, y, rotateX, rotateY, z: 100000 }}
+              className='absolute top-[-60px] -right-28 w-[350px]'
+            >
+              <img src={phoneA} className='' alt='' draggable='false' />
+            </motion.div>
+            {/* card title */}
+            <h1 className='text-2xl mb-6 font-extrabold text-[#1BFD9C]'>Iphone14</h1>
+            {/* card subtitle */}
+            <p className='max-w-[300px] text-white mb-6'>
+              Description
+            </p>
+            {/* btn & price wrapper */}
+            <div className='flex items-center justify-between'>
+              {/* card Info */}
+              <button type="button" className="text-[#1BFD9C] text-3xl hover:scale-105 duration-300 cursor-pointer"><HiOutlineExclamationCircle /></button>
+              <button onClick={addcart} type='button' className='bg-[#1BFD9C] hover:bg-[#67f7b9] hover:scale-105 hover:text-black duration-500 text-white text-sm font-medium py-2 px-2 rounded-2xl'>
+                <BsFillCartPlusFill />
+              </button>
+              <div className='text-[24px] font-bold text-white'> <span className="text-red-500">$</span> 495.00</div>
+            </div>
           </motion.div>
-          {/* card title */}
-          <h1 className='text-2xl mb-6 font-extrabold'>Iphone14</h1>
-          {/* card subtitle */}
-          <p className='max-w-[300px] text-[#000000] mb-6'>
-            Description
-          </p>
-          {/* btn & price wrapper */}
-          <div className='flex items-center justify-between'>
-            {/* card Info */}
-            <button type="button" className="text-[#1BFD9C] text-3xl hover:scale-105 duration-300 cursor-pointer"><BsFillExclamationCircleFill /></button>
-            <button className='bg-[#1BFD9C] hover:bg-[#67f7b9] hover:scale-105 duration-500 text-black text-sm font-medium py-2 px-2 rounded-2xl'>
-              <BsFillCartPlusFill />
-            </button>
-            <div className='text-[24px] font-bold text-[#000000]'>$495.00</div>
-          </div>
-        </motion.div>
-      </div>
+        </div>
 
 
-      <div style={{ perspective: 2000 }}>
-        {/* card */}
-        <motion.div
-          style={{ x, y, rotateX, rotateY, z: 100 }}
-          drag
-          dragElastic={0.18}
-          dragConstraints={{ top: 0, left: 0, right: 0, bottom: 0 }}
-          whileTap={{ cursor: 'grabbing' }}
-          className='w-[250px] mx-8 my-8 bg-bgglass rounded-[30px] shadow-sm shadow-white border-white px-3 py-4 cursor-grab hover:scale-105 relative'
-        >
 
-          {/* card image */}
-          <motion.div
-            style={{ x, y, rotateX, rotateY, z: 100000 }}
-            className='absolute top-[-60px] -right-28 w-[350px]'
-          >
-            <img src={phoneA} className='' alt='' draggable='false' />
-          </motion.div>
-          {/* card title */}
-          <h1 className='text-2xl mb-6 font-extrabold'>Iphone14</h1>
-          {/* card subtitle */}
-          <p className='max-w-[300px] text-[#000000] mb-6'>
-            Description
-          </p>
-          {/* btn & price wrapper */}
-          <div className='flex items-center justify-between'>
-            {/* card Info */}
-            <button type="button" className="text-[#1BFD9C] text-3xl hover:scale-105 duration-300 cursor-pointer"><BsFillExclamationCircleFill /></button>
-            <button className='bg-[#1BFD9C] hover:bg-[#67f7b9] hover:scale-105 duration-500 text-black text-sm font-medium py-2 px-2 rounded-2xl'>
-              <BsFillCartPlusFill />
-            </button>
-            <div className='text-[24px] font-bold text-[#000000]'>$495.00</div>
-          </div>
-        </motion.div>
-      </div>
 
 
       </div>
