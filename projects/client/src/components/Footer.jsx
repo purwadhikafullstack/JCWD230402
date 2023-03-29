@@ -67,7 +67,7 @@ function Footer() {
                       className="w-full border-none focus:border-transparent focus:ring-transparent dark:bg-gray-900 dark:text-white sm:text-sm"
                     />
 
-                    <button onClick={onBtnRegis}
+                    <button onClick={onBtnRegis} type='button'
                       className="mt-1 w-full bg-teal-500 px-6 py-3 text-sm font-bold uppercase tracking-wide text-white transition-none hover:bg-teal-600 sm:mt-0 sm:w-auto sm:flex-shrink-0"
                     >
                       Sign Up
