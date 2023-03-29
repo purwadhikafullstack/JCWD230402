@@ -22,7 +22,6 @@ function ScrollProduct({ data, }) {
   const scrollRight = () => {
     document.getElementById("content").scrollLeft += 200;
   }
-
   const addcart = () => {
     if (statusId != 2) {
       navigate('/login')
@@ -67,7 +66,6 @@ function ScrollProduct({ data, }) {
            <button type="button" onClick={addcart} className="w-10 h-8 px-2 md:w-8 md:h-8 rounded-full bg-emerald-400 flex items-center justify-center cursor-pointer hover:shadow-md hover:scale-110 duration-500 -mt-8">
                 <MdShoppingBasket className="text-white hover:text-black duration-500" />
               </button>
-          
           </div>
 
           <div className="w-full flex flex-col items-end justify-end -mt-8">

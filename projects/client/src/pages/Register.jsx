@@ -28,7 +28,6 @@ function Register() {
         } catch (error) {
             console.log("error",error);
             alert(error.response.data.error[0].msg);
-
         }
 
     }
