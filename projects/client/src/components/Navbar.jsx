@@ -87,21 +87,14 @@ function Navbar() {
                                 <button type='button' onClick={logoutBtn} className='bg-emerald-300 hover:bg-emerald-400 px-1 rounded-lg font-bold text-white hover:text-black hover:scale-105 duration-500'>Log Out</button>
                             </div>
                         </div>
-
                     </div> 
-                        : 
+                    : 
                         <div className=' flex gap-2 md:gap-8'>
                         <button className='text-white text-xs md:text-base bg-emerald-400 px-2 md:px-5 py-1 rounded-3xl font-semibold hover:text-black hover:bg-emerald-300 hover:scale-110 duration-500'><NavLink to='/login'>Login</NavLink></button>
                         <button className='text-white text-xs md:text-base bg-emerald-400 px-2 md:px-3 py-1 rounded-3xl font-semibold hover:text-black hover:bg-emerald-300 hover:scale-110 duration-500'><NavLink to='/register'>Register</NavLink></button>
                     </div>}
-
-
-
                 </div>
-
-
             </div>
-
         </header>
     )
 }
