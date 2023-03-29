@@ -1,15 +1,13 @@
 import React, { useState } from 'react'
-import { FcGoogle } from 'react-icons/fc'
-import { BsFacebook } from 'react-icons/bs'
 import { HiEye, HiEyeOff } from 'react-icons/hi'
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { loginAction } from "../reducers/auth";
+import { adminloginAction } from "../reducers/admin";
 import { API_URL } from '../helper';
-import { NavLink } from 'react-router-dom';
 
-function Login() {
+
+function AdminLogin() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const dispatch = useDispatch();
@@ -29,16 +27,16 @@ function Login() {
             if (email === "" || password === "") {
                 alert("Please enter your credentials");
             } else {
-                let res = await axios.post(`${API_URL}/auth/customer`, {
+                let res = await axios.post(`${API_URL}/auth/admin/login`, {
                     email: email,
                     password: password,
                 });
                 console.log("data from LOGIN", res.data);
 
                 alert("Login Successfull");
-                localStorage.setItem("Gadgetwarehouse_userlogin", res.data.token);
-                dispatch(loginAction(res.data));
-                navigate("/", { replace: true });
+                localStorage.setItem("Gadgetwarehouse_adminlogin", res.data.token);
+                dispatch(adminloginAction(res.data));
+                navigate("/dashboard", { replace: true });
             }
         } catch (error) {
             console.log(error);
@@ -50,7 +48,6 @@ function Login() {
         <section className='form bg-bgglass rounded-[20px] shadow-sm shadow-yellow-50 box-border w-[320px] p-5 mt-24 mb-8 m-auto hover:scale-105 duration-500'>
             <div className='flex flex-col gap-3'>
                 <h1 className='text-[#1BFD9C] font-bold text-3xl text-center'>Welcome</h1>
-                <h1 className='text-white font-bold text-lg '>Ready for shopping?</h1>
 
                 <div className='flex flex-col gap-2'>
                     <label htmlFor="" className='font-semibold text-emerald-300'>Email</label>
@@ -66,15 +63,10 @@ function Login() {
                 </div>
 
                 <button type='button' className='text-white bg-emerald-400 font-bold border border-[#1BFD9C] rounded-xl w-1/2 mx-auto mt-4 hover:bg-emerald-300 hover:border-white hover:text-black duration-500 hover:scale-110' onClick={onBtnLogin}>Login</button>
-                <p className='text-center font-bold text-white'>-- or Sign in with --</p>
-                <div className='flex justify-evenly py-2'>
-                    <button className='bg-slate-200 border-2 border-[#1BFD9C] w-10 h-10 py-1 rounded-[100%] cursor-pointer hover:scale-110 duration-500'><FcGoogle className='m-auto' /></button>
-                    <button className='bg-slate-200 border-2 border-[#1BFD9C] w-10 h-10 py-1 rounded-[100%] cursor-pointer hover:scale-110 duration-500'><BsFacebook className='m-auto' /></button>
-                </div>
-                <p className='font-semibold'>forgot your <NavLink to='/request' className='text-[#1BFD9C] hover:scale-110 duration-500'>password</NavLink> ? </p>
+                
             </div>
         </section>
     )
 }
 
-export default Login
+export default AdminLogin

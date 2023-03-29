@@ -1,13 +1,24 @@
 import React, { useState } from 'react'
-import { NavLink } from 'react-router-dom'
-import { FcGoogle } from 'react-icons/fc'
-import { BsFacebook } from 'react-icons/bs'
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { API_URL } from '../helper';
 
 function RequestPassword() {
   const [email, setEmail] = useState("");
-  const onSendreq = async () => { }
+  const onSendreq = async () => { 
+    try {
+      let res = await axios.post(`${API_URL}/auth/customer/forgot-password`, { 
+          email: email,
+      }
+      );
+      console.log("ini dari btn regis",res);
+      if (res.data.success) {
+          alert(res.data.message);
+      }
+  } catch (error) {
+      console.log("error",error);
+      alert(error.response.data.error[0].msg);
+  }
+  }
   return (
     <section className='form bg-bgglass rounded-[20px] shadow-sm shadow-yellow-50 box-border w-[320px] p-5 mt-24 mb-8 m-auto hover:scale-110 duration-500'>
       <div className='flex flex-col gap-4'>

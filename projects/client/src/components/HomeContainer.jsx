@@ -19,7 +19,7 @@ function HomeContainer() {
             <div className="py-2 flex-1 flex items-center relative">
                 <img className='ml-auto h-[420px] w-full lg:w-[400px] lg:h-[650px] rounded-xl' src={heroBg2} alt="" />
 
-                <div className="w-full h-full absolute top-0 left-0 flex items-center justify-center lg:px-32  py-4 gap-4 flex-wrap">
+                <div className="w-full h-full absolute top-0 left-0 flex items-center justify-center  lg:px-32  py-4 gap-8 md:gap-4 flex-wrap">
                     {heroData &&
                         heroData.map((n) => (
                             <div

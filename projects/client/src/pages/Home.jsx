@@ -1,5 +1,5 @@
 import React from 'react'
-import { Carousel, HomeContainer, Product, ScrollProduct } from '../components'
+import { Carousel, HomeContainer, Product, ScrollProduct, Limited} from '../components'
 
 function Home() {
   return (
@@ -7,6 +7,7 @@ function Home() {
       <HomeContainer />
       <Carousel />
       <ScrollProduct />
+      <Limited/>
       <Product />
     </div>
   )

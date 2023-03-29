@@ -22,7 +22,27 @@ function ResetPassword() {
       setVisible("password")
     }
   }
-  const Resetbtn = async () => { }
+  const Resetbtn = async () => {
+    try {
+      if (password === confirmationpassword) {
+        let res = await axios.patch(`${API_URL}/auth/customer/reset`, {
+          password, confirmationpassword
+        }, {
+          headers: {
+            'Authorization': `Bearer ${param.token}`
+          }
+        })
+        console.log('ini res dari reset password', res)
+        navigate("/");
+      }
+      else {
+        alert("password not match")
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <section className='form bg-bgglass rounded-[20px] shadow-sm shadow-yellow-50 box-border w-[320px] p-5 mt-24 mb-8 m-auto hover:scale-105 duration-500'>
       <div className='flex flex-col gap-3'>
@@ -33,7 +53,7 @@ function ResetPassword() {
           <label htmlFor="" className='font-semibold text-[#1BFD9C]'>Password</label>
           <div className='flex hover:scale-105 duration-300'>
             <input onChange={(e) => setPassword(e.target.value)} type={visible} placeholder='Password' className='rounded-xl rounded-tr-none rounded-br-none w-full px-2 bg-transparent border border-emerald-300  text-white outline-none ' />
-            <button className='bg-transparent h-[26px] px-1 text-xl rounded-tr-xl rounded-br-xl border border-emerald-300 text-white' type='button' onClick={klik}> {visible ? <HiEye /> : <HiEyeOff />}</button>
+            <button className='bg-transparent h-[26px] px-1 text-xl rounded-tr-xl rounded-br-xl border border-emerald-300 text-white' type='button' onClick={klik}>{visible === 'password' ? <HiEyeOff /> : <HiEye />}</button>
           </div>
         </div>
 
@@ -41,7 +61,7 @@ function ResetPassword() {
           <label htmlFor="" className='font-semibold text-[#1BFD9C]'>Confirmation Password</label>
           <div className='flex hover:scale-105 duration-300'>
             <input onChange={(e) => setConfirmationPassword(e.target.value)} type={visible} placeholder='Confirmation Password' className='rounded-xl rounded-tr-none rounded-br-none w-full px-2 bg-transparent border border-emerald-300  text-white outline-none ' />
-            <button className='bg-transparent h-[26px] px-1 text-xl rounded-tr-xl text-white rounded-br-xl border border-emerald-300' type='button' onClick={klik}> {visible ? <HiEye /> : <HiEyeOff />}</button>
+            <button className='bg-transparent h-[26px] px-1 text-xl rounded-tr-xl text-white rounded-br-xl border border-emerald-300' type='button' onClick={klik}>{visible === 'password' ? <HiEyeOff /> : <HiEye />}</button>
           </div>
           <p className='text-sm text-white'> Min <span className='text-[#1BFD9C]'>8 character</span>  have a <span className='text-[#1BFD9C]'>capitalize</span>  and a <span className='text-[#1BFD9C]'>number</span>  </p>
         </div>
