@@ -6,7 +6,7 @@ const authSlice = createSlice({
     initialState: {
         name: "",
         email: "",
-        statusId:""
+        statusId: ""
     },
 
     reducers: {
@@ -15,13 +15,15 @@ const authSlice = createSlice({
             state.email = action.payload.email;
             state.statusId = action.payload.statusId;
             console.log('data from statusId reducer:', state.statusId);
+            
         },
-    logoutAction: (state, action) => {
-        localStorage.removeItem('gadgetwarehouse_login');
-        state.name = '';
-        state.statusId= null;
-    }
-},
+        logoutAction: (state, action) => {
+            localStorage.removeItem('Gadgetwarehouse_userlogin');
+            state.name = '';
+            state.email = '';
+            state.statusId = null;
+        }
+    },
 });
 
 // Export action function nya

@@ -139,10 +139,11 @@ module.exports = {
 
                 if (check) {
                     let { uuid, name, email, phone, gender, profileImage, statusId } = get[0].dataValues;
-                    let token = createToken({ uuid });
+                    let token = createToken({ uuid, statusId });
                     return res.status(200).send({
                         success: true,
                         message: "login success",
+                        
                         name: name,
                         email: email,
                         phone: phone,
@@ -181,24 +182,227 @@ module.exports = {
 
             console.log("Data from get[0].dataValues", get[0].dataValues);
 
-            let {uuid, name, email, phone, gender, profileImage, statusId} = get[0].dataValues
-            let token = createToken({uuid},"1h");
+            let { uuid, name, email, phone, gender, profileImage, statusId } = get[0].dataValues
+            let token = createToken({ uuid }, "1h");
 
             return res.status(200).send({
                 success: true,
                 message: "login success",
-                  name: name,
-                        email: email,
-                        phone: phone,
-                        gender: gender,
-                        profileImage : profileImage,
-                        statusId: statusId,
-                        token: token
+                name: name,
+                email: email,
+                phone: phone,
+                gender: gender,
+                profileImage: profileImage,
+                statusId: statusId,
+                token: token
             });
         } catch (error) {
             console.log(error);
             next(error);
         }
     },
-}
 
+        forgotpassword: async (req, res, next) => {
+            try {
+                //.email data user
+                let getData = await model.customer.findAll({
+                    where: {
+                        email: req.body.email,
+                    }
+                });
+                console.log("data dari get data", getData[0].dataValues)
+
+                //send email and create token
+                let { id, statusId } = getData[0].dataValues;
+                let token = createToken({ id, statusId }, '24h');
+                const { email } = req.body
+
+                //send reset password by email
+                await transporter.sendMail({
+                    from: "GadgetHouse Admin",
+                    to: `${email}`,
+                    subject: "Reset Password",
+                    html:
+                        `<img src="" />
+                <hr />
+                <h3>Hello, ${email}</h3>
+                <h3>We've recieved a request to reset your password! 😃</h3>
+                <h5>
+                  Click the link below for reset your password.
+                </h5>
+                <h5>
+                  <a href="http://localhost:3000/reset/${token}"
+                    >Reset Your Password</a
+                  >
+                </h5>
+                <br>
+                <br>
+                <p>Regards, Admin GadgetHouse</p>`
+                });
+                res.status(200).send({
+                    success: true,
+                    message: "Email for confirmation reset password has been delivered",
+                    token: token
+                })
+            } catch (error) {
+                console.log(error);
+                next(error);
+            }
+        },
+
+    resetpassword: async (req, res, next) => {
+        try {
+            if (req.body.Password === req.body.confirmationPassword){
+                console.log("dcript token", req.decript);
+                req.body.password = bcrypt.hashSync(req.body.password, salt);
+
+                await model.customer.update({password: req.body.password},
+                    {
+                        where: {
+                            id: req.decript.id,
+                        },
+                    }
+                    );
+                    return res.status(200).send({
+                        success: true,
+                        message: "Reset password success"
+                    })
+                }else{
+                    res.status(400).send({
+                        success: false,
+                        message:"error: password and confirmation password not match"
+                    })
+                }
+
+        } catch (error) {
+            console.log(error)
+            next(error)
+
+        }
+    },
+
+    adminregister: async (req, res, next) => {
+        try {
+            let checkUser = await model.admin.findAll({
+                where: {
+                    email: req.body.email,
+
+                }
+            });
+            console.log("check user exist", checkUser);
+
+            if (checkUser.length === 0) {
+                // if (req.body.password == req.body.confirmationPassword) {
+                //     delete req.body.confirmationPassword
+                //     console.log("check data before create", req.body);
+                //     req.body.password = bcrypt.hashSync(req.body.password.salt);
+                //     console.log("check data after  hash password :", req.body);
+
+                const uuid = uuidv4();
+                req.body.password = bcrypt.hashSync(req.body.password, salt)
+                const { email, name, gender, phone, password, roleId, warehouseId, profileImage } = req.body
+
+
+                let register = await model.admin.create({ email, uuid, name, gender, phone, password, roleId, warehouseId, profileImage });
+
+
+
+                return res.status(200).send({
+                    success: true,
+                    message: "Account registered success",
+                    data: register,
+
+
+                })
+            } else {
+                return res.status(400).send({
+                    success: false,
+                    message: "User already exist"
+                })
+            }
+
+        } catch (error) {
+            console.log(error);
+            next(error)
+        }
+    },
+
+    adminlogin: async (req, res, next) => {
+        try {
+            console.log("data from req", req.body);
+
+            let get = await model.admin.findAll({
+                where:
+                    { email: req.body.email }
+            })
+            console.log("for get admin login", get)
+            if (get.length > 0) {
+                let check = bcrypt.compareSync(req.body.password, get[0].dataValues.password);
+
+                if (check) {
+                    let { email, uuid, name, gender, phone, roleId, warehouseId, profileImage } = get[0].dataValues;
+                    let token = createToken({ uuid });
+                    return res.status(200).send({
+                        success: true,
+                        message: "login success",
+                        name: name,
+                        email: email,
+                        warehouseId: warehouseId,
+                        phone: phone,
+                        gender: gender,
+                        profileImage: profileImage,
+                        roleId: roleId,
+                        token: token
+                    })
+                } else {
+                    res.status(400).send({
+                        success: false,
+                        message: "Login fail email or password wrong"
+                    })
+                }
+            } else {
+                res.status(404).send({
+                    success: false,
+                    message: "Account not found"
+                })
+            }
+
+        } catch (error) {
+            console.log(error);
+            next(error)
+        }
+    },
+
+    keepadminLogin: async (req, res, next) => {
+        try {
+            console.log("Decript token:", req.decript);
+            let get = await model.admin.findAll({
+                where: {
+                    uuid: req.decript.uuid
+                }
+            });
+
+            console.log("Data from get[0].dataValues", get[0].dataValues);
+
+            let { email, uuid, name, gender, phone, roleId, warehouseId, profileImage } = get[0].dataValues
+            let token = createToken({ uuid }, "1h");
+
+            return res.status(200).send({
+                success: true,
+                message: "login success",
+                name: name,
+                email: email,
+                roleId: roleId,
+                warehouseId: warehouseId,
+                phone: phone,
+                gender: gender,
+                profileImage: profileImage,
+                token: token
+            });
+        } catch (error) {
+            console.log(error);
+            next(error);
+        }
+    },
+
+}
