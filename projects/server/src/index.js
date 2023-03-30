@@ -4,7 +4,7 @@ const cors = require("cors");
 const { join } = require("path");
 const PORT = process.env.PORT || 8000;
 const app = express();
-const bearerToken = require ('express-bearer-token');
+const bearerToken = require('express-bearer-token');
 app.use(
   cors({
     // origin: [
@@ -22,7 +22,14 @@ app.use(express.json());
 // ===========================
 // NOTE : Add your routes here
 const authRouter = require('./Routers/authRouter');
-app.use('/auth',authRouter);
+app.use('/auth', authRouter);
+
+const rajaongkirRouter = require('./Routers/rajaongkirRouter');
+app.use('/rajaongkir', rajaongkirRouter);
+
+const warehouseRouter = require('./Routers/warehouseRouter');
+app.use('/warehouse', warehouseRouter);
+
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);

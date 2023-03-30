@@ -19,12 +19,12 @@ module.exports = (sequelize, DataTypes) => {
     email: DataTypes.STRING,
     address: DataTypes.STRING,
     location: DataTypes.STRING,
-    kabupaten: DataTypes.STRING,
-    kecamatan: DataTypes.STRING,
     province: DataTypes.STRING,
     city: DataTypes.STRING,
     postalCode: DataTypes.STRING,
-    phone: DataTypes.STRING
+    phone: DataTypes.STRING,
+    province_id: DataTypes.STRING,
+    city_id: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'warehouse',

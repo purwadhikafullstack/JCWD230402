@@ -107,6 +107,7 @@ function Product() {
               <div className='text-[24px] font-bold text-white'> <span className="text-red-500">$</span> 495.00</div>
             </div>
           </motion.div>
+        </div>
       </div>
     </section>
   )

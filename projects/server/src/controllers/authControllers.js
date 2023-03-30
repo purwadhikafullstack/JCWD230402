@@ -143,7 +143,7 @@ module.exports = {
                     return res.status(200).send({
                         success: true,
                         message: "login success",
-                        
+
                         name: name,
                         email: email,
                         phone: phone,
@@ -202,28 +202,28 @@ module.exports = {
         }
     },
 
-        forgotpassword: async (req, res, next) => {
-            try {
-                //.email data user
-                let getData = await model.customer.findAll({
-                    where: {
-                        email: req.body.email,
-                    }
-                });
-                console.log("data dari get data", getData[0].dataValues)
+    forgotpassword: async (req, res, next) => {
+        try {
+            //.email data user
+            let getData = await model.customer.findAll({
+                where: {
+                    email: req.body.email,
+                }
+            });
+            console.log("data dari get data", getData[0].dataValues)
 
-                //send email and create token
-                let { id, statusId } = getData[0].dataValues;
-                let token = createToken({ id, statusId }, '24h');
-                const { email } = req.body
+            //send email and create token
+            let { id, statusId } = getData[0].dataValues;
+            let token = createToken({ id, statusId }, '24h');
+            const { email } = req.body
 
-                //send reset password by email
-                await transporter.sendMail({
-                    from: "GadgetHouse Admin",
-                    to: `${email}`,
-                    subject: "Reset Password",
-                    html:
-                        `<img src="" />
+            //send reset password by email
+            await transporter.sendMail({
+                from: "GadgetHouse Admin",
+                to: `${email}`,
+                subject: "Reset Password",
+                html:
+                    `<img src="" />
                 <hr />
                 <h3>Hello, ${email}</h3>
                 <h3>We've recieved a request to reset your password! 😃</h3>
@@ -238,41 +238,41 @@ module.exports = {
                 <br>
                 <br>
                 <p>Regards, Admin GadgetHouse</p>`
-                });
-                res.status(200).send({
-                    success: true,
-                    message: "Email for confirmation reset password has been delivered",
-                    token: token
-                })
-            } catch (error) {
-                console.log(error);
-                next(error);
-            }
-        },
+            });
+            res.status(200).send({
+                success: true,
+                message: "Email for confirmation reset password has been delivered",
+                token: token
+            })
+        } catch (error) {
+            console.log(error);
+            next(error);
+        }
+    },
 
     resetpassword: async (req, res, next) => {
         try {
-            if (req.body.Password === req.body.confirmationPassword){
+            if (req.body.Password === req.body.confirmationPassword) {
                 console.log("dcript token", req.decript);
                 req.body.password = bcrypt.hashSync(req.body.password, salt);
 
-                await model.customer.update({password: req.body.password},
+                await model.customer.update({ password: req.body.password },
                     {
                         where: {
                             id: req.decript.id,
                         },
                     }
-                    );
-                    return res.status(200).send({
-                        success: true,
-                        message: "Reset password success"
-                    })
-                }else{
-                    res.status(400).send({
-                        success: false,
-                        message:"error: password and confirmation password not match"
-                    })
-                }
+                );
+                return res.status(200).send({
+                    success: true,
+                    message: "Reset password success"
+                })
+            } else {
+                res.status(400).send({
+                    success: false,
+                    message: "error: password and confirmation password not match"
+                })
+            }
 
         } catch (error) {
             console.log(error)
@@ -329,19 +329,20 @@ module.exports = {
 
     adminlogin: async (req, res, next) => {
         try {
-            console.log("data from req", req.body);
+            // console.log("data from req", req.body);
 
             let get = await model.admin.findAll({
                 where:
                     { email: req.body.email }
             })
-            console.log("for get admin login", get)
+            // console.log("for get admin login", get)
             if (get.length > 0) {
                 let check = bcrypt.compareSync(req.body.password, get[0].dataValues.password);
 
                 if (check) {
                     let { email, uuid, name, gender, phone, roleId, warehouseId, profileImage } = get[0].dataValues;
-                    let token = createToken({ uuid });
+                    let token = createToken({ uuid, roleId });
+                    console.log(`ini token admin login`, token);
                     return res.status(200).send({
                         success: true,
                         message: "login success",
@@ -378,18 +379,19 @@ module.exports = {
             console.log("Decript token:", req.decript);
             let get = await model.admin.findAll({
                 where: {
-                    uuid: req.decript.uuid
+                    uuid: req.decript.uuid,
+                    roleId: req.decript.roleId
                 }
             });
 
-            console.log("Data from get[0].dataValues", get[0].dataValues);
+            // console.log("Data from get[0].dataValues", get[0].dataValues);
 
             let { email, uuid, name, gender, phone, roleId, warehouseId, profileImage } = get[0].dataValues
-            let token = createToken({ uuid }, "1h");
+            let token = createToken({ uuid, roleId }, "24h");
 
             return res.status(200).send({
                 success: true,
-                message: "login success",
+                message: "keep admin login success",
                 name: name,
                 email: email,
                 roleId: roleId,

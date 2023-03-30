@@ -31,10 +31,10 @@ function AdminLogin() {
                     email: email,
                     password: password,
                 });
-                console.log("data from LOGIN", res.data);
+                console.log("data from admin LOGIN", res.data);
 
                 alert("Login Successfull");
-                localStorage.setItem("Gadgetwarehouse_adminlogin", res.data.token);
+                localStorage.setItem("gadgetwarehouse_adminlogin", res.data.token);
                 dispatch(adminloginAction(res.data));
                 navigate("/dashboard", { replace: true });
             }

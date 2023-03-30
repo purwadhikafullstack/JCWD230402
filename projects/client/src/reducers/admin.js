@@ -6,7 +6,7 @@ const adminSlice = createSlice({
     initialState: {
         name: "",
         email: "",
-        roleId:""
+        roleId: null
     },
 
     reducers: {
@@ -16,13 +16,13 @@ const adminSlice = createSlice({
             state.roleId = action.payload.roleId;
             console.log('data from roleId reducer:', state.roleId);
         },
-    adminlogoutAction: (state, action) => {
-        localStorage.removeItem('Gadgetwarehouse_adminlogin');
-        state.name = '';
-        state.email = '';
-        state.roleId= null;
-    }
-},
+        adminlogoutAction: (state, action) => {
+            localStorage.removeItem('gadgetwarehouse_adminlogin');
+            state.name = '';
+            state.email = '';
+            state.roleId = null;
+        }
+    },
 });
 
 // Export action function nya
