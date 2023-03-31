@@ -31,5 +31,32 @@ module.exports = {
             console.log(error);
             next(error);
         }
+    },
+
+    checkWarehouse: async (req, res, next) => {
+        try {
+
+            console.log('request path:', req.path);
+            if (req.path == '/') {
+                await check('email').notEmpty().isEmail().withMessage('Email requirment are not met').run(req);
+            }
+
+            const validation = validationResult(req);
+            console.log('validation result:', validation);
+
+            if (validation.isEmpty()) {
+                next();
+            } else {
+                return res.status(400).send({
+                    success: false,
+                    message: 'Validation invalid',
+                    error: validation.errors
+                })
+            }
+
+        } catch (error) {
+            console.log(error);
+            next(error)
+        }
     }
 }
