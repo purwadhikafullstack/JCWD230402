@@ -8,13 +8,15 @@ import {
   Register,
   RequestPassword,
   ResetPassword,
-  Verification, 
+  Verification,
   Login,
   Dashboard,
   AdminLogin,
   PageNotFound,
   Warehouse,
-  UserManagement
+  UserManagement,
+  CustomerProfile,
+  EditProfile
 } from './pages';
 import { Routes, Route } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion';
@@ -112,6 +114,8 @@ function App() {
                     <Route path='/reset/:token' element={<ResetPassword />} />
                     <Route path='/verify/:token' element={<Verification />} />
                     <Route path='*' element={<PageNotFound />} />
+                    <Route path='/Customerprofile' element={<CustomerProfile />} />
+                    <Route path='/editprofile' element={<EditProfile />} />
                   </Routes>
                 </main>
                 <Footer />
