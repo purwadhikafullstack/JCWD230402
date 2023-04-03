@@ -286,7 +286,6 @@ module.exports = {
             let checkUser = await model.admin.findAll({
                 where: {
                     email: req.body.email,
-
                 }
             });
             console.log("check user exist", checkUser);
@@ -300,12 +299,19 @@ module.exports = {
 
                 const uuid = uuidv4();
                 req.body.password = bcrypt.hashSync(req.body.password, salt)
-                const { email, name, gender, phone, password, roleId, warehouseId, profileImage } = req.body
+                const { name, gender, phone, email, password, roleId, warehouseId, profileImage } = req.body
 
-
-                let register = await model.admin.create({ email, uuid, name, gender, phone, password, roleId, warehouseId, profileImage });
-
-
+                let register = await model.admin.create({
+                    email,
+                    uuid,
+                    name,
+                    gender,
+                    phone,
+                    password,
+                    roleId,
+                    warehouseId,
+                    profileImage
+                });
 
                 return res.status(200).send({
                     success: true,

@@ -22,10 +22,16 @@ module.exports = (sequelize, DataTypes) => {
     password: DataTypes.STRING,
     profileImage: DataTypes.STRING,
     roleId: DataTypes.INTEGER,
-    warehouseId: DataTypes.INTEGER
+    warehouseId: DataTypes.INTEGER,
+    isDeleted: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'admin',
   });
+
+  admin.associate = (models) => {
+    admin.belongsTo(models.role, {foreignKey: "roleId"})
+    admin.belongsTo(models.warehouse, {foreignKey: "warehouseId"})
+  }
   return admin;
 };

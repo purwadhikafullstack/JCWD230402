@@ -30,5 +30,10 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'warehouse',
   });
+
+  warehouse.associate = (models) => {
+    warehouse.hasMany(models.admin, { foreignKey: "warehouseId" })
+  }
+
   return warehouse;
 };

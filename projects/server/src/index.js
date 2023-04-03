@@ -30,6 +30,9 @@ app.use('/rajaongkir', rajaongkirRouter);
 const warehouseRouter = require('./Routers/warehouseRouter');
 app.use('/warehouse', warehouseRouter);
 
+const adminRouter = require('./Routers/adminRouter');
+app.use('/admin', adminRouter);
+
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);
