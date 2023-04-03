@@ -1,4 +1,11 @@
 const authController = require("./authControllers");
+const rajaongkirController = require("./rajaongkirController");
+const warehouseController = require("./warehouseController");
+const adminController = require("./adminControllers");
+
 module.exports ={
-    authController
+    authController,
+    rajaongkirController,
+    warehouseController,
+    adminController,
 }

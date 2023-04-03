@@ -10,7 +10,7 @@ route.post('/customer', authController.login);
 route.get('/customer/keep-login', readToken, authController.keepLogin);
 route.post('/customer/forgot-password', authController.forgotpassword);
 route.patch('/customer/reset', readToken, authController.resetpassword);
-route.post('/admin/register', authController.adminregister);
+route.post('/admin/register', readToken, checkUsers, authController.adminregister);
 route.post('/admin/login', authController.adminlogin);
 route.get('/admin/keep-adminlogin', readToken, authController.keepadminLogin);
 
