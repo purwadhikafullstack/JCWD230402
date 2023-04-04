@@ -33,6 +33,9 @@ app.use('/warehouse', warehouseRouter);
 const adminRouter = require('./Routers/adminRouter');
 app.use('/admin', adminRouter);
 
+const categoryRouter = require('./Routers/categoryRouter');
+app.use('/category', categoryRouter);
+
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);

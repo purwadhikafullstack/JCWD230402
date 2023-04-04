@@ -14,7 +14,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   category.init({
-    type: DataTypes.STRING
+    type: DataTypes.STRING,
+    isDisabled: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'category',
