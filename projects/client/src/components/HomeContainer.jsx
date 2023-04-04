@@ -31,11 +31,11 @@ function HomeContainer() {
                                     className="w-20 lg:w-56 -mt-10 lg:-mt-20 z-40 hover:scale-110 duration-500"
                                     alt="I1"
                                 />
-                                <p className="text-medium lg:text-xl font-semibold text-black mt-2 lg:mt-4">
+                                <p className="text-medium lg:text-xl font-semibold text-white mt-2 lg:mt-4">
                                     {n.name}
                                 </p>
 
-                                <p className="text-[12px] lg:text-sm text-black font-semibold my-1 lg:my-3">
+                                <p className="text-[12px] lg:text-sm text-white font-semibold my-1 lg:my-3">
                                     {n.decp}
                                 </p>
 

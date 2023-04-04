@@ -183,7 +183,7 @@ module.exports = {
             console.log("Data from get[0].dataValues", get[0].dataValues);
 
             let { uuid, name, email, phone, gender, profileImage, statusId } = get[0].dataValues
-            let token = createToken({ uuid }, "1h");
+            let token = createToken({ uuid }, "24h");
 
             return res.status(200).send({
                 success: true,

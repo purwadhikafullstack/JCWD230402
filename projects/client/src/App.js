@@ -116,6 +116,7 @@ function App() {
                     <Route path='*' element={<PageNotFound />} />
                     <Route path='/Customerprofile' element={<CustomerProfile />} />
                     <Route path='/editprofile' element={<EditProfile />} />
+               
                   </Routes>
                 </main>
                 <Footer />
@@ -128,7 +129,7 @@ function App() {
                     <Route path='/register' element={<Register />} />
                     <Route path='/login' element={<Login />} />
                     <Route path='*' element={<PageNotFound />} />
-                    <Route path='/admin' element={<AdminLogin />} />
+                    <Route path='/admin' element={<AdminLogin />} />     
                   </Routes>
                 </main>
                 <Footer />

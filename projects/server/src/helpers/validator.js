@@ -68,5 +68,19 @@ module.exports = {
             console.log(error);
             next(error)
         }
+    },
+
+    editProfile: async (req, res, next) => {
+        try {
+            if (req.body.name) {
+                await check("name").notEmpty().isLength({ max: 100 }).withMessage("name must not be empty and must less than equal to 100 character").matches(/^[a-zA-Z ]+$/)
+                    .withMessage("Name must only contain letters and spaces")
+                    .run(req);
+                await check("phone").notEmpty().isMobilePhone().withMessage("Invalid phone number").run(req);
+                await check("gender").notEmpty().isIn(["Male", "Female"]).withMessage("Gender must not be empty").run(req);
+            }
+        } catch (error) {
+
+        }
     }
 }

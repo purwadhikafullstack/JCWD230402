@@ -13,5 +13,4 @@ route.patch('/customer/reset', readToken, authController.resetpassword);
 route.post('/admin/register', readToken, checkUsers, authController.adminregister);
 route.post('/admin/login', authController.adminlogin);
 route.get('/admin/keep-adminlogin', readToken, authController.keepadminLogin);
-
 module.exports = route;
