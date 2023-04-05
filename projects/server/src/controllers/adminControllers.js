@@ -1,7 +1,5 @@
 const model = require('../models')
-const { sequelize } = require('../models')
-const { v4: uuidv4 } = require('uuid')
-const transporter = require("../helpers/nodemailer")
+const sequelize = require("sequelize");
 const bcrypt = require('bcrypt')
 
 let salt = bcrypt.genSaltSync(10);
@@ -9,17 +7,24 @@ let salt = bcrypt.genSaltSync(10);
 module.exports = {
     allAdmin: async (req, res, next) => {
         try {
-            let getAllAdmin = await model.admin.findAll({
+            let { page, size, name, sortby, order } = req.query
+
+            let getAllAdmin = await model.admin.findAndCountAll({
+                offset: parseInt(page * size),
+                limit: parseInt(size),
+                where: { name: { [sequelize.Op.like]: `%${name}%` } },
                 include: [{
                     model: model.warehouse,
                     attributes: ["name"]
-                }]
+                }],
+                order: [[sortby, order]],
             })
-            console.log(`getalladmin`, getAllAdmin);
+            // console.log(`getalladmin`, getAllAdmin);
 
             res.status(200).send({
                 success: true,
-                data: getAllAdmin
+                data: getAllAdmin.rows,
+                datanum: getAllAdmin.count,
             })
 
         } catch (error) {
@@ -36,7 +41,7 @@ module.exports = {
                 }
             })
 
-            console.log(`findadmin`, findAdmin);
+            // console.log(`findadmin`, findAdmin);
 
             if (findAdmin[0].dataValues.isDeleted == false) {
 
@@ -45,10 +50,10 @@ module.exports = {
                         uuid: req.params.uuid
                     }
                 })
-                console.log(`deleteAdmin`, deleteAdmin);
+                // console.log(`deleteAdmin`, deleteAdmin);
                 res.status(200).send({
                     success: true,
-                    message: "admin unavailable"
+                    message: "Admin Is Now Unavailable"
                 })
             } else {
                 let deleteAdmin = await model.admin.update({ isDeleted: 0 }, {
@@ -56,10 +61,10 @@ module.exports = {
                         uuid: req.params.uuid
                     }
                 })
-                console.log(`deleteWarehouse`, deleteAdmin);
+                // console.log(`deleteWarehouse`, deleteAdmin);
                 res.status(200).send({
                     success: true,
-                    message: "admin available"
+                    message: "Admin is now Available"
                 })
             }
         } catch (error) {
@@ -73,12 +78,17 @@ module.exports = {
             console.log(`ini dari req params`, req.params.uuid);
             let cekAdmin = await model.admin.findAll({
                 where: {
-                    uuid: req.params.uuid
+                    [sequelize.Op.or]: [
+                        { name: req.body.name },
+                        { email: req.body.email },
+                        { phone: req.body.phone }
+                    ],
+                    uuid: { [sequelize.Op.ne]: req.params.uuid }
                 }
             });
-            console.log(`ini cekAdmin`, cekAdmin);
+            // console.log(`ini cekAdmin`, cekAdmin);
 
-            if (cekAdmin.length == 1) {
+            if (cekAdmin.length == 0) {
                 req.body.password = bcrypt.hashSync(req.body.password, salt)
                 const { name, email, phone, gender, password, warehouseId } = req.body
 
@@ -99,16 +109,18 @@ module.exports = {
 
                 return res.status(200).send({
                     success: true,
-                    message: "admin update",
+                    message: "admin updated",
                     data: editAdmin
                 })
 
             } else {
                 return res.status(400).send({
                     success: false,
-                    message: "name, email, phone exist"
+                    message: "name, email, phone number already exists",
+                    description: "please check and ensure that email, username, phone number is unique"
                 })
             }
+
 
         } catch (error) {
             console.log(error);

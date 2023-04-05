@@ -70,11 +70,29 @@ module.exports = {
 
     getWarehouse: async (req, res, next) => {
         try {
-            let data = await model.warehouse.findAll()
-            console.log(`data`, data);
+            let { page, size, name, sortby, order } = req.query
 
-            return res.status(200).send(data)
+            if (!page && !size && !name && !sortby && !order) {
+                let data = await model.warehouse.findAll()
+                console.log(`data`, data);
+                return res.status(200).send(data)
+            }
+            else {
+                let getAllWarehouse = await model.warehouse.findAndCountAll({
+                    offset: parseInt(page * size),
+                    limit: parseInt(size),
+                    where: { name: { [sequelize.Op.like]: `%${name}%` } },
+                    order: [[sortby, order]],
+                })
+                // console.log(`getAllWarehouse`, getAllWarehouse);
 
+                res.status(200).send({
+                    success: true,
+                    data: getAllWarehouse.rows,
+                    datanum: getAllWarehouse.count,
+                })
+
+            }
         } catch (error) {
             next(error)
         }

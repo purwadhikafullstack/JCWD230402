@@ -28,7 +28,7 @@ module.exports = {
             } else {
                 res.status(400).send({
                     success: false,
-                    message: "Category name existed"
+                    message: "Category Name Already exists"
                 })
             }
 
@@ -112,20 +112,21 @@ module.exports = {
             console.log(error);
             next(error)
         }
-    }, 
+    },
 
     editCategory: async (req, res, next) => {
         try {
             console.log(`ini dari req params`, req.params.id);
             let cekCategory = await model.category.findAll({
                 where: {
-                    id: req.params.id
+                    type: req.body.type,
+                    id: { [sequelize.Op.ne]: req.params.id }
                 }
             });
-            console.log(`ini cekAdmin`, cekCategory);
+            // console.log(`ini cekAdmin`, cekCategory);
 
-            if (cekCategory.length == 1) {
-                
+            if (cekCategory.length == 0) {
+
                 let editCategory = await model.category.update({
                     type: req.body.type
                 }, {
@@ -134,18 +135,18 @@ module.exports = {
                     }
                 })
 
-                console.log(editCategory);
+                // console.log(editCategory);
 
                 return res.status(200).send({
                     success: true,
-                    message: "category update",
+                    message: "Category Successfully Updated",
                     data: editCategory
                 })
 
             } else {
                 return res.status(400).send({
                     success: false,
-                    message: "category name exist"
+                    message: "Category Name Already Exists"
                 })
             }
 

@@ -288,7 +288,7 @@ module.exports = {
                     email: req.body.email,
                 }
             });
-            console.log("check user exist", checkUser);
+            console.log("check user exist", checkUser.length);
 
             if (checkUser.length === 0) {
                 // if (req.body.password == req.body.confirmationPassword) {
@@ -315,7 +315,7 @@ module.exports = {
 
                 return res.status(200).send({
                     success: true,
-                    message: "Account registered success",
+                    message: "Account Registration Success",
                     data: register,
 
 
@@ -323,7 +323,7 @@ module.exports = {
             } else {
                 return res.status(400).send({
                     success: false,
-                    message: "User already exist"
+                    message: "User Already Exists"
                 })
             }
 

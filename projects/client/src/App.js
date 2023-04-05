@@ -8,7 +8,7 @@ import {
   Register,
   RequestPassword,
   ResetPassword,
-  Verification, 
+  Verification,
   Login,
   Dashboard,
   AdminLogin,
