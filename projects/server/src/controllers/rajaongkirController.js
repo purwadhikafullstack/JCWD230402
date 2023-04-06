@@ -13,6 +13,7 @@ module.exports = {
 
             return res.status(200).send(response.data)
         } catch (error) {
+            console.log(error)
             next(error)
         }
     },
@@ -30,6 +31,7 @@ module.exports = {
 
             return res.status(200).send(response.data)
         } catch (error) {
+            console.log(error)
             next(error)
         }
     },
