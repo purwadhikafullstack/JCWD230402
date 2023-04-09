@@ -6,7 +6,9 @@ const authSlice = createSlice({
     initialState: {
         name: "",
         email: "",
-        statusId: ""
+        statusId: "",
+        profileImage:"https://ionicframework.com/docs/img/demos/avatar.svg",
+
     },
 
     reducers: {
@@ -25,6 +27,10 @@ const authSlice = createSlice({
             localStorage.removeItem('Gadgetwarehouse_userlogin');
             state.name = '';
             state.email = '';
+            state.gender = '';
+            state.phone = '';
+            state.address = '';
+            state.profileImage = "https://ionicframework.com/docs/img/demos/avatar.svg";
             state.statusId = null;
         }
     },

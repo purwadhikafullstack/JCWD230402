@@ -413,4 +413,34 @@ module.exports = {
         }
     },
 
+    edit: async (req, res, next) => {
+        try {
+          console.log("Decript token:", req.decript);
+          const uuid = uuidv4();
+          const { name, gender, phone } = req.body;
+          if (name || gender || phone) {
+            await model.customer.update(
+              req.body,
+              {
+                where: {
+                  uuid: req.decrypt.uuid,
+                },
+              }
+            );
+            return res.status(200).send({
+              success: true,
+              message: "Edit profile success ",
+            });
+          } else {
+            res.status(400).send({
+              success: false,
+              message: "Cannot change data",
+            });
+          }
+        } catch (error) {
+          console.log(error);
+          next(error);
+        }
+      },
+
 }

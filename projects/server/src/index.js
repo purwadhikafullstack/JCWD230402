@@ -16,23 +16,26 @@ app.use(
 app.use(bearerToken())
 
 app.use(express.json());
+app.use(express.static('src/public'))
 
 //#region API ROUTES
 
 // ===========================
 // NOTE : Add your routes here
 const authRouter = require('./Routers/authRouter');
-app.use('/auth', authRouter);
+app.use('/api/auth', authRouter);
 
 const rajaongkirRouter = require('./Routers/rajaongkirRouter');
-app.use('/rajaongkir', rajaongkirRouter);
+app.use('/api/rajaongkir', rajaongkirRouter);
 
 const warehouseRouter = require('./Routers/warehouseRouter');
-app.use('/warehouse', warehouseRouter);
+app.use('/api/warehouse', warehouseRouter);
 
 const adminRouter = require('./Routers/adminRouter');
-app.use('/admin', adminRouter);
+app.use('/api/admin', adminRouter);
 
+const profileRouter = require('./Routers/profileRouter');
+app.use('/api/profile', profileRouter);
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);
@@ -58,7 +61,7 @@ app.use((req, res, next) => {
 // error
 app.use((err, req, res, next) => {
   if (req.path.includes("/api/")) {
-    console.error("Error : ", err.stack);
+    console.error("Error : ", err);
     res.status(500).send("Error !");
   } else {
     next();

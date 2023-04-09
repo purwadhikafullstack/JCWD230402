@@ -16,7 +16,6 @@ import {
   Warehouse,
   UserManagement,
   CustomerProfile,
-  EditProfile
 } from './pages';
 import { Routes, Route } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion';
@@ -40,7 +39,7 @@ function App() {
 
   const keepLogin = async () => {
     try {
-      let token = localStorage.getItem("Gadgetwarehouse_login")
+      let token = localStorage.getItem("Gadgetwarehouse_userlogin")
       if (token) {
         let res = await axios.get(`${API_URL}/auth/customer/keep-login`, {
           headers: {
@@ -48,7 +47,7 @@ function App() {
           }
         })
         console.log('response from login', res.data)
-        localStorage.setItem("Gadgetwarehouse_login", res.data.token)
+        localStorage.setItem("Gadgetwarehouse_userlogin", res.data.token)
         dispatch(loginAction(res.data))
       }
     } catch (error) {
@@ -114,9 +113,7 @@ function App() {
                     <Route path='/reset/:token' element={<ResetPassword />} />
                     <Route path='/verify/:token' element={<Verification />} />
                     <Route path='*' element={<PageNotFound />} />
-                    <Route path='/Customerprofile' element={<CustomerProfile />} />
-                    <Route path='/editprofile' element={<EditProfile />} />
-               
+                    <Route path='/Customerprofile' element={<CustomerProfile />} />              
                   </Routes>
                 </main>
                 <Footer />
