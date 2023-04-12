@@ -69,7 +69,7 @@ module.exports = {
         }
       })
 
-      console.log("this is check address", checkAddress)
+      
       if (checkAddress.length == 0) {
         // function get customerid berdasarkan uuid dri token yg lgi login
         let getcustomer = await model.customer.findAll(
@@ -86,7 +86,7 @@ module.exports = {
         let coordinate = await (
           await axios.get(`https://api.opencagedata.com/geocode/v1/json?q=${city}&key=e2823746c2e14794a1a9f2b316dbaeb2`)
         ).data
-        console.log('this coordinate:', coordinate.results[0].geometry.lat)
+        // console.log('this coordinate:', coordinate.results[0].geometry.lat)
 
         let lat = coordinate.results[0].geometry.lat
         let lng = coordinate.results[0].geometry.lng
@@ -150,12 +150,11 @@ module.exports = {
 
       if (cekAddress.length == 0) {
         // const uuid = uuidv4();
-        const { address, province, city, postalCode, city_id, provinceId } = req.body
+        const { address, province, city, postalCode, city_id, province_id } = req.body
 
-        let coordinate = await (
-          await axios.get(`https://api.opencagedata.com/geocode/v1/json?q=${city}&key=e2823746c2e14794a1a9f2b316dbaeb2`)
-        ).data
-        console.log(`ini coordinate`, coordinate.results[0].geometry.lat);
+        let coordinate = await axios.get(`https://api.opencagedata.com/geocode/v1/json?q=${city}&key=e2823746c2e14794a1a9f2b316dbaeb2`)
+        
+        console.log(`ini coordinate`, coordinate.results);
 
         let lat = coordinate.results[0].geometry.lat
         let lng = coordinate.results[0].geometry.lng
@@ -167,7 +166,7 @@ module.exports = {
           city,
           postalCode,
           city_id,
-          province_id: provinceId,
+          province_id: province_id,
           location: location,
         }, {
           where: {

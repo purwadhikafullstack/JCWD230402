@@ -131,12 +131,13 @@ function CustomerProfile(props) {
   useEffect(() => {
     getProvince();
     getCity();
+    getAllLocation();
   }, [province_id, provinceName])
 
   const clickProvince = (provinceName) => {
     // setProvinceName(nameprovince)
     console.log("privince name", provinceName)
-    alert(provinceName)
+    setProvinceName(provinceName)
   }
 
   const printProvince = () => {
@@ -144,7 +145,7 @@ function CustomerProfile(props) {
       return (
         <option
           onClick={() => clickProvince(val.province)}
-          value={`${val.province_id}`}
+          value={val.province_id}
         >
           {val.province}</option>
       )
@@ -162,15 +163,15 @@ function CustomerProfile(props) {
     return city.map((val, idx) => {
 
       return (
-        <option onClick={() => clickCity(val.city_name, val.postal_code)}
-          value={`${val.city_id}`}
+        <option onClick={() => clickCity(val.city_name, val.postal_Code)}
+          value={val.city_id}
         >
           {val.city_name}</option>
       )
     })
   }
 
-  //-------add Location pop up--------//
+  //-------add and edit Location pop up--------//
   const [showMenuLocation, setShowMenuLocation] = useState(false);
   const toggleMenuLocation = () => {
     setShowMenuLocation(!showMenuLocation)
@@ -207,6 +208,8 @@ function CustomerProfile(props) {
   //-------------------Add User Location------------------//
   const btnaddLocation = async () => {
     try {
+      alert(cityName)
+      alert(provinceName)
       let res = await axios.post(`${API_URL}/profile/address`, {
         address: address,
         province: provinceName,
@@ -219,7 +222,7 @@ function CustomerProfile(props) {
           "Authorization": `Bearer ${token}`
         }
       })
-      // console.log(`ini dari resp addnewuser`, res);
+      console.log(`ini dari resp addnewuser`, res);
 
       if (res.data.success) {
         alert(res.data.message);
@@ -240,6 +243,7 @@ function CustomerProfile(props) {
 
   //---------------------Get user Location-----------------//
   const [addressList, setAddressList] = React.useState([])
+  const primaryIndex = parseInt(localStorage.getItem("primaryIndex"));
 
   const getAllLocation = async () => {
     try {
@@ -256,30 +260,75 @@ function CustomerProfile(props) {
   }
 
   const printAddress = () => {
+    // const handleSetPrimary = (idx) => {
+    //   // make API call to set address as primary in database
+    //   // update local state to reflect the change
+    //   setAddressList((prevList) => {
+    //     const newList = prevList.map((val, i) => {
+    //       if (i === idx) {
+    //         return { ...val, isPrimary: true };
+    //       } else {
+    //         return { ...val, isPrimary: false };
+    //       }
+    //     });
+    //     return newList;
+    //   });
+    // };
     return addressList.map((val, idx) => {
-      return (<tr textColor={"white"}>
-        <td><input type="radio" /></td>
-        <td>{idx + 1}</td >
-        <td>{val.address}</td >
-        <td>{val.province}</td>
-        <td>{val.city}</td>
-        <td>{val.postalCode}</td>
+      return (<tr className='text-white gap-3 w-full'>
+        <div className='flex justify-between gap-6 py-3'>
+          <div className='flex justify-between gap-5'>
+            <td>{idx + 1}</td >
+            <td>{val.address}</td >
+            <td>{val.province}</td>
+            <td>{val.city}</td>
+            <td>{val.postalCode}</td>
+          </div>
+          <td>
+            <div className='flex gap-3'>
+              <button className='bg-emerald-400 px-1 rounded-md hover:bg-emerald-300 hover:text-black hover:scale-105 duration-300' onClick={toggleMenuLocationEdit} type='button'>Edit</button>
+              <button className='bg-emerald-400 px-1 rounded-md hover:bg-emerald-300 hover:text-black hover:scale-105 duration-300' onClick={onBtnDelete} type='button'>Delete</button>
+              {!val.isPrimary && (
+                <button className='bg-emerald-400 px-1 rounded-md hover:bg-emerald-300 hover:text-black hover:scale-105 duration-300'>
+                  Set as Primary
+                </button>
+              )}
+              {val.isPrimary && <span>Primary Address</span>}
+            </div></td>
+        </div>
       </tr>
       )
     })
   }
 
+  const printPrimaryAddress = () => {
+    const primaryAddress = addressList.find((address) => address.isPrimary);
+    if (!primaryAddress) {
+      return <p>No primary address found</p>;
+    }
+    return (
+      <div>
+        <h3>Primary Address</h3>
+        <p>{primaryAddress.address}</p>
+        <p>{primaryAddress.province}</p>
+        <p>{primaryAddress.city}</p>
+        <p>{primaryAddress.postalCode}</p>
+      </div>
+    );
+  };
+
   //--------------------Edit Address----------------//
 
-  const btnSaveAddress = async () => {
+  const btneditAddress = async () => {
     try {
-      let res = await axios.patch(`${API_URL}/profile/${uuid}`, {
-
+      alert(cityName)
+      alert(provinceName)
+      let token = localStorage.getItem("Gadgetwarehouse_userlogin");
+      let res = await axios.patch(`${API_URL}/profile/address`, {
         address: address,
         province: provinceName,
         city: cityName,
         postalCode: postalCode,
-        phone: phone,
         province_id: province_id,
         city_id: city_id
       }, {
@@ -287,12 +336,11 @@ function CustomerProfile(props) {
           "Authorization": `Bearer ${token}`
         }
       })
-      // console.log(`ini dari resp addnewuser`, res);
 
       if (res.data.success) {
 
         alert(res.data.message);
-        setPostalCode(null)
+        setPostalCode()
         getAllLocation()
         setuuid("")
       }
@@ -310,7 +358,7 @@ function CustomerProfile(props) {
   //------------------Delete Address-------------//
   const onBtnDelete = async (uuid) => {
     try {
-      let res = await axios.delete(`${API_URL}/profile/${uuid}`, {
+      let res = await axios.delete(`${API_URL}/profile/address`, {
         headers: {
           "Authorization": `Bearer ${token}`
         }
@@ -351,20 +399,19 @@ function CustomerProfile(props) {
     try {
       let token = localStorage.getItem("Gadgetwarehouse_userlogin");
       let formData = new FormData();
-      // image max size is 1 MB
+      //image max size is 1 MB
       if (profileImage.size > 1000000) {
         throw new Error("Image size should not exceed 1MB");
       }
-      // image has to be .jpg .png .gif (ganti .gif jd .jpeg in the mean time)
       if (
         !["image/jpg", "image/png", "image/jpeg"].includes(profileImage.type)
       ) {
-        throw new Error("Only .jpg, .png, and .jpeg format allowed!");
+        throw new Error("Only .jpg, .png, webp and .jpeg format allowed!");
       }
       formData.append("image_profile", profileImage);
       console.log("ini isi dari formData", formData);
       console.log("ini tipe dari image_profile :", profileImage.type)
-      let response = await axios.patch(`${API_URL}/profile/updateprofileimage`, formData,
+      let response = await axios.patch(`${API_URL}/profile/updateprofileimage`, {},
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -388,7 +435,7 @@ function CustomerProfile(props) {
     <div className='relative mt-32 mb-8 gap-x-4 gap-y-4 bg-bgglass h-[850px] md:h-full w-full p-4 flex flex-col md:flex-row rounded-2xl backdrop-blur-md'>
       <div className='flex justify-center pt-2 bg-bgglass rounded-2xl md:w-[40%]'>
         <div className='flex flex-col items-center gap-4 md:gap-2 relative'>
-          <img src={profileImage ? "https://w7.pngwing.com/pngs/81/570/png-transparent-profile-logo-computer-icons-user-user-blue-heroes-logo-thumbnail.png" :`${API_URL}${profileImage}` } alt="" className='w-[150px] md:w-[250px] md:h-[250px] h-[150px] rounded-2xl md:rounded-[100%]' />
+          <img src={profileImage ? "https://w7.pngwing.com/pngs/81/570/png-transparent-profile-logo-computer-icons-user-user-blue-heroes-logo-thumbnail.png" : `${API_URL}${userProfileImage}`} alt="" className='w-[150px] md:w-[250px] md:h-[250px] h-[150px] rounded-2xl md:rounded-[100%]' />
           <div className='absolute right-12 md:top-5 md:right-6 flex justify-center items-center z-10 bg-white p-1 rounded-full'>
             <button className='bg-emerald-300 p-[2px] flex justify-center items-center w-10 h-10 rounded-full cursor-pointer' onClick={() => img.current.click()} >
               <BsCamera className='text-white' />
@@ -403,13 +450,14 @@ function CustomerProfile(props) {
           <div>
             <table>
               <thead className='text-emerald-300 flex gap-4'>
+                <th>#</th>
                 <th>Address</th>
                 <th>Province</th>
                 <th>City</th>
                 <th>Postal Code</th>
               </thead>
               <tbody>
-                {printAddress()}
+                {printPrimaryAddress()}
               </tbody>
             </table>
           </div>
@@ -420,11 +468,8 @@ function CustomerProfile(props) {
       <div className=' flex flex-col gap-60'>
         <div>
           <table>
-            <thead className='text-emerald-300 flex gap-4'>
+            <thead className='text-emerald-300 flex gap-10 w-full'>
               <th>Address</th>
-              <th>Province</th>
-              <th>City</th>
-              <th>Postal Code</th>
             </thead>
             <tbody>
               {printAddress()}
@@ -507,14 +552,26 @@ function CustomerProfile(props) {
               <div className='flex md:flex-col justify-between md:gap-2'>
                 <div className='flex flex-col gap-2'>
                   <label className='text-[#1BFD9C]'>Province</label>
-                  <select onChange={(e) => { setProvince_id(e.target.value); }} placeholder="-- Select --" className=''>
+                  <select onChange={(e) => {
+                    let index = e.nativeEvent.target.selectedIndex;
+                    let label = e.nativeEvent.target[index].text;
+                    let value = e.target.value;
+                    setProvinceName(label)
+                    setProvince_id(value)
+                  }} placeholder="-- Select --" className=''>
                     {printProvince()}
                   </select>
                 </div>
 
                 <div className='flex flex-col gap-2'>
                   <label className='text-[#1BFD9C]'>City</label>
-                  <select onChange={(e) => { setCity_id(e.target.value); }} placeholder="-- Select --" className=''>
+                  <select onChange={(e) => {
+                    let index = e.nativeEvent.target.selectedIndex;
+                    let label = e.nativeEvent.target[index].text;
+                    let value = e.target.value;
+                    setCityName(label)
+                    setCity_id(value)
+                  }} placeholder="-- Select --" className=''>
                     {printCity()}
                   </select>
                 </div>
@@ -523,7 +580,7 @@ function CustomerProfile(props) {
               </div>
               <div className='flex flex-col gap-2'>
                 <label className='text-[#1BFD9C]'>Postal Code</label>
-                <input isDisabled={true} placeholder={postalCode} _placeholder={{ color: "black" }} defaultValue={postalCode} className='md:w-[38%]'>
+                <input onChange={(e) => { setPostalCode(e.target.value); }} isDisabled={false} placeholder={postalCode} _placeholder={{ color: "black" }} defaultValue={postalCode} className='md:w-[38%]'>
                 </input>
               </div>
 
@@ -561,14 +618,26 @@ function CustomerProfile(props) {
               <div className='flex md:flex-col justify-between md:gap-2'>
                 <div className='flex flex-col gap-2'>
                   <label className='text-[#1BFD9C]'>Province</label>
-                  <select onChange={(e) => { setProvince_id(e.target.value); }} placeholder="-- Select --" className=''>
+                  <select onChange={(e) => {
+                    let index = e.nativeEvent.target.selectedIndex;
+                    let label = e.nativeEvent.target[index].text;
+                    let value = e.target.value;
+                    setProvinceName(label)
+                    setProvince_id(value)
+                  }} placeholder="-- Select --" className=''>
                     {printProvince()}
                   </select>
                 </div>
 
                 <div className='flex flex-col gap-2'>
                   <label className='text-[#1BFD9C]'>City</label>
-                  <select onChange={(e) => { setCity_id(e.target.value); }} placeholder="-- Select --" className=''>
+                  <select onChange={(e) => {
+                    let index = e.nativeEvent.target.selectedIndex;
+                    let label = e.nativeEvent.target[index].text;
+                    let value = e.target.value;
+                    setCityName(label)
+                    setCity_id(value)
+                  }} placeholder="-- Select --" className=''>
                     {printCity()}
                   </select>
                 </div>
@@ -577,7 +646,7 @@ function CustomerProfile(props) {
               </div>
               <div className='flex flex-col gap-2'>
                 <label className='text-[#1BFD9C]'>Postal Code</label>
-                <input isDisabled={true} placeholder={postalCode} _placeholder={{ color: "black" }} defaultValue={postalCode} className='md:w-[38%]'>
+                <input onChange={(e) => { setPostalCode(e.target.value); }} isDisabled={false} placeholder={postalCode} _placeholder={{ color: "black" }} defaultValue={postalCode} className='md:w-[38%]'>
                 </input>
               </div>
 
@@ -597,7 +666,7 @@ function CustomerProfile(props) {
                 <button
                   type="button"
                   className="w-auto md:w-auto border-none outline-none bg-emerald-400 px-2 md:px-5 py-2 rounded-lg text-sm md:text-lg text-white font-semibold hover:bg-emerald-300 hover:text-black hover:scale-105 duration-500"
-                  onClick={btnaddLocation}>
+                  onClick={btneditAddress}>
                   Edit
                 </button>
                 <button
@@ -615,7 +684,7 @@ function CustomerProfile(props) {
                 <img src={profileImage ? URL.createObjectURL(profileImage) : 'https://png.pngtree.com/png-vector/20190623/ourmid/pngtree-personalpersonalizationprofileuser-abstract-flat-color-ico-png-image_1491346.jpg'} className='object-cover w-40 md:w-52 rounded-lg' alt="" />
               </div>
               <div className='flex justify-between'>
-                <button className='bg-emerald-400 hover:bg-emerald-300 text-white hover:text-black font-semibold hover:scale duration-500 rounded-xl px-2 py-1' >Save</button>
+                <button className='bg-emerald-400 hover:bg-emerald-300 text-white hover:text-black font-semibold hover:scale duration-500 rounded-xl px-2 py-1' onClick={onBtnEditProfileImage} >Save</button>
                 <button className='bg-emerald-400 hover:bg-emerald-300 text-white hover:text-black font-semibold hover:scale duration-500 rounded-xl px-2 py-1' onClick={hideMenuImage}>Cancel</button>
               </div>
             </div>

@@ -16,6 +16,7 @@ import {
   Warehouse,
   UserManagement,
   CustomerProfile,
+  CartPage
 } from './pages';
 import { Routes, Route } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion';
@@ -113,7 +114,8 @@ function App() {
                     <Route path='/reset/:token' element={<ResetPassword />} />
                     <Route path='/verify/:token' element={<Verification />} />
                     <Route path='*' element={<PageNotFound />} />
-                    <Route path='/Customerprofile' element={<CustomerProfile />} />              
+                    <Route path='/Customerprofile' element={<CustomerProfile />} /> 
+                    <Route path='/CartPage' element={<CartPage />} />                   
                   </Routes>
                 </main>
                 <Footer />

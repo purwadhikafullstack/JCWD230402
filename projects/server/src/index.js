@@ -23,19 +23,19 @@ app.use(express.static('src/public'))
 // ===========================
 // NOTE : Add your routes here
 const authRouter = require('./Routers/authRouter');
-app.use('/api/auth', authRouter);
+app.use('/auth', authRouter);
 
 const rajaongkirRouter = require('./Routers/rajaongkirRouter');
-app.use('/api/rajaongkir', rajaongkirRouter);
+app.use('/rajaongkir', rajaongkirRouter);
 
 const warehouseRouter = require('./Routers/warehouseRouter');
-app.use('/api/warehouse', warehouseRouter);
+app.use('/warehouse', warehouseRouter);
 
 const adminRouter = require('./Routers/adminRouter');
-app.use('/api/admin', adminRouter);
+app.use('/admin', adminRouter);
 
 const profileRouter = require('./Routers/profileRouter');
-app.use('/api/profile', profileRouter);
+app.use('/profile', profileRouter);
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);

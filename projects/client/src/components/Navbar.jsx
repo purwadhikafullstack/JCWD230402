@@ -59,12 +59,17 @@ function Navbar() {
 
                     {statusId ? <div className='flex gap-4'>
                         <div className='relative flex items-center justify-center mr-2 '>
-                            <FaShoppingBasket className='text-[#1BFD9C] hover:text-[#82ffc9] hover:text-xl duration-500 text-2xl  cursor-pointer' />
+                            <button type='button'><NavLink to='/CartPage'><FaShoppingBasket className='text-[#1BFD9C] hover:text-[#82ffc9] hover:text-xl duration-500 text-2xl  cursor-pointer' /></NavLink></button>
                             <div className=' absolute -top-3 -right-4  w-5 h-5 rounded-full bg-red-400 flex items-center justify-center animate-bounce'>
                                 <p className=' text-xs text-white font-semibold'>2</p>
                             </div>
                         </div>
-                        <button className='flex gap-2 text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={toggleMenu}> <img src={profileImage ? `${API_URL}${profileImage}` : ''} className='text-2xl text-white cursor-pointer '/>{name}</button>
+                        {/* <button className='flex gap-2 text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={toggleMenu}> <img src={profileImage ? `${API_URL}${profileImage}` : ''} className='text-2xl text-white cursor-pointer '/>{name}</button> */}
+                        <div class="flex items-center gap-2 text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium cursor-pointer" onClick={toggleMenu}>
+                        <img src={profileImage ? `${API_URL}${profileImage}` : ''} className="w-10 h-10 rounded-full" alt="" />
+  <span>{name}</span>
+</div>
+
                         <div className={`absolute flex flex-col px-2 items-center text-start bg-bgglass backdrop-blur w-[110px] md:w-[130px] h-[270px] md:h-[270px] gap-2 top-[55px] md:top-[78px] bottom-0 py-4 duration-500 rounded-3xl ${showMenu ? "right-2 md:right-10" : "right-[-250px]"}`} >
                             <ul className='flex flex-col gap-4'>
                                 <li className='flex gap-2'>
