@@ -34,8 +34,19 @@ import axios from "axios";
 import Pagination from "../components/Pagination";
 import { useSelector } from "react-redux";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function Category() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const params = new URLSearchParams(location.search);
+
+  const defautlPage = parseInt(params.get("page")) - 1 || 0;
+  const defaultSort = params.get("sortby") || "type";
+  const defaultOrder = params.get("orderby") || "ASC";
+  const defaultFilter = params.get("filter") || "";
+
   const toast = useToast();
   const roleId = useSelector((state) => state.adminReducer.roleId);
 
@@ -43,11 +54,11 @@ function Category() {
   const modalEdit = useDisclosure();
   const initialRef = React.useRef(null);
   const finalRef = React.useRef(null);
-  const [page, setPage] = React.useState(0); // const [size, setSize] = React.useState(5)
+  const [page, setPage] = React.useState(defautlPage); // const [size, setSize] = React.useState(5)
   const [size] = React.useState(5);
-  const [sortby, setSortby] = React.useState("type");
-  const [order, setOrder] = React.useState("ASC");
-  const [type, setType] = React.useState("");
+  const [sortby, setSortby] = React.useState(defaultSort);
+  const [order, setOrder] = React.useState(defaultOrder);
+  const [filter, setFilter] = React.useState(defaultFilter);
 
   let token = localStorage.getItem("gadgetwarehouse_adminlogin");
 
@@ -108,12 +119,12 @@ function Category() {
   //--------------------------------------- GET ALL CATEGORY ---------------------------------------------
 
   const [categoryList, setCategoryList] = React.useState([]);
-  const [totalData, setTotalData] = React.useState(0);
+  const [totalData, setTotalData] = React.useState(1);
 
   const getCategory = async () => {
     try {
       let res = await axios.get(
-        `${API_URL}/category/?page=${page}&size=${size}&sortby=${sortby}&order=${order}&type=${type}`,
+        `${API_URL}/category/?page=${page}&size=${size}&sortby=${sortby}&order=${order}&type=${filter}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -131,7 +142,7 @@ function Category() {
   };
 
   const printCategory = () => {
-    console.log(`categorylist`, categoryList);
+    // console.log(`categorylist`, categoryList);
     return categoryList.map((val, idx) => {
       return (
         <Tr textColor={"white"}>
@@ -169,8 +180,18 @@ function Category() {
   // ------------------------------ PAGINATION ------------------------------------
 
   const paginate = (pageNumber) => {
-    console.log(`pagenumber`, pageNumber.selected);
+    // console.log(`pagenumber`, pageNumber.selected);
     setPage(pageNumber.selected);
+
+    params.set("page", pageNumber.selected + 1);
+    if (pageNumber.selected !== 0) {
+      navigate({ search: params.toString() }); // buat update url
+      // sama kaya navigate(`?${params.toString()}`);
+    } else {
+      params.delete("page");
+      navigate({ search: params.toString() }); // buat update url
+    }
+    // console.log("location on pagination click", location);
   };
 
   // ------------------------------ DELETE CATEGORY ------------------------------------
@@ -257,22 +278,41 @@ function Category() {
     if (sortby !== sortbywhat) {
       setSortby(sortbywhat);
       setOrder("ASC");
+      params.set("sortby", sortbywhat);
+      params.set("orderby", "ASC");
+      navigate({ search: params.toString() }); // buat update url
     } else {
       if (order === "DESC") {
         setSortby(sortbywhat); // mau sort by apa
         setOrder("ASC"); // ordernya asc atau DESC
+        params.set("sortby", sortbywhat);
+        params.set("orderby", "ASC");
+        navigate({ search: params.toString() });
       } else {
         setSortby(sortbywhat);
         setOrder("DESC");
+        params.set("sortby", sortbywhat);
+        params.set("orderby", "DESC");
+        navigate({ search: params.toString() });
       }
     }
   };
 
   const setprops = (setname) => {
-    setType(setname);
+    setFilter(setname);
   };
-  const getfromAPI = () => {
-    getCategory();
+
+  const onSearchBtn = () => {
+    setPage(0);
+    params.delete("page");
+    getCategory(); // change to get yg lu mau pake
+    if (filter.length === 0) {
+      params.delete("filter");
+      navigate({ search: params.toString() });
+    } else {
+      params.set("filter", filter);
+      navigate({ search: params.toString() });
+    }
   };
 
   return (
@@ -281,11 +321,7 @@ function Category() {
         <Heading size={"lg"} fontStyle="inherit">
           Category List
         </Heading>
-        <SearchBar
-          setprops={setprops}
-          getfromAPI={getfromAPI}
-          setPage={setPage}
-        />
+        <SearchBar setprops={setprops} onSearchBtn={onSearchBtn} />
         <Button
           onClick={modalAdd.onOpen}
           _hover={"none"}
@@ -356,11 +392,6 @@ function Category() {
         </ModalContent>
       </Modal>
 
-      {/* <InputGroup mt={"28px"} w={{ sm: "40", md: "96", lg: "96" }}>
-                <InputLeftElement pointerEvents="none" children={<MdSearch size={"22"} color='gray.800' />} />
-                <Input type="text" placeholder="Search List" bg="white" color="gray.800" />
-            </InputGroup> */}
-
       <TableContainer mt={"20px"}>
         <Table>
           <Thead>
@@ -395,7 +426,12 @@ function Category() {
 
       {
         <div className="justify-end flex">
-          <Pagination paginate={paginate} size={size} totalData={totalData} />
+          <Pagination
+            paginate={paginate}
+            size={size}
+            totalData={totalData}
+            page={page}
+          />
         </div>
       }
     </Box>
