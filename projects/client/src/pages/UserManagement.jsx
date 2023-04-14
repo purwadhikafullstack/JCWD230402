@@ -39,22 +39,33 @@ import axios from "axios";
 import { API_URL } from "../helper";
 import { HiEye, HiEyeOff } from "react-icons/hi";
 import { useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function UserManagement() {
   const toast = useToast();
   const roleId = useSelector((state) => state.adminReducer.roleId);
   const name = useSelector((state) => state.adminReducer.name);
 
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const params = new URLSearchParams(location.search);
+
+  const defautlPage = parseInt(params.get("page")) - 1 || 0;
+  const defaultSort = params.get("sortby") || "name";
+  const defaultOrder = params.get("orderby") || "ASC";
+  const defaultFilter = params.get("filter") || "";
+
   const modalAdd = useDisclosure();
   const modalEdit = useDisclosure();
   const initialRef = React.useRef(null);
   const finalRef = React.useRef(null);
 
-  const [page, setPage] = React.useState(0);
+  const [page, setPage] = React.useState(defautlPage);
   const [size] = React.useState(5);
-  const [sortby, setSortby] = React.useState("name");
-  const [order, setOrder] = React.useState("ASC");
-  const [adminname, setAdminname] = React.useState("");
+  const [sortby, setSortby] = React.useState(defaultSort);
+  const [order, setOrder] = React.useState(defaultOrder);
+  const [filter, setFilter] = React.useState(defaultFilter);
   const [totalData, setTotalData] = React.useState(0);
 
   let token = localStorage.getItem("gadgetwarehouse_adminlogin");
@@ -79,7 +90,7 @@ function UserManagement() {
   const getAllAdmin = async () => {
     try {
       let res = await axios.get(
-        `${API_URL}/admin/alladmin/?page=${page}&size=${size}&sortby=${sortby}&order=${order}&name=${adminname}`,
+        `${API_URL}/admin/alladmin/?page=${page}&size=${size}&sortby=${sortby}&order=${order}&name=${filter}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -401,13 +412,22 @@ function UserManagement() {
     if (sortby !== sortbywhat) {
       setSortby(sortbywhat);
       setOrder("ASC");
+      params.set("sortby", sortbywhat);
+      params.set("orderby", "ASC");
+      navigate({ search: params.toString() }); // buat update url
     } else {
       if (order === "DESC") {
         setSortby(sortbywhat); // mau sort by apa
         setOrder("ASC"); // ordernya asc atau DESC
+        params.set("sortby", sortbywhat);
+        params.set("orderby", "ASC");
+        navigate({ search: params.toString() });
       } else {
         setSortby(sortbywhat);
         setOrder("DESC");
+        params.set("sortby", sortbywhat);
+        params.set("orderby", "DESC");
+        navigate({ search: params.toString() });
       }
     }
   };
@@ -417,16 +437,35 @@ function UserManagement() {
   }, [sortby, order, page]);
 
   const paginate = (pageNumber) => {
-    console.log(`pagenumber`, pageNumber.selected);
+    // console.log(`pagenumber`, pageNumber.selected);
     setPage(pageNumber.selected);
+    params.set("page", pageNumber.selected + 1);
+    if (pageNumber.selected !== 0) {
+      navigate({ search: params.toString() }); // buat update url
+      // sama kaya navigate(`?${params.toString()}`);
+    } else {
+      params.delete("page");
+      navigate({ search: params.toString() }); // buat update url
+    }
+    // console.log("location on pagination click", location);
   };
   // ===========================SearchBAR====================================
 
   const setprops = (setname) => {
-    setAdminname(setname);
+    setFilter(setname);
   };
-  const getfromAPI = () => {
-    getAllAdmin();
+
+  const onSearchBtn = () => {
+    setPage(0);
+    params.delete("page");
+    getAllAdmin(); // change to get yg lu mau pake
+    if (filter.length === 0) {
+      params.delete("filter");
+      navigate({ search: params.toString() });
+    } else {
+      params.set("filter", filter);
+      navigate({ search: params.toString() });
+    }
   };
 
   return (
@@ -435,11 +474,7 @@ function UserManagement() {
         <Heading size={"lg"} fontStyle="inherit">
           User List
         </Heading>
-        <SearchBar
-          setprops={setprops}
-          getfromAPI={getfromAPI}
-          setPage={setPage}
-        />
+        <SearchBar setprops={setprops} onSearchBtn={onSearchBtn} />
         <Button
           onClick={modalAdd.onOpen}
           _hover={"none"}

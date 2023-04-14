@@ -30,6 +30,7 @@
     "react-scripts": "5.0.1",
     "react-toastify": "^9.1.2",
     "sass": "latest",
+    "swiper": "^9.2.0",
     "tailwindcss": "latest",
     "web-vitals": "^2.1.4"
   },

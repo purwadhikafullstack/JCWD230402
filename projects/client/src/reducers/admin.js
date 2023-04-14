@@ -14,7 +14,7 @@ const adminSlice = createSlice({
             state.name = action.payload.name;
             state.email = action.payload.email;
             state.roleId = action.payload.roleId;
-            console.log('data from roleId reducer:', state.roleId);
+            // console.log('data from roleId reducer:', state.roleId);
         },
         adminlogoutAction: (state, action) => {
             localStorage.removeItem('gadgetwarehouse_adminlogin');

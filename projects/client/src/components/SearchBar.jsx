@@ -16,7 +16,7 @@ const SearchBar = (props) => {
         <Input
           type="search"
           variant="filled"
-          placeholder="Enter username"
+          placeholder="Search..."
           bgColor="whiteAlpha.300"
           onChange={(e) => props.setprops(e.target.value)}
           color="white"
@@ -25,8 +25,7 @@ const SearchBar = (props) => {
           pointerEvents="visible"
           as="button"
           onClick={() => {
-            props.setPage(0);
-            props.getfromAPI();
+            props.onSearchBtn();
           }}
           border="none"
           bgColor="#1BFD9C"
@@ -35,22 +34,6 @@ const SearchBar = (props) => {
         >
           <Icon as={FiSearch} />
         </InputRightAddon>
-        {/* <Button
-          pointerEvents="visible"
-          leftIcon={<FiSearch color="white" />}
-          as={Button}
-          onClick={() => {
-            props.setPage(0);
-            props.getfromAPI();
-          }}
-          size="20"
-          variant="outline"
-          bgColor="black"
-          color="white"
-          _active={{ bg: "black", color: "white" }}
-        >
-          Search
-        </Button> */}
       </InputGroup>
     </Stack>
   );

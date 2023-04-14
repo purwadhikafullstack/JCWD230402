@@ -45,7 +45,8 @@
   align-items: center;
   margin-top: 1rem;
   margin-bottom: 5rem;
-  font-size: 1.2rem;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
   gap: 5px;
 }
 
@@ -54,6 +55,8 @@
   cursor: pointer;
   border-radius: 3px;
   font-weight: 400;
+  color: white;
+  
 }
 
 .pagination .page-num:hover{
@@ -64,4 +67,18 @@
 .pagination .active{
   background-color: #1BFD9C;
   color: black;
+}
+
+
+
+/* Mobile styling */
+@media (max-width: 767px) {
+  .pagination {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+
+  .pagination .page-num {
+    padding: 6px 12px;
+  }
 }
