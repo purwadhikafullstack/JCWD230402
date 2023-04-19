@@ -16,7 +16,7 @@ import {
   Warehouse,
   UserManagement,
   CustomerProfile,
-  CartPage
+  CartPage,
   Category,
   AllProduct,
   ProductPage,
@@ -46,18 +46,16 @@ function App() {
 
   const keepLogin = async () => {
     try {
-      let token = localStorage.getItem("Gadgetwarehouse_userlogin")
+      let token = localStorage.getItem("Gadgetwarehouse_userlogin");
       if (token) {
         let res = await axios.get(`${API_URL}/auth/customer/keep-login`, {
           headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        })
-        console.log('response from login', res.data)
-        localStorage.setItem("Gadgetwarehouse_userlogin", res.data.token)
-        dispatch(loginAction(res.data))
-
-     
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log("response from login", res.data);
+        localStorage.setItem("Gadgetwarehouse_userlogin", res.data.token);
+        dispatch(loginAction(res.data));
       }
     } catch (error) {
       console.log(error);
@@ -132,8 +130,11 @@ function App() {
                   <Route path="/reset/:token" element={<ResetPassword />} />
                   <Route path="/verify/:token" element={<Verification />} />
                   <Route path="*" element={<PageNotFound />} />
-                  <Route path='/Customerprofile' element={<CustomerProfile />} /> 
-                    <Route path='/CartPage' element={<CartPage />} />   
+                  <Route
+                    path="/Customerprofile"
+                    element={<CustomerProfile />}
+                  />
+                  <Route path="/CartPage" element={<CartPage />} />
                 </Routes>
               </main>
               <Footer />
@@ -162,10 +163,8 @@ function App() {
               </main>
               <Footer />
             </div>
-
           )
         }
-
       </div>
     </AnimatePresence>
   );
