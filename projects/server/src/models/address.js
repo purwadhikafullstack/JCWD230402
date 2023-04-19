@@ -16,12 +16,12 @@ module.exports = (sequelize, DataTypes) => {
   address.init({
     address: DataTypes.STRING,
     location: DataTypes.STRING,
-    kabupaten: DataTypes.STRING,
-    kecamatan: DataTypes.STRING,
     province: DataTypes.STRING,
     city: DataTypes.STRING,
     postalCode: DataTypes.STRING,
     isPrimary: DataTypes.BOOLEAN,
+    province_id: DataTypes.INTEGER,
+    city_id: DataTypes.INTEGER,
     isDeleted: DataTypes.BOOLEAN,
     customerId: DataTypes.INTEGER
   }, {

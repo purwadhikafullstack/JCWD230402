@@ -8,6 +8,7 @@ const bearerToken = require("express-bearer-token");
 app.use(cors());
 app.use(bearerToken());
 app.use(express.json());
+app.use(express.static('src/public'))
 
 app.use("/", express.static(__dirname + "/public"));
 
@@ -30,8 +31,12 @@ app.use("/admin", adminRouter);
 const categoryRouter = require("./Routers/categoryRouter");
 app.use("/category", categoryRouter);
 
+
 const productRouter = require("./Routers/productRouter");
 app.use("/product", productRouter);
+const profileRouter = require('./Routers/profileRouter');
+app.use('/profile', profileRouter);
+
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);
@@ -57,7 +62,7 @@ app.use((req, res, next) => {
 // error
 app.use((err, req, res, next) => {
   if (req.path.includes("/api/")) {
-    console.error("Error : ", err.stack);
+    console.error("Error : ", err);
     res.status(500).send("Error !");
   } else {
     next();
