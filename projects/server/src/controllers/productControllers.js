@@ -45,11 +45,19 @@ module.exports = {
             : [[sortby, order]],
       });
 
-      console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa = ", get);
+      // console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa = ", get);
+
+      const counter = await model.product.count({
+        where: {
+          isDisabled: false,
+        },
+      });
+
+      console.log(counter);
 
       return res.status(200).send({
         data: get.rows,
-        datanum: get.count,
+        datanum: counter,
       });
     } catch (error) {
       console.log(error);

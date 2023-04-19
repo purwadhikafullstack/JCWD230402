@@ -4,23 +4,11 @@ import ReactPaginate from "react-paginate";
 import { Flex } from "@chakra-ui/react";
 
 const Pagination = (props) => {
-  // console.log("ini props.totaldata", props.totalData);
-  // console.log("ini props.size", props.size);
+  console.log("ini props.totaldata", props.totalData);
+  console.log("ini props.size", props.size);
   const pageCount = Math.ceil(props.totalData / props.size);
 
-  // React.useEffect(() => {
-  //   window.onbeforeunload = deleteItemFromLocalStorage;
-  //   return () => {
-  //     window.onbeforeunload = null;
-  //   };
-  // }, []);
-
-  // function deleteItemFromLocalStorage() {
-  //   const items = ["orderby", "sorting", "current_page"];
-  //   items.forEach((val) => {
-  //     localStorage.removeItem(val);
-  //   });
-  // }
+  console.log("pageCount = ", pageCount);
 
   return (
     <Flex>
