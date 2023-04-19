@@ -197,23 +197,6 @@ function Product() {
         }
     }
 
-    // const [maxMinPrice, setMaxMinPrice] = React.useState()
-    // const resultMinMaxPrice = []
-
-    // const minMaxPrice = async (id) => {
-    //     try {
-    //         let response = await axios.get(`${API_URL}/product/price?id=${id}`, {
-    //             headers: {
-    //                 "Authorization": `Bearer ${token}`
-    //             }
-    //         })
-    //         setMaxMinPrice(response.data);
-
-    //     } catch (error) {
-    //         console.log(`minMaxPrice`, error);
-    //     }
-    // }
-
     const printProduct = () => {
         console.log(`productList`, productList);
         return productList.map((val, idx) => {

@@ -30,7 +30,7 @@ function ProductCard(props) {
     >
       <NavLink to={`/product/${forURL}`}>
         <Image
-          objectFit="cover"
+          objectFit="contain"
           height={{ base: "200px", md: "270px", lg: "300px", xl: "350px" }}
           width="full"
           src={props.productimage}

@@ -69,7 +69,7 @@ function AllProduct() {
         <ProductCard
           name={val.name}
           uuid={val.uuid}
-          productimage={val.productImage}
+          productimage={`${API_URL}${val.productImage}`}
           category={val.category.type}
         />
       );

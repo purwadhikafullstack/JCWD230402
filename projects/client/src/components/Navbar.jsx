@@ -10,7 +10,6 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logoutAction } from "../reducers/auth";
 import axios from "axios";
-import { API_URL } from "../helper";
 
 function Navbar() {
   const navigate = useNavigate();
