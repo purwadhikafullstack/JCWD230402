@@ -1,14 +1,18 @@
-import React, { useState } from "react";
-import { FaShoppingBasket, FaUserCircle } from "react-icons/fa";
-import { motion } from "framer-motion";
-import { NavLink, Link } from "react-router-dom";
-import Logo from "./Logo";
-import "./Navbar.css";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { logoutAction } from "../reducers/auth";
-import { API_URL } from "../helper";
+
+import React, { useState } from 'react'
+import { FaShoppingBasket, FaUserCircle } from 'react-icons/fa'
+import { motion } from 'framer-motion'
+import { NavLink, Link } from 'react-router-dom'
+import Logo from './Logo'
+import "./Navbar.css"
+import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { logoutAction } from '../reducers/auth'
+import { API_URL } from '../helper';
+
+
+
 
 function Navbar() {
   // const locations = useLocation();
@@ -17,6 +21,7 @@ function Navbar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
+  
 
   const toggleMenu = () => {
     setShowMenu(!showMenu);
@@ -30,11 +35,15 @@ function Navbar() {
   const statusId = useSelector((state) => state.authReducer.statusId);
   const profileImage = useSelector((state) => state.authReducer.profileImage);
 
+
   const logoutBtn = () => {
     localStorage.removeItem("Gadgetwarehouse_userlogin");
     dispatch(logoutAction());
     navigate("/", { replace: true });
   };
+
+
+ 
 
   return (
     <header className="navbar fixed z-50 w-screen top-0 left-0 p-3 px-4 md:p-6 md:px-12 bg-bgglass backdrop-blur border-b-2 border-b-bgglass">
@@ -71,108 +80,138 @@ function Navbar() {
             </li>
           </motion.ul>
 
-          {statusId ? (
-            <div className="flex gap-4">
-              <div className="relative flex items-center justify-center mr-2 ">
-                <button type="button">
-                  <NavLink to="/CartPage">
-                    <FaShoppingBasket className="text-[#1BFD9C] hover:text-[#82ffc9] hover:text-xl duration-500 text-2xl  cursor-pointer" />
-                  </NavLink>
-                </button>
-                <div className=" absolute -top-3 -right-4  w-5 h-5 rounded-full bg-red-400 flex items-center justify-center animate-bounce">
-                  <p className=" text-xs text-white font-semibold">2</p>
-                </div>
-              </div>
-              {/* <button className='flex gap-2 text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={toggleMenu}> <img src={profileImage ? `${API_URL}${profileImage}` : ''} className='text-2xl text-white cursor-pointer '/>{name}</button> */}
-              <div
-                className="flex items-center gap-2 text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium cursor-pointer"
-                onClick={toggleMenu}
-              >
-                <img
-                  src={profileImage ? `${API_URL}${profileImage}` : ""}
-                  className="w-10 h-10 rounded-full"
-                  alt=""
-                />
-                <span>{name}</span>
-              </div>
 
-              <div
-                className={`absolute flex flex-col px-2 items-center text-start bg-bgglass backdrop-blur w-[110px] md:w-[130px] h-[270px] md:h-[270px] gap-2 top-[55px] md:top-[78px] bottom-0 py-4 duration-500 rounded-3xl ${
-                  showMenu ? "right-2 md:right-10" : "right-[-250px]"
-                }`}
-              >
-                <ul className="flex flex-col gap-4">
-                  <li className="flex gap-2">
-                    <div
-                      className="text-2xl text-white cursor-pointer "
-                      onClick={hideMenu}
-                    >
-                      <img src={`${API_URL}${profileImage}`} />
-                    </div>
-                    <h1 className="text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium">
-                      {name}
-                    </h1>
-                  </li>
-                  <li>
-                    <NavLink
-                      to="/customerProfile"
-                      className="text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium"
-                      onClick={hideMenu}
-                    >
-                      Profile
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      className="text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium"
-                      onClick={hideMenu}
-                    >
-                      Cart
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      className="text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium"
-                      onClick={hideMenu}
-                    >
-                      Orders
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      className="text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium"
-                      onClick={hideMenu}
-                      to="/request"
-                    >
-                      Reset Password
-                    </NavLink>
-                  </li>
-                </ul>
-                <div className="flex flex-col gap-2">
-                  <span className="border-b-2 p-1 border-gray"></span>
-                  <button
-                    type="button"
-                    onClick={logoutBtn}
-                    className="bg-emerald-300 hover:bg-emerald-400 px-1 rounded-lg font-bold text-white hover:text-black hover:scale-105 duration-500"
-                  >
-                    Log Out
-                  </button>
-                </div>
+          {statusId ? <div className='flex gap-4'>
+            <div className='relative flex items-center justify-center mr-2 '>
+              <button type='button'><NavLink to='/CartPage'><FaShoppingBasket className='text-[#1BFD9C] hover:text-[#82ffc9] hover:text-xl duration-500 text-2xl  cursor-pointer' /></NavLink></button>
+              <div className=' absolute -top-3 -right-4  w-5 h-5 rounded-full bg-red-400 flex items-center justify-center animate-bounce'>
+                <p className=' text-xs text-white font-semibold'>2</p>
               </div>
             </div>
-          ) : (
-            <div className=" flex gap-2 md:gap-8">
-              <button className="text-white text-xs md:text-base bg-emerald-400 px-2 md:px-5 py-1 rounded-3xl font-semibold hover:text-black hover:bg-emerald-300 hover:scale-110 duration-500">
-                <NavLink to="/login">Login</NavLink>
-              </button>
-              <button className="text-white text-xs md:text-base bg-emerald-400 px-2 md:px-3 py-1 rounded-3xl font-semibold hover:text-black hover:bg-emerald-300 hover:scale-110 duration-500">
-                <NavLink to="/register">Register</NavLink>
-              </button>
+            {/* <button className='flex gap-2 text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={toggleMenu}> <img src={profileImage ? `${API_URL}${profileImage}` : ''} className='text-2xl text-white cursor-pointer '/>{name}</button> */}
+            <div className="flex items-center gap-2 text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium cursor-pointer" onClick={toggleMenu}>
+              <img src={profileImage ? `${API_URL}${profileImage}` : ''} className="w-10 h-10 rounded-full" alt="" />
+              <span>{name}</span>
             </div>
-          )}
+
+            <div className={`absolute flex flex-col px-2 items-center text-start bg-bgglass backdrop-blur w-[110px] md:w-[130px] h-[270px] md:h-[270px] gap-2 top-[55px] md:top-[78px] bottom-0 py-4 duration-500 rounded-3xl ${showMenu ? "right-2 md:right-10" : "right-[-250px]"}`} >
+              <ul className='flex flex-col gap-4'>
+                <li className='flex gap-2'>
+                  <div className='text-2xl text-white cursor-pointer ' onClick={hideMenu} ><img src={`${API_URL}${profileImage}`} /></div>
+                  <h1 className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium'>{name}</h1>
+                </li>
+                <li>
+                  <NavLink to='/customerProfile' className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={hideMenu}>Profile</NavLink>
+                </li>
+                <li>
+                  <NavLink className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={hideMenu}>Cart</NavLink>
+                </li>
+                <li>
+                  <NavLink className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={hideMenu}>Orders</NavLink>
+                </li>
+                <li>
+                  <NavLink className='text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={hideMenu} to='/request'>Reset Password</NavLink>
+                </li>
+              </ul>
+              <div className='flex flex-col gap-2'>
+                <span className='border-b-2 p-1 border-gray'></span>
+                <button type='button' onClick={logoutBtn} className='bg-emerald-300 hover:bg-emerald-400 px-1 rounded-lg font-bold text-white hover:text-black hover:scale-105 duration-500'>Log Out</button>
+              </div>
+            </div>
+          </div>
+            :
+            (<div className=' flex gap-2 md:gap-8'>
+              <button className='text-white text-xs md:text-base bg-emerald-400 px-2 md:px-5 py-1 rounded-3xl font-semibold hover:text-black hover:bg-emerald-300 hover:scale-110 duration-500'><NavLink to='/login'>Login</NavLink></button>
+              <button className='text-white text-xs md:text-base bg-emerald-400 px-2 md:px-3 py-1 rounded-3xl font-semibold hover:text-black hover:bg-emerald-300 hover:scale-110 duration-500'><NavLink to='/register'>Register</NavLink></button>
+            </div>)}
+
         </div>
       </div>
-    </header>
+      {/* ===================================================================================================================================== */}
+      <button
+        className="flex gap-2 text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium"
+        onClick={toggleMenu}
+      >
+        {" "}
+        <FaUserCircle className="text-2xl text-white cursor-pointer " />{" "}
+        {name}{" "}
+      </button>
+      <div
+        className={`absolute flex flex-col px-2 items-center text-start bg-bgglass backdrop-blur w-[110px] md:w-[130px] h-[270px] md:h-[270px] gap-2 top-[55px] md:top-[78px] bottom-0 py-4 duration-500 rounded-3xl ${showMenu ? "right-2 md:right-10" : "right-[-250px]"
+          }`}
+      >
+        <ul className="flex flex-col gap-4">
+          <li className="flex gap-2">
+            <FaUserCircle
+              className="text-2xl text-white cursor-pointer "
+              onClick={hideMenu}
+            />
+            <h1 className="text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium">
+              {name}
+            </h1>
+          </li>
+          <li>
+            <NavLink
+              className="text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium"
+              onClick={hideMenu}
+            >
+              Profile
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              className="text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium"
+              onClick={hideMenu}
+            >
+              Cart
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              className="text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium"
+              onClick={hideMenu}
+            >
+              Orders
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              className="text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium"
+              onClick={hideMenu}
+              to="/request"
+            >
+              Reset Password
+            </NavLink>
+          </li>
+        </ul>
+        <div className="flex flex-col gap-2">
+          <span className="border-b-2 p-1 border-gray"></span>
+          <button
+            type="button"
+            onClick={logoutBtn}
+            className="bg-emerald-300 hover:bg-emerald-400 px-1 rounded-lg font-bold text-white hover:text-black hover:scale-105 duration-500"
+          >
+            Log Out
+          </button>
+        </div>
+      </div>
+    </div>
+  ) : (
+    <div className=" flex gap-2 md:gap-8">
+      <button className="text-white text-xs md:text-base bg-emerald-400 px-2 md:px-5 py-1 rounded-3xl font-semibold hover:text-black hover:bg-emerald-300 hover:scale-110 duration-500">
+        <NavLink to="/login">Login</NavLink>
+      </button>
+      <button className="text-white text-xs md:text-base bg-emerald-400 px-2 md:px-3 py-1 rounded-3xl font-semibold hover:text-black hover:bg-emerald-300 hover:scale-110 duration-500">
+        <NavLink to="/register">Register</NavLink>
+      </button>
+    </div>
+  )
+}
+
+        </div >
+      </div >
+      {/* ===================================================================================================================================== */}
+    </header >
   );
 }
 
