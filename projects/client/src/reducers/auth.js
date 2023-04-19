@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const authSlice = createSlice({
-    name: "auth",
+  name: "auth",
+
 
     initialState: {
         name: "",
@@ -33,7 +34,9 @@ const authSlice = createSlice({
             state.profileImage = "https://ionicframework.com/docs/img/demos/avatar.svg";
             state.statusId = null;
         }
+
     },
+  },
 });
 
 // Export action function nya

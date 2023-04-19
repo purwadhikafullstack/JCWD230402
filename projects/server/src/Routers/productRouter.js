@@ -32,4 +32,7 @@ route.get("/colorproduct", productController.checkColor);
 route.get("/memoryproduct", productController.checkMemory);
 route.get("/priceproduct", productController.checkPrice);
 
+route.post("/cart", readToken, productController.addToCart);
+route.get("/cart", readToken, productController.getCart);
+
 module.exports = route;

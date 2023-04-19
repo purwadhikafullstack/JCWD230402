@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class warehouse extends Model {
     /**
@@ -13,28 +11,31 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  warehouse.init({
-    uuid: DataTypes.STRING,
-    name: DataTypes.STRING,
-    email: DataTypes.STRING,
-    address: DataTypes.STRING,
-    location: DataTypes.STRING,
-    province: DataTypes.STRING,
-    city: DataTypes.STRING,
-    postalCode: DataTypes.STRING,
-    phone: DataTypes.STRING,
-    province_id: DataTypes.STRING,
-    city_id: DataTypes.STRING,
-    isDisabled: DataTypes.BOOLEAN,
-  }, {
-    sequelize,
-    modelName: 'warehouse',
-  });
+  warehouse.init(
+    {
+      uuid: DataTypes.STRING,
+      name: DataTypes.STRING,
+      email: DataTypes.STRING,
+      address: DataTypes.STRING,
+      location: DataTypes.STRING,
+      province: DataTypes.STRING,
+      city: DataTypes.STRING,
+      postalCode: DataTypes.STRING,
+      phone: DataTypes.STRING,
+      province_id: DataTypes.INTEGER,
+      city_id: DataTypes.INTEGER,
+      isDisabled: DataTypes.BOOLEAN,
+    },
+    {
+      sequelize,
+      modelName: "warehouse",
+    }
+  );
 
   warehouse.associate = (models) => {
-    warehouse.hasMany(models.admin, { foreignKey: "warehouseId" })
-    warehouse.hasMany(models.type, { foreignKey: "warehouseId" })
-  }
-
+    warehouse.hasMany(models.admin, { foreignKey: "warehouseId" });
+    warehouse.hasMany(models.type, { foreignKey: "warehouseId" });
+  };
+  
   return warehouse;
 };

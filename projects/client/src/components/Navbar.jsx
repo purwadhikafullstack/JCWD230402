@@ -1,23 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaShoppingBasket, FaUserCircle } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { NavLink, Link } from "react-router-dom";
+import { API_URL } from "../helper";
 import Logo from "./Logo";
 import "./Navbar.css";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logoutAction } from "../reducers/auth";
+import axios from "axios";
 import { API_URL } from "../helper";
 
 function Navbar() {
-  // const locations = useLocation();
-
-  // const parameters = new URLSearchParams(locations.search);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
-
+  const [cartlength, setCartLength] = useState(0);
   const toggleMenu = () => {
     setShowMenu(!showMenu);
   };
@@ -36,11 +35,33 @@ function Navbar() {
     navigate("/", { replace: true });
   };
 
+
+  const getCartnumber = async () => {
+    try {
+      const token = localStorage.getItem("Gadgetwarehouse_userlogin");
+      let res = await axios.get(`${API_URL}/product/cart?email=${email}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log("dri getcartnumber", res);
+      setCartLength(res.data.datanum);
+    } catch (error) {
+      console.log("error dri getcartnumber", error);
+    }
+  };
+
+  useEffect(() => {
+    if (name) {
+      getCartnumber();
+    }
+  }, [name]);
+
   return (
     <header className="navbar fixed z-50 w-screen top-0 left-0 p-3 px-4 md:p-6 md:px-12 bg-bgglass backdrop-blur border-b-2 border-b-bgglass">
       {/*Desktop & Tablet*/}
       <div className="flex w-full h-full px-4 items-center justify-between">
-        {/* ======================================================= SearchBar ========================================= */}
         <div className="flex">
           <NavLink to="/" className="flex items-center gap-10">
             <Logo />
@@ -74,14 +95,20 @@ function Navbar() {
           {statusId ? (
             <div className="flex gap-4">
               <div className="relative flex items-center justify-center mr-2 ">
+
                 <button type="button">
                   <NavLink to="/CartPage">
                     <FaShoppingBasket className="text-[#1BFD9C] hover:text-[#82ffc9] hover:text-xl duration-500 text-2xl  cursor-pointer" />
                   </NavLink>
                 </button>
-                <div className=" absolute -top-3 -right-4  w-5 h-5 rounded-full bg-red-400 flex items-center justify-center animate-bounce">
-                  <p className=" text-xs text-white font-semibold">2</p>
-                </div>
+               {cartlength === 0 ? null : (
+                  <div className=" absolute -top-3 -right-4  w-5 h-5 rounded-full bg-red-400 flex items-center justify-center animate-bounce">
+                    <p className=" text-xs text-white font-semibold">
+                      {cartlength}
+                    </p>
+                  </div>
+                )}
+                
               </div>
               {/* <button className='flex gap-2 text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={toggleMenu}> <img src={profileImage ? `${API_URL}${profileImage}` : ''} className='text-2xl text-white cursor-pointer '/>{name}</button> */}
               <div

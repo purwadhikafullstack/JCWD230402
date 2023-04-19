@@ -1,7 +1,6 @@
 const multer = require("multer");
 const fs = require("fs");
 
-
 const uploader = (directory, filePreFix) => {
   // 1. default directory storage
   let defaultDir = "./src/public";

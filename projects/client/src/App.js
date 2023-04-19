@@ -53,7 +53,9 @@ function App() {
             Authorization: `Bearer ${token}`,
           },
         });
+
         console.log("response from login", res.data);
+
         localStorage.setItem("Gadgetwarehouse_userlogin", res.data.token);
         dispatch(loginAction(res.data));
       }
@@ -111,7 +113,6 @@ function App() {
           ) : // ini customer
           statusId ? (
             <div>
-              {" "}
               <Navbar />
               <main className="mt-2 md:mt-2 px-2 md:px-10 w-full">
                 <Routes>
@@ -142,7 +143,6 @@ function App() {
           ) : (
             // ini untuk yang belum login
             <div>
-              {" "}
               <Navbar />
               <main className="mt-2 md:mt-2 px-2 md:px-10 w-full">
                 <Routes>
@@ -158,6 +158,7 @@ function App() {
                   <Route path="/register" element={<Register />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="*" element={<PageNotFound />} />
+                  <Route path="/verify/:token" element={<Verification />} />
                   <Route path="/admin" element={<AdminLogin />} />
                 </Routes>
               </main>
