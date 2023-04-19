@@ -24,5 +24,6 @@ module.exports = (sequelize, DataTypes) => {
   memory.associate = (models) => {
     memory.hasMany(models.type, { foreignKey: "memoryId" });
   };
+
   return memory;
 };

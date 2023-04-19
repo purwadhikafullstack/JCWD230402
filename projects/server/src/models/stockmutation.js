@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   stockMutation.init({
-    productAtWarehouseId: DataTypes.INTEGER,
+    typeId: DataTypes.INTEGER,
     addition: DataTypes.INTEGER,
     subtraction: DataTypes.INTEGER,
     orderId: DataTypes.INTEGER,

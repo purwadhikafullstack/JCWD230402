@@ -12,3 +12,4 @@ export { default as Category } from "./Category";
 export { default as PageNotFound } from "./PageNotFound";
 export { default as AllProduct } from "./AllProduct";
 export { default as ProductPage } from "./ProductPage";
+export { default as Product } from "./Product";
