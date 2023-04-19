@@ -19,12 +19,6 @@ module.exports = {
       console.log("check user exist", checkUser);
 
       if (checkUser.length === 0) {
-        // if (req.body.password == req.body.confirmationPassword) {
-        //     delete req.body.confirmationPassword
-        //     console.log("check data before create", req.body);
-        //     req.body.password = bcrypt.hashSync(req.body.password.salt);
-        //     console.log("check data after  hash password :", req.body);
-
         const uuid = uuidv4();
         const { email } = req.body;
 
@@ -113,7 +107,6 @@ module.exports = {
             success: false,
             message: "Password and Confirmation password are not equal",
           });
-        }
       } else {
         return res.status(400).send({
           success: false,
@@ -161,8 +154,7 @@ module.exports = {
             success: false,
             message: "Login fail email or password wrong",
           });
-        }
-      } else {
+    } else {
         res.status(404).send({
           success: false,
           message: "Account not found",
@@ -173,6 +165,8 @@ module.exports = {
       next(error);
     }
   },
+
+ 
 
   keepLogin: async (req, res, next) => {
     try {
@@ -187,7 +181,7 @@ module.exports = {
 
       let { uuid, name, email, phone, gender, profileImage, statusId } =
         get[0].dataValues;
-      let token = createToken({ uuid }, "1h");
+     let token = createToken({ uuid }, "24h");
 
       return res.status(200).send({
         success: true,
@@ -385,7 +379,6 @@ module.exports = {
             success: false,
             message: "Login fail email or password wrong",
           });
-        }
       } else {
         res.status(404).send({
           success: false,
@@ -440,3 +433,35 @@ module.exports = {
     }
   },
 };
+
+    edit: async (req, res, next) => {
+        try {
+          console.log("Decript token:", req.decript);
+          const uuid = uuidv4();
+          const { name, gender, phone } = req.body;
+          if (name || gender || phone) {
+            await model.customer.update(
+              req.body,
+              {
+                where: {
+                  uuid: req.decrypt.uuid,
+                },
+              }
+            );
+            return res.status(200).send({
+              success: true,
+              message: "Edit profile success ",
+            });
+          } else {
+            res.status(400).send({
+              success: false,
+              message: "Cannot change data",
+            });
+          }
+        } catch (error) {
+          console.log(error);
+          next(error);
+        }
+      },
+
+}

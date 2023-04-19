@@ -15,12 +15,17 @@ import {
   PageNotFound,
   Warehouse,
   UserManagement,
+  CustomerProfile,
+  CartPage,
   Category,
   AllProduct,
   ProductPage,
+  Product,
 } from "./pages";
+
 import { Routes, Route } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
+
 import { API_URL } from "./helper";
 import { loginAction } from "./reducers/auth";
 import { adminloginAction } from "./reducers/admin";
@@ -48,6 +53,9 @@ function App() {
             Authorization: `Bearer ${token}`,
           },
         });
+
+        console.log("response from login", res.data);
+
         localStorage.setItem("Gadgetwarehouse_userlogin", res.data.token);
         dispatch(loginAction(res.data));
       }
@@ -98,6 +106,7 @@ function App() {
                   <Route path="/usermanagement" element={<UserManagement />} />
                   <Route path="/category" element={<Category />} />
                   <Route path="*" element={<PageNotFound />} />
+                  <Route path="/product" element={<Product />} />
                 </Routes>
               </main>
             </div>
@@ -122,6 +131,11 @@ function App() {
                   <Route path="/reset/:token" element={<ResetPassword />} />
                   <Route path="/verify/:token" element={<Verification />} />
                   <Route path="*" element={<PageNotFound />} />
+                  <Route
+                    path="/Customerprofile"
+                    element={<CustomerProfile />}
+                  />
+                  <Route path="/CartPage" element={<CartPage />} />
                 </Routes>
               </main>
               <Footer />

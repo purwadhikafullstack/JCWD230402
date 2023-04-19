@@ -11,11 +11,10 @@ module.exports = {
           },
         }
       );
-      console.log(`ini res getProvince`, response.data);
-
+      // console.log(`ini res getProvince`, response.data);
       return res.status(200).send(response.data);
     } catch (error) {
-      console.log(error);
+      console.log(`error get`, error);
       next(error);
     }
   },
@@ -36,7 +35,7 @@ module.exports = {
 
       return res.status(200).send(response.data);
     } catch (error) {
-      console.log(error);
+      console.log(`error getcity`, error);
       next(error);
     }
   },

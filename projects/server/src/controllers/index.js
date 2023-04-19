@@ -5,6 +5,7 @@ const adminController = require("./adminControllers");
 const categoryController = require("./categoryControllers");
 const productController = require("./productControllers");
 const detailController = require("./detailController");
+const profileController = require("./profileControllers");
 
 module.exports = {
   authController,
@@ -14,4 +15,5 @@ module.exports = {
   categoryController,
   productController,
   detailController,
+  profileController,
 };

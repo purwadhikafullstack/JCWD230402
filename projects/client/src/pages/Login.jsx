@@ -71,7 +71,7 @@ function Login() {
                     <button className='bg-slate-200 border-2 border-[#1BFD9C] w-10 h-10 py-1 rounded-[100%] cursor-pointer hover:scale-110 duration-500'><FcGoogle className='m-auto' /></button>
                     <button className='bg-slate-200 border-2 border-[#1BFD9C] w-10 h-10 py-1 rounded-[100%] cursor-pointer hover:scale-110 duration-500'><BsFacebook className='m-auto' /></button>
                 </div>
-                <p className='font-semibold'>forgot your <NavLink to='/request' className='text-[#1BFD9C] hover:scale-110 duration-500'>password</NavLink> ? </p>
+                <p className='font-semibold text-white'>forgot your <NavLink to='/request' className='text-[#1BFD9C] hover:scale-110 duration-500'>password</NavLink> ? </p>
             </div>
         </section>
     )

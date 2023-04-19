@@ -11,22 +11,20 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  stockMutation.init(
-    {
-      typeId: DataTypes.INTEGER,
-      addition: DataTypes.INTEGER,
-      subtraction: DataTypes.INTEGER,
-      supplierId: DataTypes.INTEGER,
-      targetId: DataTypes.INTEGER,
-      orderId: DataTypes.INTEGER,
-      statusId: DataTypes.INTEGER,
-      onLocation: DataTypes.BOOLEAN,
-      requestId: DataTypes.INTEGER,
-    },
-    {
-      sequelize,
-      modelName: "stockMutation",
-    }
-  );
+
+  stockMutation.init({
+    typeId: DataTypes.INTEGER,
+    addition: DataTypes.INTEGER,
+    subtraction: DataTypes.INTEGER,
+    orderId: DataTypes.INTEGER,
+    statusId: DataTypes.INTEGER,
+    onLocation: DataTypes.BOOLEAN,
+    requestId: DataTypes.INTEGER,
+    supplierId: DataTypes.INTEGER,
+    targetId: DataTypes.INTEGER
+  }, {
+    sequelize,
+    modelName: 'stockMutation',
+  });
   return stockMutation;
 };
