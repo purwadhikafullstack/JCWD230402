@@ -28,6 +28,7 @@
     "react-redux": "latest",
     "react-router-dom": "latest",
     "react-scripts": "5.0.1",
+    "react-select": "^5.7.2",
     "react-toastify": "^9.1.2",
     "sass": "latest",
     "tailwindcss": "latest",

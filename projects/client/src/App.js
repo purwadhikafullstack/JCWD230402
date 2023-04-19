@@ -15,7 +15,8 @@ import {
   PageNotFound,
   Warehouse,
   UserManagement,
-  Category
+  Category,
+  Product
 } from './pages';
 import { Routes, Route } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion';
@@ -97,6 +98,7 @@ function App() {
                   <Route path='/warehouse' element={<Warehouse />} />
                   <Route path='/usermanagement' element={<UserManagement />} />
                   <Route path='/category' element={<Category />} />
+                  <Route path='/product' element={<Product />} />
                   <Route path='*' element={<PageNotFound />} />
                 </Routes>
               </main>

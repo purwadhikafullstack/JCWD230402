@@ -45,24 +45,34 @@ module.exports = {
             let sortby = req.query.sortby
             let order = req.query.order
 
+            if (!page && !size && !sortby && !order) {
+                let get = await model.category.findAll()
 
-            let get = await model.category.findAndCountAll({
-                offset: parseInt(page * size),
-                limit: parseInt(size),
-                where: {
-                    type: {
-                        [sequelize.Op.like]: `%${req.query.type}%`
-                    }
-                },
-                order: [[sortby, order]],
-            });
+                return res.status(200).send({
+                    success: true,
+                    data: get
+                })
 
-            console.log(`getCategory`, get);
+            } else {
+                let get = await model.category.findAndCountAll({
+                    offset: parseInt(page * size),
+                    limit: parseInt(size),
+                    where: {
+                        type: {
+                            [sequelize.Op.like]: `%${req.query.type}%`
+                        }
+                    },
+                    order: [[sortby, order]],
+                });
 
-            return res.status(200).send({
-                data: get.rows,
-                datanum: get.count,
-            });
+                console.log(`getCategory`, get);
+
+                return res.status(200).send({
+                    data: get.rows,
+                    datanum: get.count,
+                });
+            }
+
 
         } catch (error) {
             console.log(error);
@@ -112,7 +122,7 @@ module.exports = {
             console.log(error);
             next(error)
         }
-    }, 
+    },
 
     editCategory: async (req, res, next) => {
         try {
@@ -125,7 +135,7 @@ module.exports = {
             console.log(`ini cekAdmin`, cekCategory);
 
             if (cekCategory.length == 1) {
-                
+
                 let editCategory = await model.category.update({
                     type: req.body.type
                 }, {
@@ -154,4 +164,6 @@ module.exports = {
             next(error)
         }
     },
+
+
 }

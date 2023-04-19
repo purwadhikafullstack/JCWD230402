@@ -17,13 +17,18 @@ module.exports = (sequelize, DataTypes) => {
     uuid: DataTypes.STRING,
     name: DataTypes.STRING,
     productImage: DataTypes.STRING,
-    price: DataTypes.INTEGER,
     description: DataTypes.STRING,
-    statusId: DataTypes.INTEGER,
-    categoryId: DataTypes.INTEGER
+    categoryId: DataTypes.INTEGER,
+    isDisabled: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'product',
   });
+
+  product.associate = (models) => {
+    product.belongsTo(models.category, { foreignKey: "categoryId" });
+    product.hasMany(models.type, { foreignKey: "productId" });
+  }
+
   return product;
 };

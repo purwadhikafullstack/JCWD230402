@@ -70,12 +70,25 @@ module.exports = {
 
     getWarehouse: async (req, res, next) => {
         try {
-            let data = await model.warehouse.findAll()
-            console.log(`data`, data);
+            if (req.query.warehouseId) {
+                let data = await model.warehouse.findAll({
+                    where: {
+                        id: req.query.warehouseId
+                    }
+                })
+                console.log(`data`, data);
 
-            return res.status(200).send(data)
+                return res.status(200).send(data)
+
+            } else {
+                let data = await model.warehouse.findAll()
+                console.log(`data`, data);
+
+                return res.status(200).send(data)
+            }
 
         } catch (error) {
+            console.log(error);
             next(error)
         }
     },

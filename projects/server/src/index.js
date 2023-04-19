@@ -6,16 +6,12 @@ const PORT = process.env.PORT || 8000;
 const app = express();
 const bearerToken = require('express-bearer-token');
 app.use(
-  cors({
-    // origin: [
-    //   process.env.WHITELISTED_DOMAIN &&
-    //     process.env.WHITELISTED_DOMAIN.split(","),
-    // ],
-  })
+  cors()
 );
 app.use(bearerToken())
-
 app.use(express.json());
+
+app.use("/", express.static(__dirname + "/public"));
 
 //#region API ROUTES
 
@@ -35,6 +31,9 @@ app.use('/admin', adminRouter);
 
 const categoryRouter = require('./Routers/categoryRouter');
 app.use('/category', categoryRouter);
+
+const productRouter = require('./Routers/productRouter');
+app.use('/product', productRouter);
 
 
 app.get("/api", (req, res) => {

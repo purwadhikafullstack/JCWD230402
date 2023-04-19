@@ -14,6 +14,7 @@ const adminSlice = createSlice({
             state.name = action.payload.name;
             state.email = action.payload.email;
             state.roleId = action.payload.roleId;
+            state.warehouseId = action.payload.warehouseId;
             console.log('data from roleId reducer:', state.roleId);
         },
         adminlogoutAction: (state, action) => {
@@ -21,6 +22,7 @@ const adminSlice = createSlice({
             state.name = '';
             state.email = '';
             state.roleId = null;
+            state.warehouseId = null;
         }
     },
 });
