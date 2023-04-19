@@ -18,6 +18,7 @@ import {
   Category,
   AllProduct,
   ProductPage,
+  Product,
 } from "./pages";
 import { Routes, Route } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
@@ -99,6 +100,7 @@ function App() {
                   <Route path="/usermanagement" element={<UserManagement />} />
                   <Route path="/category" element={<Category />} />
                   <Route path="*" element={<PageNotFound />} />
+                  <Route path="/product" element={<Product />} />
                 </Routes>
               </main>
             </div>

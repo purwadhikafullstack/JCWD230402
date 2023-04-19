@@ -5,11 +5,12 @@ const { join } = require("path");
 const PORT = process.env.PORT || 8000;
 const app = express();
 const bearerToken = require("express-bearer-token");
-app.use(cors({}));
+app.use(cors());
 app.use(bearerToken());
-
 app.use(express.json());
+
 app.use("/", express.static(__dirname + "/public"));
+
 //#region API ROUTES
 
 // ===========================

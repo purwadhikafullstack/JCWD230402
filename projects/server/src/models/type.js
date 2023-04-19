@@ -17,10 +17,12 @@ module.exports = (sequelize, DataTypes) => {
       discount: DataTypes.FLOAT,
       discountedPrice: DataTypes.INTEGER,
       stock: DataTypes.INTEGER,
-      colorId: DataTypes.STRING,
-      memoryId: DataTypes.STRING,
-      productId: DataTypes.STRING,
+      booked: DataTypes.INTEGER,
+      colorId: DataTypes.INTEGER,
+      memoryId: DataTypes.INTEGER,
+      productId: DataTypes.INTEGER,
       statusId: DataTypes.INTEGER,
+      warehouseId: DataTypes.INTEGER,
     },
     {
       sequelize,
@@ -30,9 +32,11 @@ module.exports = (sequelize, DataTypes) => {
 
   type.associate = (models) => {
     type.belongsTo(models.product, { foreignKey: "productId" });
-    type.belongsTo(models.memory, { foreignKey: "memoryId" });
     type.belongsTo(models.color, { foreignKey: "colorId" });
-    type.hasMany(models.productAtWarehouse, { foreignKey: "typeId" });
+    type.belongsTo(models.memory, { foreignKey: "memoryId" });
+    type.belongsTo(models.status, { foreignKey: "statusId" });
+    type.belongsTo(models.warehouse, { foreignKey: "warehouseId" });
   };
+
   return type;
 };
