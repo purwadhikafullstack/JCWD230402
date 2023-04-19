@@ -12,9 +12,6 @@ import { logoutAction } from "../reducers/auth";
 import axios from "axios";
 
 function Navbar() {
-  // const locations = useLocation();
-
-  // const parameters = new URLSearchParams(locations.search);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
@@ -40,7 +37,7 @@ function Navbar() {
   const getCartnumber = async () => {
     try {
       const token = localStorage.getItem("Gadgetwarehouse_userlogin");
-      let res = await axios.get(`${API_URL}/product/cart?name=${name}`, {
+      let res = await axios.get(`${API_URL}/product/cart?email=${email}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -63,7 +60,6 @@ function Navbar() {
     <header className="navbar fixed z-50 w-screen top-0 left-0 p-3 px-4 md:p-6 md:px-12 bg-bgglass backdrop-blur border-b-2 border-b-bgglass">
       {/*Desktop & Tablet*/}
       <div className="flex w-full h-full px-4 items-center justify-between">
-        {/* ======================================================= SearchBar ========================================= */}
         <div className="flex">
           <NavLink to="/" className="flex items-center gap-10">
             <Logo />

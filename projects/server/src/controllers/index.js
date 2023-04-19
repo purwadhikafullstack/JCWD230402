@@ -3,7 +3,7 @@ const rajaongkirController = require("./rajaongkirController");
 const warehouseController = require("./warehouseController");
 const adminController = require("./adminControllers");
 const categoryController = require("./categoryControllers");
-const productController = require("../controllers/productController");
+const productController = require("./productControllers");
 const detailController = require("./detailController");
 
 module.exports = {

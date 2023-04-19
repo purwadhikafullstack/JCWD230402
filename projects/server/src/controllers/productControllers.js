@@ -1,6 +1,7 @@
-const model = require("../models");
 const sequelize = require("sequelize");
+const model = require("../models");
 const { v4: uuidv4 } = require("uuid");
+const fs = require("fs");
 
 function formating(params) {
   let total = new Intl.NumberFormat("id-ID", {
@@ -204,7 +205,7 @@ module.exports = {
       const findCustomer = await model.customer.findOne({
         attributes: ["id"],
         where: {
-          name: req.body.name,
+          email: req.body.email,
         },
       });
       const findproduct = await model.product.findOne({
@@ -314,7 +315,7 @@ module.exports = {
     try {
       let findCustomerId = await model.customer.findOne({
         where: {
-          name: req.query.name,
+          email: req.query.email,
         },
       });
 

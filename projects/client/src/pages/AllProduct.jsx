@@ -50,7 +50,7 @@ function AllProduct() {
   const getAllProducts = async () => {
     try {
       let res = await axios.get(
-        `${API_URL}/product/?page=${page}&size=${size}&sortby=${sortby}&order=${order}&name=${filter}`,
+        `${API_URL}/product/customerproduct/?page=${page}&size=${size}&sortby=${sortby}&order=${order}&name=${filter}`,
         {}
       );
 
