@@ -1,6 +1,7 @@
 const multer = require("multer");
 const fs = require("fs");
 
+
 const uploader = (directory, filePreFix) => {
   // 1. default directory storage
   let defaultDir = "./src/public";
@@ -36,7 +37,7 @@ const uploader = (directory, filePreFix) => {
 
   //3. file filter config
   const fileFilter = (req, file, cb) => {
-    const extFilter = /\.(jpg|gif|png|webp|jpeg)/;
+    const extFilter = /\.(jpg|gif|png|webp|jpeg|avif)/;
     let checkExt = file.originalname.toLowerCase().match(extFilter);
     if (checkExt) {
       cb(null, true);

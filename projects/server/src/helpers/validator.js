@@ -45,10 +45,9 @@ module.exports = {
 
     checkWarehouse: async (req, res, next) => {
         try {
-
             console.log('request path:', req.path);
             if (req.path == '/') {
-                await check('email').notEmpty().isEmail().withMessage('Email requirment are not met').run(req);
+                await check('email').notEmpty().isEmail().withMessage('Email requirements are not met').run(req);
             }
 
             const validation = validationResult(req);

@@ -33,6 +33,7 @@ module.exports = (sequelize, DataTypes) => {
 
   warehouse.associate = (models) => {
     warehouse.hasMany(models.admin, { foreignKey: "warehouseId" })
+    warehouse.hasMany(models.type, { foreignKey: "warehouseId" })
   }
 
   return warehouse;

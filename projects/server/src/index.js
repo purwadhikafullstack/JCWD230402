@@ -4,38 +4,39 @@ const cors = require("cors");
 const { join } = require("path");
 const PORT = process.env.PORT || 8000;
 const app = express();
-const bearerToken = require('express-bearer-token');
-app.use(
-  cors({
-    // origin: [
-    //   process.env.WHITELISTED_DOMAIN &&
-    //     process.env.WHITELISTED_DOMAIN.split(","),
-    // ],
-  })
-);
-app.use(bearerToken())
-
+const bearerToken = require("express-bearer-token");
+app.use(cors());
+app.use(bearerToken());
 app.use(express.json());
 app.use(express.static('src/public'))
+
+app.use("/", express.static(__dirname + "/public"));
 
 //#region API ROUTES
 
 // ===========================
 // NOTE : Add your routes here
-const authRouter = require('./Routers/authRouter');
-app.use('/auth', authRouter);
+const authRouter = require("./Routers/authRouter");
+app.use("/auth", authRouter);
 
-const rajaongkirRouter = require('./Routers/rajaongkirRouter');
-app.use('/rajaongkir', rajaongkirRouter);
+const rajaongkirRouter = require("./Routers/rajaongkirRouter");
+app.use("/rajaongkir", rajaongkirRouter);
 
-const warehouseRouter = require('./Routers/warehouseRouter');
-app.use('/warehouse', warehouseRouter);
+const warehouseRouter = require("./Routers/warehouseRouter");
+app.use("/warehouse", warehouseRouter);
 
-const adminRouter = require('./Routers/adminRouter');
-app.use('/admin', adminRouter);
+const adminRouter = require("./Routers/adminRouter");
+app.use("/admin", adminRouter);
 
+const categoryRouter = require("./Routers/categoryRouter");
+app.use("/category", categoryRouter);
+
+
+const productRouter = require("./Routers/productRouter");
+app.use("/product", productRouter);
 const profileRouter = require('./Routers/profileRouter');
 app.use('/profile', profileRouter);
+
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);
