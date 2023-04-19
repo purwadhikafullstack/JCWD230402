@@ -1,22 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaShoppingBasket, FaUserCircle } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { NavLink, Link } from "react-router-dom";
+import { API_URL } from "../helper";
 import Logo from "./Logo";
 import "./Navbar.css";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logoutAction } from "../reducers/auth";
-import {
-  Stack,
-  Input,
-  InputGroup,
-  InputRightAddon,
-  Button,
-  Icon,
-} from "@chakra-ui/react";
-import { FiSearch } from "react-icons/fi";
+import axios from "axios";
 
 function Navbar() {
   // const locations = useLocation();
@@ -25,7 +18,7 @@ function Navbar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
-  const [search, setSearch] = useState("");
+  const [cartlength, setCartLength] = useState(0);
 
   const toggleMenu = () => {
     setShowMenu(!showMenu);
@@ -44,18 +37,27 @@ function Navbar() {
     navigate("/", { replace: true });
   };
 
-  // bikin function lngsung navigate ke all products page, set page to 1, set filter params to search usestate
-  // function onSearchBtn() {
+  const getCartnumber = async () => {
+    try {
+      const token = localStorage.getItem("Gadgetwarehouse_userlogin");
+      let res = await axios.get(`${API_URL}/product/cart?name=${name}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-  //   if (locations.pathname == "/product/all-products") {
-  //     alert("aaaaaaaaaaaa");
-  //     parameters.set("page", 2);
-  //     navigate({ search: parameters.toString() });
-  //     navigate(`/product/all-products?filter=${search}&page=1`);
-  //   } else {
-  //     navigate("/product/all-products?page=3");
-  //   }
-  // }
+      console.log("dri getcartnumber", res);
+      setCartLength(res.data.datanum);
+    } catch (error) {
+      console.log("error dri getcartnumber", error);
+    }
+  };
+
+  useEffect(() => {
+    if (name) {
+      getCartnumber();
+    }
+  }, [name]);
 
   return (
     <header className="navbar fixed z-50 w-screen top-0 left-0 p-3 px-4 md:p-6 md:px-12 bg-bgglass backdrop-blur border-b-2 border-b-bgglass">
@@ -69,33 +71,6 @@ function Navbar() {
               Gadget<span className="text-[#1BFD9C]">House</span>
             </p>
           </NavLink>
-          {/* <div className="ml-5">
-            <Stack spacing={4}>
-              <InputGroup>
-                <Input
-                  type="search"
-                  variant="filled"
-                  placeholder="Enter username"
-                  bgColor="whiteAlpha.300"
-                  onChange={(e) => setSearch(e.target.value)}
-                  color="white"
-                />
-                <InputRightAddon
-                  pointerEvents="visible"
-                  as="button"
-                  onClick={() => {
-                    onSearchBtn();
-                  }}
-                  border="none"
-                  bgColor="#1BFD9C"
-                  color="black"
-                  _active={{ bg: "black", color: "white" }}
-                >
-                  <Icon as={FiSearch} />
-                </InputRightAddon>
-              </InputGroup>
-            </Stack>
-          </div> */}
         </div>
 
         <div className="flex items-center gap-x-4 md:gap-x-8">
@@ -123,9 +98,14 @@ function Navbar() {
             <div className="flex gap-4">
               <div className="relative flex items-center justify-center mr-2 ">
                 <FaShoppingBasket className="text-[#1BFD9C] hover:text-[#82ffc9] hover:text-xl duration-500 text-2xl  cursor-pointer" />
-                <div className=" absolute -top-3 -right-4  w-5 h-5 rounded-full bg-red-400 flex items-center justify-center animate-bounce">
-                  <p className=" text-xs text-white font-semibold">2</p>
-                </div>
+
+                {cartlength === 0 ? null : (
+                  <div className=" absolute -top-3 -right-4  w-5 h-5 rounded-full bg-red-400 flex items-center justify-center animate-bounce">
+                    <p className=" text-xs text-white font-semibold">
+                      {cartlength}
+                    </p>
+                  </div>
+                )}
               </div>
               <button
                 className="flex gap-2 text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium"

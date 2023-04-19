@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class admin extends Model {
     /**
@@ -13,25 +11,28 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  admin.init({
-    uuid: DataTypes.STRING,
-    name: DataTypes.STRING,
-    gender: DataTypes.STRING,
-    phone: DataTypes.STRING,
-    email: DataTypes.STRING,
-    password: DataTypes.STRING,
-    profileImage: DataTypes.STRING,
-    roleId: DataTypes.INTEGER,
-    warehouseId: DataTypes.INTEGER,
-    isDeleted: DataTypes.BOOLEAN
-  }, {
-    sequelize,
-    modelName: 'admin',
-  });
+  admin.init(
+    {
+      uuid: DataTypes.STRING,
+      name: DataTypes.STRING,
+      gender: DataTypes.STRING,
+      phone: DataTypes.STRING,
+      email: DataTypes.STRING,
+      password: DataTypes.STRING,
+      profileImage: DataTypes.STRING,
+      isDeleted: DataTypes.BOOLEAN,
+      roleId: DataTypes.INTEGER,
+      warehouseId: DataTypes.INTEGER,
+    },
+    {
+      sequelize,
+      modelName: "admin",
+    }
+  );
 
   admin.associate = (models) => {
-    admin.belongsTo(models.role, {foreignKey: "roleId"})
-    admin.belongsTo(models.warehouse, {foreignKey: "warehouseId"})
-  }
+    admin.belongsTo(models.role, { foreignKey: "roleId" });
+    admin.belongsTo(models.warehouse, { foreignKey: "warehouseId" });
+  };
   return admin;
 };

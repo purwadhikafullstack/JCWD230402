@@ -32,6 +32,9 @@ app.use("/category", categoryRouter);
 const productRouter = require("./Routers/productRouter");
 app.use("/product", productRouter);
 
+const detailRouter = require("./Routers/detailRouter");
+app.use("/detail", detailRouter);
+
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);
 });

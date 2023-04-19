@@ -41,15 +41,14 @@ function App() {
 
   const keepLogin = async () => {
     try {
-      let token = localStorage.getItem("Gadgetwarehouse_login");
+      let token = localStorage.getItem("Gadgetwarehouse_userlogin");
       if (token) {
         let res = await axios.get(`${API_URL}/auth/customer/keep-login`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log("response from login", res.data);
-        localStorage.setItem("Gadgetwarehouse_login", res.data.token);
+        localStorage.setItem("Gadgetwarehouse_userlogin", res.data.token);
         dispatch(loginAction(res.data));
       }
     } catch (error) {
@@ -105,7 +104,6 @@ function App() {
           ) : // ini customer
           statusId ? (
             <div>
-              {" "}
               <Navbar />
               <main className="mt-2 md:mt-2 px-2 md:px-10 w-full">
                 <Routes>
@@ -131,7 +129,6 @@ function App() {
           ) : (
             // ini untuk yang belum login
             <div>
-              {" "}
               <Navbar />
               <main className="mt-2 md:mt-2 px-2 md:px-10 w-full">
                 <Routes>
@@ -147,6 +144,7 @@ function App() {
                   <Route path="/register" element={<Register />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="*" element={<PageNotFound />} />
+                  <Route path="/verify/:token" element={<Verification />} />
                   <Route path="/admin" element={<AdminLogin />} />
                 </Routes>
               </main>

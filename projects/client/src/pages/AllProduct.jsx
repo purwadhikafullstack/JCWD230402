@@ -210,6 +210,7 @@ function AllProduct() {
             pb={1}
           ></IconButton>
           <Select
+            // options={[{ colorScheme: "black" }]}
             w={"120px"}
             backgroundColor={"transparent"}
             borderColor={"#34D399"}
@@ -218,11 +219,25 @@ function AllProduct() {
               sorting(e.target.value);
             }}
           >
-            <option className="option" value="name">
+            <option
+              className="option"
+              value="name"
+              style={{ backgroundColor: "black", margin: 0 }}
+            >
               Name
             </option>
-            <option value="discountedPrice">Price</option>
-            <option value="createdAt">Newest</option>
+            <option
+              style={{ backgroundColor: "black", margin: 0 }}
+              value="discountedPrice"
+            >
+              Price
+            </option>
+            <option
+              style={{ backgroundColor: "black", margin: 0 }}
+              value="createdAt"
+            >
+              Newest
+            </option>
           </Select>
         </Flex>
         {/*==================================================== sorting drawer ================================================================*/}

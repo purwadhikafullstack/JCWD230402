@@ -17,9 +17,10 @@ module.exports = (sequelize, DataTypes) => {
       discount: DataTypes.FLOAT,
       discountedPrice: DataTypes.INTEGER,
       stock: DataTypes.INTEGER,
-      colorId: DataTypes.STRING,
-      memoryId: DataTypes.STRING,
-      productId: DataTypes.STRING,
+      colorId: DataTypes.INTEGER,
+      memoryId: DataTypes.INTEGER,
+      productId: DataTypes.INTEGER,
+      warehouseId: DataTypes.INTEGER,
       statusId: DataTypes.INTEGER,
     },
     {
@@ -32,7 +33,6 @@ module.exports = (sequelize, DataTypes) => {
     type.belongsTo(models.product, { foreignKey: "productId" });
     type.belongsTo(models.memory, { foreignKey: "memoryId" });
     type.belongsTo(models.color, { foreignKey: "colorId" });
-    type.hasMany(models.productAtWarehouse, { foreignKey: "typeId" });
   };
   return type;
 };
