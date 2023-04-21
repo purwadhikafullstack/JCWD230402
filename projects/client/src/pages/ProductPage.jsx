@@ -59,6 +59,8 @@ function ProductPage() {
   const [memoryPick, setMemoryPick] = useState(0);
   const [priceList, setPriceList] = useState(null);
   const [quantity, setQuantity] = useState(0);
+  const [minus, setMinus] = useState(true);
+  const [plus, setPlus] = useState(true);
 
   const dispatch = useDispatch();
 
@@ -181,7 +183,7 @@ function ProductPage() {
 
   const printMemory = () => {
     return memoryVarList.map((val) => {
-      // console.log("print memory", val);
+      console.log("print memory", val);
       return (
         <Button
           mb={{ base: 3, lg: 5 }}
@@ -189,14 +191,16 @@ function ProductPage() {
           boxShadow={"dark-lg"}
           variant={activeMemory === val.memory.id ? "outline" : "solid"}
           borderColor={
-            val.statusId === 3 || val.stock === 0 ? "red.500" : "green.500"
+            val.statusId === 3 || val.available == 0 ? "red.500" : "green.500"
           }
           py={1}
-          opacity={val.statusId === 3 || val.stock === 0 ? "0.6" : "1"}
+          opacity={val.statusId === 3 || val.available == 0 ? "0.6" : "1"}
           backgroundColor={
-            val.statusId === 3 || val.stock === 0 ? "gray.400" : "transparent"
+            val.statusId === 3 || val.available == 0
+              ? "gray.400"
+              : "transparent"
           }
-          isDisabled={val.statusId === 3 || val.stock === 0 ? true : false}
+          isDisabled={val.statusId === 3 || val.available == 0 ? true : false}
           _hover={{ bg: "#32CD32" }}
           fontSize={{ base: "xl" }}
           letterSpacing={"widest"}
@@ -214,7 +218,7 @@ function ProductPage() {
           {val.discount === 0 ? (
             <Text
               color={
-                val.statusId === 3 || val.stock === 0 ? "gray.600" : "white"
+                val.statusId === 3 || val.available == 0 ? "gray.600" : "white"
               }
               opacity={"1"}
             >
@@ -223,7 +227,7 @@ function ProductPage() {
           ) : (
             <Text
               color={
-                val.statusId === 3 || val.stock === 0 ? "gray.600" : "white"
+                val.statusId === 3 || val.available == 0 ? "gray.600" : "white"
               }
               opacity={"1"}
               mt={{ base: "1" }}
@@ -255,18 +259,23 @@ function ProductPage() {
   };
 
   const printPrice = () => {
-    console.log("priceList = ", priceList);
     if (priceList?.data[0]?.discount === 0) {
       return (
         <Box mt={{ base: "5" }}>
           <Text
+            as={"span"}
             textAlign={{ base: "center", lg: "left" }}
-            color={priceList?.stock > 10 ? "#34D399" : "red.500"}
+            color={priceList?.stock > 10 ? "#1BFD9C" : "red.500"}
             // display={{ base: "none", lg: "block" }}
             mb={{ base: "4" }}
+            border={"1px"}
+            rounded={"lg"}
+            cursor={"none"}
+            py={"0.5"}
+            px="1"
           >
             {priceList?.stock > 10
-              ? "In Stock"
+              ? "AVAILABLE"
               : `${priceList?.stock} Remaining`}
           </Text>
           <Flex
@@ -294,9 +303,17 @@ function ProductPage() {
             justifyContent={{ base: "center", lg: "flex-start" }}
             mb={{ base: "4" }}
           >
-            <Text color={priceList?.stock > 10 ? "#34D399" : "red.500"}>
+            <Text
+              as={"span"}
+              border={"1px"}
+              rounded={"lg"}
+              cursor={"none"}
+              py={"0.5"}
+              px="1"
+              color={priceList?.stock > 10 ? "#1BFD9C" : "red.500"}
+            >
               {priceList?.stock > 10
-                ? "In Stock"
+                ? "AVAILABLE"
                 : `${priceList?.stock} Remaining`}
             </Text>
             <Text
@@ -371,7 +388,6 @@ function ProductPage() {
         await axios.post(
           `${API_URL}/product/cart`,
           {
-            email: customerEmail,
             product: nameFromURL,
             color: colorPick,
             memory: memoryPick,
@@ -435,6 +451,22 @@ function ProductPage() {
     }
   };
 
+  const minusCheck = () => {
+    if (quantity === 0) {
+      setMinus(true);
+    } else {
+      setMinus(false);
+    }
+  };
+
+  const plusCheck = () => {
+    if (quantity + 1 > priceList?.stock) {
+      setPlus(true);
+    } else {
+      setPlus(false);
+    }
+  };
+
   useEffect(() => {
     getProduct();
     getColors();
@@ -450,10 +482,15 @@ function ProductPage() {
   useEffect(() => {
     if (colorPick !== 0 && memoryPick !== 0) {
       getPrice();
+      setPlus(false);
     }
   }, [memoryPick]);
 
-  console.log(productData);
+  useEffect(() => {
+    minusCheck();
+    plusCheck();
+  }, [quantity]);
+
   return (
     <>
       {loading === true ? (
@@ -604,13 +641,14 @@ function ProductPage() {
                       onClick={() => {
                         setQuantity(quantity - 1);
                       }}
-                      isDisabled={quantity === 0 ? true : false}
+                      isDisabled={minus}
                     >
                       -
                     </Button>
                     <Text fontSize={{ base: "xl" }}>{quantity}</Text>
 
                     <Button
+                      isDisabled={plus}
                       onClick={() => {
                         setQuantity(quantity + 1);
                       }}

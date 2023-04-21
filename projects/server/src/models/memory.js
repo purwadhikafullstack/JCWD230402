@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
 
   memory.associate = (models) => {
     memory.hasMany(models.type, { foreignKey: "memoryId" });
+    memory.hasMany(models.cart, { foreignKey: "memoryId" });
   };
 
   return memory;

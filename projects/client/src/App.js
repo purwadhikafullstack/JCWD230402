@@ -54,8 +54,6 @@ function App() {
           },
         });
 
-        console.log("response from login", res.data);
-
         localStorage.setItem("Gadgetwarehouse_userlogin", res.data.token);
         dispatch(loginAction(res.data));
       }

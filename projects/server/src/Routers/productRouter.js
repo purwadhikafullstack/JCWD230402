@@ -12,6 +12,7 @@ route.post(
 ); //images itu harus sama dengan yang di formData FE
 route.get("/", readToken, productController.getProduct);
 route.get("/variant", readToken, productController.getVariant);
+route.delete("/cart", readToken, productController.deleteAll);
 route.delete("/:id", readToken, productController.deleteProduct);
 route.patch(
   "/",
@@ -34,5 +35,8 @@ route.get("/priceproduct", productController.checkPrice);
 
 route.post("/cart", readToken, productController.addToCart);
 route.get("/cart", readToken, productController.getCart);
+route.patch("/cart/:id", readToken, productController.deleteOneFromCart);
+route.delete("/cart/", readToken, productController.deleteAll);
+route.patch("/pluscart", readToken, productController.addItem);
 
 module.exports = route;

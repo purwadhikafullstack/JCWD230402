@@ -8,7 +8,6 @@ const authSlice = createSlice({
     email: "",
     statusId: "",
     profileImage: "https://ionicframework.com/docs/img/demos/avatar.svg",
-
   },
 
   reducers: {
@@ -20,19 +19,18 @@ const authSlice = createSlice({
       state.address = action.payload.address;
       state.profileImage = action.payload.profileImage;
       state.statusId = action.payload.statusId;
-      console.log('data from statusId reducer:', state.statusId);
-
     },
     logoutAction: (state, action) => {
-      localStorage.removeItem('Gadgetwarehouse_userlogin');
-      state.name = '';
-      state.email = '';
-      state.gender = '';
-      state.phone = '';
-      state.address = '';
-      state.profileImage = "https://ionicframework.com/docs/img/demos/avatar.svg";
+      localStorage.removeItem("Gadgetwarehouse_userlogin");
+      state.name = "";
+      state.email = "";
+      state.gender = "";
+      state.phone = "";
+      state.address = "";
+      state.profileImage =
+        "https://ionicframework.com/docs/img/demos/avatar.svg";
       state.statusId = null;
-    }
+    },
   },
 });
 
