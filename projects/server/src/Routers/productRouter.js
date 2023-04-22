@@ -37,6 +37,7 @@ route.post("/cart", readToken, productController.addToCart);
 route.get("/cart", readToken, productController.getCart);
 route.patch("/cart/:id", readToken, productController.deleteOneFromCart);
 route.delete("/cart/", readToken, productController.deleteAll);
+route.patch("/minuscart", readToken, productController.minusItem);
 route.patch("/pluscart", readToken, productController.addItem);
 
 module.exports = route;

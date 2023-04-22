@@ -1,8 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BsTrash } from "react-icons/bs";
 import { Text, Flex, Box, Button, Icon, Image } from "@chakra-ui/react";
 
 function CardCart(props) {
+  const [plus, setPlus] = useState(true);
+
+  const checkplus = () => {
+    if (props.totalQty + 1 > props.available) {
+      setPlus(true);
+    } else {
+      setPlus(false);
+    }
+  };
+
+  useEffect(() => {
+    checkplus();
+  }, [props.totalQty]);
   return (
     <Box>
       {/* card body */}
@@ -98,7 +111,12 @@ function CardCart(props) {
             w={"full"}
           >
             <Flex alignItems={"center"} my="auto">
-              <button class="bg-bgglass rounded-l border text-[#1BFD9C] hover:bg-gray-100 active:bg-gray-200 disabled:opacity-50 inline-flex items-center px-2 py-1 border-r border-gray-200">
+              <button
+                class="bg-bgglass rounded-l border text-[#1BFD9C] hover:bg-gray-100 active:bg-gray-200 disabled:opacity-50 inline-flex items-center px-2 py-1 border-r border-gray-200"
+                onClick={() => {
+                  props.minusItem(props.id);
+                }}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-6 w-4"
@@ -118,7 +136,8 @@ function CardCart(props) {
                 {props.totalQty}
               </div>
               <button
-                class="bg-bgglass rounded-r border text-[#1BFD9C] hover:bg-gray-100 active:bg-gray-200 disabled:opacity-50 inline-flex items-center px-2 py-1 border-r border-gray-200"
+                class="bg-bgglass rounded-r border text-[#1BFD9C] hover:bg-gray-100 active:bg-gray-200 disabled:text-gray-700 disabled:hover:bg-bgglass inline-flex items-center px-2 py-1 border-r border-gray-200"
+                disabled={plus}
                 onClick={() => {
                   props.addItem(props.id);
                 }}

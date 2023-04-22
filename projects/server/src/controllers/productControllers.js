@@ -992,6 +992,39 @@ module.exports = {
       next(error);
     }
   },
+  minusItem: async (req, res, next) => {
+    try {
+      let findCart = await model.cart.findOne({
+        where: {
+          id: req.body.id,
+        },
+      });
+
+      if (findCart.dataValues.totalQty === 1) {
+        await model.cart.destroy({
+          where: {
+            id: req.body.id,
+          },
+        });
+
+        res.status(200).send({ delete: true });
+      } else {
+        await model.cart.update(
+          {
+            totalQty: findCart.dataValues.totalQty - 1,
+          },
+          {
+            where: { id: req.body.id },
+          }
+        );
+
+        res.status(200).send({ update: true });
+      }
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  },
   addItem: async (req, res, next) => {
     try {
       let findCart = await model.cart.findOne({
@@ -1000,21 +1033,16 @@ module.exports = {
         },
       });
 
-      const quantityBeforeChange = findCart.dataValues.totalQty;
-      const quantityAfterChange = findCart.dataValues.totalQty + 1;
+      await model.cart.update(
+        { totalQty: findCart.dataValues.totalQty + 1 },
+        {
+          where: {
+            id: req.body.id,
+          },
+        }
+      );
 
-      console.log("aaaaaaaaaaaaa", quantityBeforeChange, quantityAfterChange);
-
-      // await model.cart.update(
-      //   { totalQty: quantityFromFront },
-      //   {
-      //     where: {
-      //       id: req.body.id,
-      //     },
-      //   }
-      // );
-
-      return res.status(200).send({ success: quantityAfterChange });
+      return res.status(200).send({ success: true });
     } catch (error) {
       console.log(error);
       next(error);

@@ -35,6 +35,8 @@ function CartPage() {
   const [priceList, setPriceList] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // console.log("pricelist", priceList);
+
   const paginate = (pageNumber) => {
     // console.log(`pagenumber`, pageNumber.selected);
     setPage(pageNumber.selected);
@@ -99,7 +101,7 @@ function CartPage() {
 
   const printCart = () => {
     return cartList.map((val, idx) => {
-      console.log("cart content", cartList);
+      // console.log("cart content", priceList[idx][0].available);
       return (
         <CardCart
           color={val.color.color}
@@ -111,15 +113,17 @@ function CartPage() {
           totalQty={val.totalQty}
           removeItem={removeItem}
           addItem={addItem}
+          minusItem={minusItem}
+          available={priceList[idx][0].available}
         />
       );
     });
   };
 
-  const addItem = async (id) => {
+  const minusItem = async (id) => {
     try {
       await axios.patch(
-        `${API_URL}/product/cart`,
+        `${API_URL}/product/minuscart`,
         {
           id: id,
         },
@@ -132,6 +136,25 @@ function CartPage() {
       getCart();
     } catch (error) {
       console.log("error delete all item", error);
+    }
+  };
+
+  const addItem = async (id) => {
+    try {
+      await axios.patch(
+        `${API_URL}/product/pluscart`,
+        {
+          id: id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      getCart();
+    } catch (error) {
+      console.log("error additem", error);
     }
   };
 
