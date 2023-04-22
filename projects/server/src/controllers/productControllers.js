@@ -939,9 +939,9 @@ module.exports = {
           having: sequelize.literal("available > 0"),
           limit: 1,
         });
+
         tempArr.push(find);
       }
-      console.log("aaaaaaaaaaaaaaaaaaaa", tempArr);
 
       res.status(200).send({
         data: cart,

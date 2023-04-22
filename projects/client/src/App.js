@@ -21,6 +21,7 @@ import {
   AllProduct,
   ProductPage,
   Product,
+  Checkout,
 } from "./pages";
 
 import { Routes, Route } from "react-router-dom";
@@ -134,6 +135,7 @@ function App() {
                     element={<CustomerProfile />}
                   />
                   <Route path="/CartPage" element={<CartPage />} />
+                  <Route path="/checkout" element={<Checkout />} />
                 </Routes>
               </main>
               <Footer />

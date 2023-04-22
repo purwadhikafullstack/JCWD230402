@@ -7,11 +7,7 @@ import {
   Table,
   Tr,
   Th,
-  Tbody,
-  Thead,
-  TableContainer,
   Box,
-  ButtonGroup,
   Button,
 } from "@chakra-ui/react";
 import { API_URL } from "../helper";
@@ -34,8 +30,7 @@ function CartPage() {
   const [cartList, setCartList] = useState([]);
   const [priceList, setPriceList] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // console.log("pricelist", priceList);
+  const [subTotal, setSubTotal] = useState("");
 
   const paginate = (pageNumber) => {
     // console.log(`pagenumber`, pageNumber.selected);
@@ -50,6 +45,16 @@ function CartPage() {
       navigate({ search: params.toString() }); // buat update url
     }
   };
+
+  function formating(params) {
+    let total = new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+    }).format(params);
+
+    return total;
+  }
 
   const getCart = async () => {
     try {
@@ -101,7 +106,7 @@ function CartPage() {
 
   const printCart = () => {
     return cartList.map((val, idx) => {
-      // console.log("cart content", priceList[idx][0].available);
+      // console.log("cart content", priceList[idx][0]);
       return (
         <CardCart
           color={val.color.color}
@@ -115,6 +120,14 @@ function CartPage() {
           addItem={addItem}
           minusItem={minusItem}
           available={priceList[idx][0].available}
+          price={priceList[idx][0].price}
+          discount={priceList[idx][0].discount}
+          discountedPrice={priceList[idx][0].discountedPrice}
+          formattedprice={formating(priceList[idx][0].price)}
+          formatteddiscount={formating(priceList[idx][0].discountedPrice)}
+          totalperitem={formating(
+            priceList[idx][0].discountedPrice * val.totalQty
+          )}
         />
       );
     });
@@ -158,9 +171,25 @@ function CartPage() {
     }
   };
 
+  const calculate = () => {
+    let result = 0;
+
+    cartList.forEach((val, idx) => {
+      result += priceList[idx][0].discountedPrice * val.totalQty;
+    });
+    sessionStorage.setItem("total all item", result);
+
+    const formated = formating(result);
+    setSubTotal(formated);
+  };
+
   useEffect(() => {
     getCart();
   }, []);
+
+  useEffect(() => {
+    calculate();
+  }, [cartList]);
 
   return (
     <>
@@ -213,7 +242,7 @@ function CartPage() {
             width={"full"}
             alignItems={"center"}
             justifyContent={"center"}
-            mt={{ base: 24, md: "36" }}
+            mt={{ base: "24", md: "36" }}
             color={"white"}
           >
             <Text
@@ -225,25 +254,45 @@ function CartPage() {
             </Text>
           </Flex>
 
-          {/* <Flex
-        width={"full"}
-        color={"white"}
-        alignItems={"center"}
-        justifyContent={"center"}
-      >
-        <TableContainer mt={"20px"} width={"full"}>
-          <Table>
-            <Thead>
-              <Tr>
-                <Th textColor={"white"}>Product</Th>
-                <Th textColor={"white"}>Quantity</Th>
-                <Th textColor={"white"}>Total</Th>
-              </Tr>
-            </Thead>
-            <Tbody></Tbody>
+          <Table
+            display={{ base: "none", md: "table" }}
+            mt={8}
+            maxW={"5xl"}
+            mx={"auto"}
+          >
+            <Tr>
+              <Th w={{ md: "55%" }} borderBottomColor={"gray.700"}>
+                <Text
+                  color={"white"}
+                  textAlign={"center"}
+                  fontSize={"lg"}
+                  fontWeight={"semibold"}
+                >
+                  Product
+                </Text>
+              </Th>
+              <Th w={"22.5%"} borderBottomColor={"gray.700"}>
+                <Text
+                  color={"white"}
+                  textAlign={"center"}
+                  fontSize={"lg"}
+                  fontWeight={"semibold"}
+                >
+                  Quantity
+                </Text>
+              </Th>
+              <Th w={"22.5%"} borderBottomColor={"gray.700"}>
+                <Text
+                  color={"white"}
+                  textAlign={"center"}
+                  fontSize={"lg"}
+                  fontWeight={"semibold"}
+                >
+                  Total
+                </Text>
+              </Th>
+            </Tr>
           </Table>
-        </TableContainer>
-      </Flex> */}
           <Box
             mt={{ base: "5", md: "8" }}
             mb={{ base: "3", md: "5" }}
@@ -253,12 +302,13 @@ function CartPage() {
             <Flex flexDir={"column"} gap={{ base: 7 }}>
               {printCart()}
               <Text
-                mt={3}
                 as={"button"}
                 textAlign={"right"}
                 color={"red.600"}
+                textUnderlineOffset={"3px"}
                 textDecoration="underline"
                 onClick={removeAll}
+                fontSize={{ md: "lg", lg: "xl" }}
               >
                 Empty Cart
               </Text>
@@ -268,26 +318,68 @@ function CartPage() {
           <Box
             maxW={"5xl"}
             mx={"auto"}
-            mb={"4"}
-            py="5"
+            mt="8"
+            mb={"8"}
+            py="4"
             borderTop={"1px"}
             borderColor={"gray.400"}
           >
-            <Flex px="4" flexDir={"column"} gap={"3"} color={"#1BFD9C"}>
-              <Text as={"h1"} textAlign={"center"} fontWeight={"semibold"}>
+            <Flex px="4" flexDir={"column"} color={"#1BFD9C"}>
+              <Text
+                color={"white"}
+                as={"h1"}
+                textAlign={"center"}
+                fontWeight={"normal"}
+                fontSize={"xl"}
+                letterSpacing={"wider"}
+                mb={4}
+              >
                 Details
               </Text>
               <Flex flexDir={"column"} alignItems={"flex-end"}>
-                <Text as={"h3"} mb={2}>
-                  Total: $(total price)
+                <Text
+                  as={"h2"}
+                  letterSpacing={"wider"}
+                  fontSize={{ base: "lg", md: "xl", lg: "2xl" }}
+                  mb={3}
+                >
+                  <Text as="span" color={"white"}>
+                    TOTAL :
+                  </Text>{" "}
+                  {subTotal}
                 </Text>
-                <Text>Shipping & Taxes Calculated at Checkout</Text>
+                <Text
+                  mb={3}
+                  color={"white"}
+                  letterSpacing={"wide"}
+                  fontSize={{ base: "md", md: "lg", lg: "xl" }}
+                >
+                  Shipping & Taxes Calculated at Checkout
+                </Text>
               </Flex>
 
-              <Flex maxW={"full"} justifyContent={"flex-end"} mt="2">
-                <button className="text-white hover:text-black hover:scale-105 bg-emerald-400 hover:bg-emerald-300 rounded-lg p-1 duration-500">
-                  Proceed To Checkout
-                </button>
+              <Flex
+                maxW={"full"}
+                justifyContent={{ base: "center", md: "flex-end" }}
+                mt="2"
+              >
+                <Button
+                  w={{ base: "100%", md: "50%", xl: "40%" }}
+                  variant={"solid"}
+                  color={"black"}
+                  _hover={{ color: "white", scale: "105", bgColor: "#34D399" }}
+                  bgColor={"#019d5a"}
+                  rounded={"lg"}
+                  transitionDuration={"500"}
+                  onClick={() => navigate("/checkout")}
+                >
+                  <Text
+                    letterSpacing={"wider"}
+                    fontsize={{ base: "xl", md: "2xl" }}
+                  >
+                    CHECKOUT
+                  </Text>
+                </Button>
               </Flex>
             </Flex>
           </Box>
