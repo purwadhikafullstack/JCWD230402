@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { API_URL } from "../helper";
 import axios from "axios";
-import Pagination from "../components/Pagination";
+
 import { useLocation, useNavigate } from "react-router-dom";
 
 function CartPage() {
@@ -22,29 +22,11 @@ function CartPage() {
 
   const params = new URLSearchParams(location.search);
 
-  let defautlPage = parseInt(params.get("page")) - 1 || 0;
-
-  const [page, setPage] = useState(defautlPage);
-  const [size] = useState(8); // to change how many items per page
   const [totalData, setTotalData] = useState(0);
   const [cartList, setCartList] = useState([]);
   const [priceList, setPriceList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [subTotal, setSubTotal] = useState("");
-
-  const paginate = (pageNumber) => {
-    // console.log(`pagenumber`, pageNumber.selected);
-    setPage(pageNumber.selected);
-
-    params.set("page", pageNumber.selected + 1);
-    if (pageNumber.selected !== 0) {
-      navigate({ search: params.toString() }); // buat update url
-      // sama kaya navigate(`?${params.toString()}`);
-    } else {
-      params.delete("page");
-      navigate({ search: params.toString() }); // buat update url
-    }
-  };
 
   function formating(params) {
     let total = new Intl.NumberFormat("id-ID", {
@@ -58,7 +40,7 @@ function CartPage() {
 
   const getCart = async () => {
     try {
-      let res = await axios.get(`${API_URL}/product/cart`, {
+      let res = await axios.get(`${API_URL}/product/cart/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -113,7 +95,7 @@ function CartPage() {
           memory={val.memory.memory}
           brand={val.product.category.type}
           product={val.product.name}
-          image={val.product.productImage}
+          image={`${API_URL}${val.product.productImage}`}
           id={val.id}
           totalQty={val.totalQty}
           removeItem={removeItem}
@@ -188,7 +170,9 @@ function CartPage() {
   }, []);
 
   useEffect(() => {
-    calculate();
+    if (cartList.length > 0) {
+      calculate();
+    }
   }, [cartList]);
 
   return (
