@@ -54,14 +54,14 @@ function ProductCard(props) {
             <Button
               backgroundColor={"transparent"}
               _hover={{ backgroundColor: "inherit" }}
-              color={"#34D399"}
+              color={"green.500"}
               border={"1px"}
               px={3}
               pb={1}
               mt={5}
             >
               <Text
-                color={"white"}
+                color={"#1BFD9C"}
                 size="sm"
                 fontWeight={"medium"}
                 letterSpacing={"wider"}

@@ -553,7 +553,7 @@ module.exports = {
       next(error);
     }
   },
-  
+
   allProduct: async (req, res, next) => {
     try {
       let { page, size, sortby, order } = req.query;
@@ -596,14 +596,13 @@ module.exports = {
       return res.status(200).send({
         data: get.rows,
         datanum: counter,
-
       });
     } catch (error) {
       console.log(error);
       next(error);
     }
   },
-  
+
   oneProduct: async (req, res, next) => {
     try {
       let findByName = await model.product.findOne({
@@ -640,7 +639,7 @@ module.exports = {
       next(error);
     }
   },
-  
+
   checkColor: async (req, res, next) => {
     try {
       // cari id product pake product name
@@ -674,7 +673,7 @@ module.exports = {
       next(error);
     }
   },
-  
+
   checkMemory: async (req, res, next) => {
     try {
       let findByName = await model.product.findOne({
@@ -683,31 +682,45 @@ module.exports = {
       });
 
       let findType = await model.type.findAll({
+        attributes: [
+          [
+            sequelize.literal(
+              `CASE WHEN EXISTS(SELECT 1 FROM types WHERE productId = ${findByName.dataValues.id} AND colorId = ${req.query.colorId} AND statusId = 4) THEN 4 ELSE type.statusId END`
+            ),
+            "statusId",
+          ],
+          "discount",
+          "memoryId",
+          [
+            sequelize.literal(
+              "SUM(CASE WHEN statusId <> 3 THEN stock - booked ELSE 0 END)"
+            ),
+            "available",
+          ],
+        ],
         where: {
           productId: findByName.dataValues.id,
           colorId: req.query.colorId,
           statusId: { [sequelize.Op.ne]: 5 },
         },
-        attributes: ["statusId", "discount", "memoryId"],
+
         include: [
           {
             model: model.memory,
             attributes: ["id", "memory"],
           },
         ],
+
+        group: ["memory.id"],
       });
 
-      let uniqueMemory = [...new Set(findType.map((item) => item.memoryId))];
-      let uniqueFindType = uniqueMemory.map((memoryId) => {
-        return findType.find((item) => item.memoryId === memoryId);
-      });
-      res.status(200).send({ data: uniqueFindType });
+      res.status(200).send({ data: findType });
     } catch (error) {
       console.log(error);
       next(error);
     }
   },
-  
+
   checkPrice: async (req, res, next) => {
     try {
       let findByName = await model.product.findOne({
@@ -730,16 +743,15 @@ module.exports = {
           "discount",
           "stock",
           "statusId",
+          [sequelize.literal("stock - booked"), "available"],
         ],
       });
 
       let finalstock = 0;
       findType.forEach((val) => {
-        finalstock = finalstock + val.dataValues.stock;
+        finalstock = finalstock + val.dataValues.available;
       });
-      
-      // console.log(formating(findType[0].dataValues.discountedPrice));
-      
+
       res.status(200).send({
         data: findType,
         stock: finalstock,
@@ -751,113 +763,98 @@ module.exports = {
       next(error);
     }
   },
-  
+
   addToCart: async (req, res, next) => {
     try {
       const findCustomer = await model.customer.findOne({
-        attributes: ["id"],
         where: {
-          email: req.body.email,
-        },
-      });
-      const findproduct = await model.product.findOne({
-        attributes: ["id"],
-        where: {
-          name: req.body.product,
+          uuid: req.decript.uuid,
         },
       });
       const customerId = findCustomer.dataValues.id;
-      const productId = findproduct.dataValues.id;
 
-      const findtype = await model.type.findAll({
+      // Check if cart is at limit
+      const cartlimit = await model.cart.count({
         where: {
-          colorId: req.body.color,
-          memoryId: req.body.memory,
-          productId: productId,
-          statusId: 4,
-          stock: {
-            [sequelize.Op.ne]: 0,
-          },
+          customerId: customerId,
         },
-        order: [["id", "ASC"]],
       });
 
-      if (findtype.length !== 0) {
-        let checkCart = await model.cart.findAll({
+      if (cartlimit >= 5) {
+        return res.status(400).send({
+          success: false,
+          message:
+            "Your cart is full. Limit is 5 items, please remove some items. ",
+        });
+      } else {
+        const findproduct = await model.product.findOne({
+          attributes: ["id"],
           where: {
-            [sequelize.Op.and]: [
-              { productId: productId },
-              { colorId: req.body.color },
-              { memoryId: req.body.memory },
-              { customerId: customerId },
-            ],
+            name: req.body.product,
           },
         });
 
-        if (checkCart.length !== 0) {
-          // if cart sudah ada item yg sma
-          let { id, totalQty } = checkCart[0].dataValues;
+        const productId = findproduct.dataValues.id;
 
-          await model.cart.update(
-            {
-              totalQty: totalQty + req.body.qty,
-            },
-            {
-              where: {
-                id: id,
-              },
-            }
-          );
-          return res.status(200).send({ update_success: true });
-        } else {
-          // if cart blom ada item yg sma
-          let createCart = await model.cart.create({
-            totalQty: req.body.qty,
-            productId: productId,
+        const findtype = await model.type.findAll({
+          where: {
             colorId: req.body.color,
             memoryId: req.body.memory,
-            customerId: customerId,
+            productId: productId,
+            statusId: 4,
+            stock: {
+              [sequelize.Op.ne]: 0,
+            },
+          },
+          order: [["id", "ASC"]],
+        });
+
+        if (findtype.length !== 0) {
+          let checkCart = await model.cart.findAll({
+            where: {
+              [sequelize.Op.and]: [
+                { productId: productId },
+                { colorId: req.body.color },
+                { memoryId: req.body.memory },
+                { customerId: customerId },
+              ],
+            },
           });
 
-          return res.status(200).send({ data: createCart });
+          if (checkCart.length !== 0) {
+            // if cart sudah ada item yg sma
+            let { id, totalQty } = checkCart[0].dataValues;
+
+            await model.cart.update(
+              {
+                totalQty: totalQty + req.body.qty,
+              },
+              {
+                where: {
+                  id: id,
+                },
+              }
+            );
+            return res.status(200).send({ update_success: true });
+          } else {
+            // if cart blom ada item yg sma
+            let createCart = await model.cart.create({
+              totalQty: req.body.qty,
+              productId: productId,
+              colorId: req.body.color,
+              memoryId: req.body.memory,
+              customerId: customerId,
+            });
+
+            return res.status(200).send({ data: createCart });
+          }
+        } else {
+          // if checktype gagal
+          return res
+            .status(400)
+            .send({ success: false, message: "Item currently out of stock" });
         }
-      } else {
-        // if checktype gagal
-        return res
-          .status(400)
-          .send({ success: false, message: "Item currently out of stock" });
       }
-
-      // const findtype = await model.type.findAll({
-      //   where: {
-      //     colorId: req.body.color,
-      //     memoryId: req.body.memory,
-      //     productId: productId,
-      //     statusId: 4,
-      //     stock: {
-      //       [sequelize.Op.ne]: 0,
-      //     },
-      //   },
-      //   order: [["id", "ASC"]],
-      // });
-
-      // if (findtype.length !== 0) {
-      //   const { discountedPrice, id } = findtype[0].dataValues;
-
-      //   await model.cart.create({
-      //     priceOnDate: discountedPrice,
-      //     totalQty: req.body.qty,
-      //     totalPrice: discountedPrice * req.body.qty,
-      //     typeId: id,
-      //     customerId: customerId,
-      //   });
-
-      //   return res.status(200).send({ success: true });
-      // } else {
-      //   return res
-      //     .status(400)
-      //     .send({ success: false, message: "Item currently out of stock" });
-      // }
     } catch (error) {
       console.log(error);
       next(error);
@@ -865,19 +862,173 @@ module.exports = {
   },
   getCart: async (req, res, next) => {
     try {
+      // find customer id based on email
       let findCustomerId = await model.customer.findOne({
         where: {
-          email: req.query.email,
+          uuid: req.decript.uuid,
         },
       });
 
-      let findcart = await model.cart.findAndCountAll({
+      // find item number for pagination
+      const count = await model.cart.count({
         where: {
           customerId: findCustomerId.dataValues.id,
         },
       });
 
-      res.status(200).send({ data: findcart.rows, datanum: findcart.count });
+      const cart = await model.cart.findAll({
+        where: {
+          customerId: findCustomerId.dataValues.id,
+        },
+        sort: [["createdAt", "ASC"]],
+        include: [
+          {
+            model: model.product,
+            attributes: {
+              exclude: [
+                "id",
+                "isDisabled",
+                "createdAt",
+                "updatedAt",
+                "description",
+              ],
+            },
+            include: [{ model: model.category, attributes: ["type"] }],
+          },
+          { model: model.color, attributes: ["color"] },
+          { model: model.memory, attributes: ["memory"] },
+        ],
+      });
+
+      let tempArr = [];
+      for (let i = 0; i < cart.length; i++) {
+        find = await model.type.findAll({
+          attributes: [
+            "id",
+            "price",
+            "discount",
+            "discountedPrice",
+            "colorId",
+            "memoryId",
+            "productId",
+            [sequelize.literal("stock - booked"), "available"],
+          ],
+
+          where: {
+            [sequelize.Op.and]: [
+              { productId: cart[i].dataValues.productId },
+              { colorId: cart[i].dataValues.colorId },
+              { memoryId: cart[i].dataValues.memoryId },
+            ],
+            statusId: 4,
+          },
+          having: sequelize.literal("available > 0"),
+          limit: 1,
+        });
+
+        tempArr.push(find);
+      }
+
+      res.status(200).send({
+        data: cart,
+        datanum: count,
+        pricing: tempArr,
+      });
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  },
+  deleteOneFromCart: async (req, res, next) => {
+    try {
+      const findCustomer = await model.customer.findOne({
+        where: {
+          uuid: req.decript.uuid,
+        },
+      });
+
+      await model.cart.destroy({
+        where: {
+          customerId: findCustomer.dataValues.id,
+          id: req.params.id,
+        },
+      });
+      res.status(200).send({ success: true });
+    } catch (error) {
+      console.log("error delete from cart", error);
+      next(error);
+    }
+  },
+  deleteAll: async (req, res, next) => {
+    try {
+      const findCustomer = await model.customer.findOne({
+        where: {
+          uuid: req.decript.uuid,
+        },
+      });
+
+      await model.cart.destroy({
+        where: {
+          customerId: findCustomer.dataValues.id,
+        },
+      });
+      res.status(200).send({ success: true });
+    } catch (error) {
+      console.log("error deleteAll", error);
+      next(error);
+    }
+  },
+  minusItem: async (req, res, next) => {
+    try {
+      let findCart = await model.cart.findOne({
+        where: {
+          id: req.body.id,
+        },
+      });
+
+      if (findCart.dataValues.totalQty === 1) {
+        await model.cart.destroy({
+          where: {
+            id: req.body.id,
+          },
+        });
+
+        res.status(200).send({ delete: true });
+      } else {
+        await model.cart.update(
+          {
+            totalQty: findCart.dataValues.totalQty - 1,
+          },
+          {
+            where: { id: req.body.id },
+          }
+        );
+
+        res.status(200).send({ update: true });
+      }
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  },
+  addItem: async (req, res, next) => {
+    try {
+      let findCart = await model.cart.findOne({
+        where: {
+          id: req.body.id,
+        },
+      });
+
+      await model.cart.update(
+        { totalQty: findCart.dataValues.totalQty + 1 },
+        {
+          where: {
+            id: req.body.id,
+          },
+        }
+      );
+
+      return res.status(200).send({ success: true });
     } catch (error) {
       console.log(error);
       next(error);

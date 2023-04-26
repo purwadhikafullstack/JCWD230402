@@ -155,7 +155,7 @@ function AllProduct() {
           letterSpacing={"widest"}
           mb={{ base: "5", md: "8" }}
         >
-          ALL PRODUCTS
+          All Products
         </Text>
       </Flex>
       <Flex

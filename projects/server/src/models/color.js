@@ -24,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
   );
   color.associate = (models) => {
     color.hasMany(models.type, { foreignKey: "colorId" });
+    color.hasMany(models.cart, { foreignKey: "colorId" });
   };
   return color;
 };

@@ -21,6 +21,7 @@ import {
   AllProduct,
   ProductPage,
   Product,
+  Checkout,
 } from "./pages";
 
 import { Routes, Route } from "react-router-dom";
@@ -53,8 +54,6 @@ function App() {
             Authorization: `Bearer ${token}`,
           },
         });
-
-        console.log("response from login", res.data);
 
         localStorage.setItem("Gadgetwarehouse_userlogin", res.data.token);
         dispatch(loginAction(res.data));
@@ -136,6 +135,7 @@ function App() {
                     element={<CustomerProfile />}
                   />
                   <Route path="/CartPage" element={<CartPage />} />
+                  <Route path="/checkout" element={<Checkout />} />
                 </Routes>
               </main>
               <Footer />
@@ -160,6 +160,7 @@ function App() {
                   <Route path="*" element={<PageNotFound />} />
                   <Route path="/verify/:token" element={<Verification />} />
                   <Route path="/admin" element={<AdminLogin />} />
+                  <Route path="/CartPage" element={<CartPage />} />
                 </Routes>
               </main>
               <Footer />
