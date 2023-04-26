@@ -38,6 +38,12 @@ function CartPage() {
     return total;
   }
 
+  const checkLogin = () => {
+    if (!token) {
+      navigate("/login");
+    }
+  };
+
   const getCart = async () => {
     try {
       let res = await axios.get(`${API_URL}/product/cart/`, {
@@ -45,7 +51,6 @@ function CartPage() {
           Authorization: `Bearer ${token}`,
         },
       });
-      // console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", res);
       setLoading(false);
       if (!res.data.data) {
         navigate("*");
@@ -88,7 +93,6 @@ function CartPage() {
 
   const printCart = () => {
     return cartList.map((val, idx) => {
-      // console.log("cart content", priceList[idx][0]);
       return (
         <CardCart
           color={val.color.color}
@@ -166,6 +170,7 @@ function CartPage() {
   };
 
   useEffect(() => {
+    checkLogin();
     getCart();
   }, []);
 

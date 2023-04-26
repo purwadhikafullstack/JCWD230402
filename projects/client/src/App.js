@@ -160,6 +160,7 @@ function App() {
                   <Route path="*" element={<PageNotFound />} />
                   <Route path="/verify/:token" element={<Verification />} />
                   <Route path="/admin" element={<AdminLogin />} />
+                  <Route path="/CartPage" element={<CartPage />} />
                 </Routes>
               </main>
               <Footer />

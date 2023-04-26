@@ -771,104 +771,90 @@ module.exports = {
           uuid: req.decript.uuid,
         },
       });
-      const findproduct = await model.product.findOne({
-        attributes: ["id"],
-        where: {
-          name: req.body.product,
-        },
-      });
       const customerId = findCustomer.dataValues.id;
-      const productId = findproduct.dataValues.id;
 
-      const findtype = await model.type.findAll({
+      // Check if cart is at limit
+      const cartlimit = await model.cart.count({
         where: {
-          colorId: req.body.color,
-          memoryId: req.body.memory,
-          productId: productId,
-          statusId: 4,
-          stock: {
-            [sequelize.Op.ne]: 0,
-          },
+          customerId: customerId,
         },
-        order: [["id", "ASC"]],
       });
 
-      if (findtype.length !== 0) {
-        let checkCart = await model.cart.findAll({
+      if (cartlimit >= 5) {
+        return res.status(400).send({
+          success: false,
+          message:
+            "Your cart is full. Limit is 5 items, please remove some items. ",
+        });
+      } else {
+        const findproduct = await model.product.findOne({
+          attributes: ["id"],
           where: {
-            [sequelize.Op.and]: [
-              { productId: productId },
-              { colorId: req.body.color },
-              { memoryId: req.body.memory },
-              { customerId: customerId },
-            ],
+            name: req.body.product,
           },
         });
 
-        if (checkCart.length !== 0) {
-          // if cart sudah ada item yg sma
-          let { id, totalQty } = checkCart[0].dataValues;
+        const productId = findproduct.dataValues.id;
 
-          await model.cart.update(
-            {
-              totalQty: totalQty + req.body.qty,
-            },
-            {
-              where: {
-                id: id,
-              },
-            }
-          );
-          return res.status(200).send({ update_success: true });
-        } else {
-          // if cart blom ada item yg sma
-          let createCart = await model.cart.create({
-            totalQty: req.body.qty,
-            productId: productId,
+        const findtype = await model.type.findAll({
+          where: {
             colorId: req.body.color,
             memoryId: req.body.memory,
-            customerId: customerId,
+            productId: productId,
+            statusId: 4,
+            stock: {
+              [sequelize.Op.ne]: 0,
+            },
+          },
+          order: [["id", "ASC"]],
+        });
+
+        if (findtype.length !== 0) {
+          let checkCart = await model.cart.findAll({
+            where: {
+              [sequelize.Op.and]: [
+                { productId: productId },
+                { colorId: req.body.color },
+                { memoryId: req.body.memory },
+                { customerId: customerId },
+              ],
+            },
           });
 
-          return res.status(200).send({ data: createCart });
+          if (checkCart.length !== 0) {
+            // if cart sudah ada item yg sma
+            let { id, totalQty } = checkCart[0].dataValues;
+
+            await model.cart.update(
+              {
+                totalQty: totalQty + req.body.qty,
+              },
+              {
+                where: {
+                  id: id,
+                },
+              }
+            );
+            return res.status(200).send({ update_success: true });
+          } else {
+            // if cart blom ada item yg sma
+            let createCart = await model.cart.create({
+              totalQty: req.body.qty,
+              productId: productId,
+              colorId: req.body.color,
+              memoryId: req.body.memory,
+              customerId: customerId,
+            });
+
+            return res.status(200).send({ data: createCart });
+          }
+        } else {
+          // if checktype gagal
+          return res
+            .status(400)
+            .send({ success: false, message: "Item currently out of stock" });
         }
-      } else {
-        // if checktype gagal
-        return res
-          .status(400)
-          .send({ success: false, message: "Item currently out of stock" });
       }
-
-      // const findtype = await model.type.findAll({
-      //   where: {
-      //     colorId: req.body.color,
-      //     memoryId: req.body.memory,
-      //     productId: productId,
-      //     statusId: 4,
-      //     stock: {
-      //       [sequelize.Op.ne]: 0,
-      //     },
-      //   },
-      //   order: [["id", "ASC"]],
-      // });
-
-      // if (findtype.length !== 0) {
-      //   const { discountedPrice, id } = findtype[0].dataValues;
-
-      //   await model.cart.create({
-      //     priceOnDate: discountedPrice,
-      //     totalQty: req.body.qty,
-      //     totalPrice: discountedPrice * req.body.qty,
-      //     typeId: id,
-      //     customerId: customerId,
-      //   });
-
-      //   return res.status(200).send({ success: true });
-      // } else {
-      //   return res
-      //     .status(400)
-      //     .send({ success: false, message: "Item currently out of stock" });
-      // }
     } catch (error) {
       console.log(error);
       next(error);
