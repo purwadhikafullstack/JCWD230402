@@ -16,6 +16,22 @@ import {
   Icon,
   Image,
   Divider,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
+  Button,
+  useDisclosure,
+  Radio,
+  RadioGroup,
+  FormControl,
+  FormLabel,
+  Input,
+  Select,
+  Textarea,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
@@ -26,10 +42,28 @@ function Checkout() {
   const fromSession = sessionStorage.getItem("total all item");
   const token = localStorage.getItem("Gadgetwarehouse_userlogin");
 
+  const modalChangeAddress = useDisclosure();
+  const modalAddAddress = useDisclosure();
+
   const [cartList, setCartList] = useState([]);
   const [priceList, setPriceList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [addressList, setAddressList] = useState([]);
+  const [primaryAddress, setPrimaryAddress] = useState([]);
+  const [user, setUser] = useState([]);
+  const [value, setValue] = React.useState("")
+
+
+  const [province, setProvince] = React.useState([]);
+  const [provinceName, setProvinceName] = React.useState("");
+  const [provinceId, setProvinceId] = React.useState();
+  const [city, setCity] = React.useState([]);
+  const [cityName, setCityName] = React.useState("");
+  const [postalCode, setPostalCode] = React.useState();
+  const [newAddress, setNewAddress] = React.useState("");
+  const [city_id, setCity_id] = React.useState("");
+
+  // console.log(`value`, value);
 
   function formating(params) {
     let total = new Intl.NumberFormat("id-ID", {
@@ -39,7 +73,7 @@ function Checkout() {
     }).format(params);
 
     return total;
-  }
+  };
 
   const getCart = async () => {
     try {
@@ -59,6 +93,108 @@ function Checkout() {
     }
   };
 
+  //-------------------- get province and city --------------------
+
+  const getProvince = async () => {
+    try {
+      let res = await axios.get(`${API_URL}/rajaongkir/province`);
+      // console.log(`getProvince`, res.data.rajaongkir.results);
+      setProvince(res.data.rajaongkir.results);
+    } catch (error) {
+      console.log("error getProvince", error);
+    }
+  };
+
+  const printProvince = () => {
+    // console.log(`province`, province);
+    return province.map((val, idx) => {
+      return (
+        <option
+          onClick={() => onClickPrintProvince(val.province)}
+          value={`${val.province_id}`}
+        >
+          {val.province}
+        </option>
+      );
+    });
+  };
+
+  const onClickPrintProvince = (namaprovinsi) => {
+    setProvinceName(namaprovinsi);
+  };
+
+  const getCity = async () => {
+    try {
+      let res = await axios.get(`${API_URL}/rajaongkir/city/${provinceId}`);
+      // console.log(`ini res getCity`, res.data.rajaongkir.results);
+
+      setCity(res.data.rajaongkir.results);
+    } catch (error) {
+      console.log("error getCity", error);
+    }
+  };
+
+  const printCity = () => {
+    return city.map((val, idx) => {
+      return (
+        <option
+          onClick={() => onClickPrintCity(val.city_name, val.postal_code)}
+          // value={city_id == "" ? `${val.city_id}` : `${val.city_id = city_id}`}
+          value={`${val.city_id}`}
+        >
+          {val.city_name}
+        </option>
+      );
+    });
+  };
+
+  const onClickPrintCity = (namakota, kodepos) => {
+    setCityName(namakota);
+    setPostalCode(kodepos);
+  };
+
+  //------------------- save new address ---------------------------
+
+  const btnSaveNewAddress = async () => {
+    try {
+      let res = await axios.post(`${API_URL}/profile/address`, {
+        address: newAddress,
+        province: provinceName,
+        city: cityName,
+        postalCode: postalCode,
+        province_id: provinceId,
+        city_id: city_id
+      }, {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      })
+      console.log(`ini dari resp btnSaveNewAddress`, res);
+
+      if (res.data.success) {
+        alert(res.data.message);
+        modalAddAddress.onClose();
+        getallAddress();
+        setPostalCode(null);
+      }
+
+    } catch (error) {
+      console.log("ini error add Location:", error);
+      if (error.response.data.error) {
+        alert(error.response.data.error[0].msg)
+      } else {
+        alert(error.response.data.message)
+      }
+    }
+  };
+
+  const onBtnCancelModalAdd = () => {
+    modalAddAddress.onClose();
+    setPostalCode(null);
+  };
+
+  //--------------------------- Change Address --------------------------------------------------
+
   const getallAddress = async () => {
     try {
       let res = await axios.get(`${API_URL}/profile/useraddress`, {
@@ -66,12 +202,76 @@ function Checkout() {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(res);
-      setAddressList(res.data.data);
+      console.log(`getallAddress`, res.data.data);
+      setAddressList(res.data.data)
     } catch (error) {
       console.log(error);
     }
   };
+
+  const printAllAddress = () => {
+    return addressList.map((val, idx) => {
+      let temp = val.id.toString()
+      return (
+        <>
+          <Radio value={temp}>{val.address}, {val.city}, {val.province}, {val.postalCode}</Radio>
+          <Divider my={4} />
+        </>
+      )
+    })
+  }
+
+  const getPrimaryAddress = async () => {
+    try {
+      let res = await axios.get(`${API_URL}/profile/useraddress`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // console.log(`getPrimaryAddress`, res.data.primaryAddress[0]);
+      setPrimaryAddress(res.data.primaryAddress[0]);
+      setValue(res.data.primaryAddress[0].id.toString())
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getUserAddress = async () => {
+    try {
+      let res = await axios.get(`${API_URL}/profile/useraddress`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // console.log(`getUserAddress`, res.data.user);
+      setUser(res.data.user);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const btnConfirmAddress = async () => {
+    try {
+      let res = await axios.patch(`${API_URL}/profile/primaryaddress`, {
+        id: value
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      })
+      // console.log("btnConfirmAddress", res);
+
+      if(res.data.status){
+        alert(res.data.message);
+        modalChangeAddress.onClose();
+        getPrimaryAddress();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  //-----------------------------------------------------------------------------------------------
 
   const printSummary = () => {
     return cartList.map((val, idx) => {
@@ -256,7 +456,11 @@ function Checkout() {
   useEffect(() => {
     getCart();
     getallAddress();
-  }, []);
+    getPrimaryAddress();
+    getUserAddress();
+    getProvince();
+    getCity();
+  }, [provinceId]);
 
   return (
     <>
@@ -307,16 +511,17 @@ function Checkout() {
                     >
                       <Box w={"80%"}>
                         <Text fontWeight={"semibold"} mb="4">
-                          customer name, Phone number
+                          {`${user.name}, ${user.phone}`}
                         </Text>
                         <Text flexWrap={"wrap"} mb="4">
-                          Adrress details
+                          {`${primaryAddress.address}, ${primaryAddress.city}, ${primaryAddress.province}, ${primaryAddress.postalCode}`}
                         </Text>
                       </Box>
                       <Text
                         as={"button"}
                         color={"#34D399"}
                         fontWeight={"semibold"}
+                        onClick={modalChangeAddress.onOpen}
                       >
                         Change
                       </Text>
@@ -326,6 +531,7 @@ function Checkout() {
                       fontWeight={"semibold"}
                       color={"#34D399"}
                       as="button"
+                      onClick={modalAddAddress.onOpen}
                     >
                       <Icon boxSize={"6"} as={FiPlus} mx="2" />
                       <Text>Add New Address</Text>
@@ -407,6 +613,101 @@ function Checkout() {
           </Flex>
         </Flex>
       )}
+
+      {/* --------------- modal change address ----------------- */}
+
+      <Modal isOpen={modalChangeAddress.isOpen} onClose={modalChangeAddress.onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>My Address</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <RadioGroup
+              defaultValue={value}
+              onChange={setValue}
+              value={value}
+            >
+              <Stack>
+                {printAllAddress()}
+              </Stack>
+            </RadioGroup>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme='blue' mr={3} >
+              Close
+            </Button>
+            <Button onClick={btnConfirmAddress}>Confirm</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      {/* ------------- modal add new address -------------------- */}
+      <Modal isOpen={modalAddAddress.isOpen} onClose={modalAddAddress.onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Add New Address</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Box>
+              <FormControl>
+                <FormLabel>Province</FormLabel>
+                <Select
+                  onChange={(e) => {
+                    setProvinceId(e.target.value);
+                    // setProvinceName(e.target.value.split(",")[1]);
+                  }}
+                  placeholder={"-- Select --"}
+                >
+                  {printProvince()}
+                </Select>
+              </FormControl>
+
+              <FormControl mt={2}>
+                <FormLabel>City</FormLabel>
+                <Select
+                  onChange={(e) => {
+                    setCity_id(e.target.value);
+                  }}
+                  placeholder={"-- Select --"}
+                >
+                  {printCity()}
+                </Select>
+              </FormControl>
+
+              <FormControl mt={2}>
+                <FormLabel>Address</FormLabel>
+                <Textarea
+                  onChange={(e) => {
+                    setNewAddress(e.target.value);
+                  }}
+                  placeholder="Address"
+                  maxLength={300}
+                  resize={"none"}
+                />
+              </FormControl>
+
+              <FormControl mt={2}>
+                <FormLabel>Postal Code</FormLabel>
+                <Input
+                  isDisabled={true}
+                  placeholder={postalCode}
+                  _placeholder={{ opacity: 1, color: "black" }}
+                />
+              </FormControl>
+            </Box>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              onClick={btnSaveNewAddress}
+              colorScheme='blue'
+              mr={3} >
+              Save
+            </Button>
+            <Button onClick={onBtnCancelModalAdd}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
     </>
   );
 }
