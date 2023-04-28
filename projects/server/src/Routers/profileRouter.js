@@ -18,5 +18,6 @@ route.patch(
   profileController.updateprofileimage
 );
 route.get("/useraddress", readToken, profileController.getUserAddress);
+route.patch("/primaryaddress", readToken, profileController.setPrimary);
 
 module.exports = route;

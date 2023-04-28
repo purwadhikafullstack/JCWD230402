@@ -69,6 +69,15 @@ module.exports = {
           },
         });
         let customerid = getcustomer[0].dataValues.id;
+
+        await model.address.update({
+          isPrimary: 0
+        }, {
+          where: {
+            customerId: getcustomer[0].dataValues.id
+          }
+        })
+
         const uuid = uuidv4();
         const {
           address,
@@ -76,8 +85,7 @@ module.exports = {
           city,
           postalCode,
           city_id,
-          province_id,
-          isDeleted,
+          province_id
         } = req.body;
 
         let coordinate = await (
@@ -101,7 +109,8 @@ module.exports = {
           province_id: province_id,
           location: location,
           customerId: customerid,
-          isDeleted: isDeleted,
+          isDeleted: 0,
+          isPrimary: 1
         });
         return res.status(200).send({
           success: true,
@@ -279,6 +288,7 @@ module.exports = {
       next(error);
     }
   },
+
   getUserAddress: async (req, res, next) => {
     try {
       // find user id
@@ -288,15 +298,62 @@ module.exports = {
         },
       });
 
+      let primaryAddress = await model.address.findAll({
+        where: {
+          customerId: user.dataValues.id,
+          isPrimary: 1
+        },
+      })
+
       let data = await model.address.findAll({
         where: {
           customerId: user.dataValues.id,
         },
       });
 
-      return res.status(200).send({ data: data });
+      return res.status(200).send({
+        user: user,
+        data: data,
+        primaryAddress: primaryAddress
+      });
     } catch (error) {
       next(error);
     }
   },
+
+  setPrimary: async (req, res, next) => {
+    try {
+      let getcustomer = await model.customer.findAll({
+        where: {
+          uuid: req.decript.uuid,
+        },
+      });
+      let customerid = getcustomer[0].dataValues.id;
+
+      await model.address.update({
+        isPrimary: 0
+      }, {
+        where: {
+          customerId: customerid
+        }
+      })
+
+      await model.address.update({
+        isPrimary: 1
+      }, {
+        where: {
+          id: parseInt(req.body.id) 
+        }
+      })
+
+      res.status(200).send({
+        status: true,
+        message: `primariy address has changed`
+      })
+
+    } catch (error) {
+      console.log(error);
+      next(error)
+    }
+  }
 };
