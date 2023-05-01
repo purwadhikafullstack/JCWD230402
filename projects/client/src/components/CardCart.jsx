@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { BsTrash } from "react-icons/bs";
-import { Text, Flex, Box, Button, Icon, Image } from "@chakra-ui/react";
+import { Text, Flex, Box, Icon, Image } from "@chakra-ui/react";
 
 function CardCart(props) {
   const [plus, setPlus] = useState(true);

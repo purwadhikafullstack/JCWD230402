@@ -32,6 +32,7 @@ import {
   Input,
   Select,
   Textarea,
+  CardFooter,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
@@ -51,8 +52,7 @@ function Checkout() {
   const [addressList, setAddressList] = useState([]);
   const [primaryAddress, setPrimaryAddress] = useState([]);
   const [user, setUser] = useState([]);
-  const [value, setValue] = React.useState("")
-
+  const [value, setValue] = React.useState("");
 
   const [province, setProvince] = React.useState([]);
   const [provinceName, setProvinceName] = React.useState("");
@@ -73,7 +73,7 @@ function Checkout() {
     }).format(params);
 
     return total;
-  };
+  }
 
   const getCart = async () => {
     try {
@@ -157,33 +157,37 @@ function Checkout() {
 
   const btnSaveNewAddress = async () => {
     try {
-      let res = await axios.post(`${API_URL}/profile/address`, {
-        address: newAddress,
-        province: provinceName,
-        city: cityName,
-        postalCode: postalCode,
-        province_id: provinceId,
-        city_id: city_id
-      }, {
-        headers: {
-          "Authorization": `Bearer ${token}`
+      let res = await axios.post(
+        `${API_URL}/profile/address`,
+        {
+          address: newAddress,
+          province: provinceName,
+          city: cityName,
+          postalCode: postalCode,
+          province_id: provinceId,
+          city_id: city_id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      })
+      );
       console.log(`ini dari resp btnSaveNewAddress`, res);
 
       if (res.data.success) {
         alert(res.data.message);
         modalAddAddress.onClose();
+        getPrimaryAddress();
         getallAddress();
         setPostalCode(null);
       }
-
     } catch (error) {
       console.log("ini error add Location:", error);
       if (error.response.data.error) {
-        alert(error.response.data.error[0].msg)
+        alert(error.response.data.error[0].msg);
       } else {
-        alert(error.response.data.message)
+        alert(error.response.data.message);
       }
     }
   };
@@ -203,7 +207,7 @@ function Checkout() {
         },
       });
       console.log(`getallAddress`, res.data.data);
-      setAddressList(res.data.data)
+      setAddressList(res.data.data);
     } catch (error) {
       console.log(error);
     }
@@ -211,15 +215,17 @@ function Checkout() {
 
   const printAllAddress = () => {
     return addressList.map((val, idx) => {
-      let temp = val.id.toString()
+      let temp = val.id.toString();
       return (
         <>
-          <Radio value={temp}>{val.address}, {val.city}, {val.province}, {val.postalCode}</Radio>
+          <Radio value={temp}>
+            {val.address}, {val.city}, {val.province}, {val.postalCode}
+          </Radio>
           <Divider my={4} />
         </>
-      )
-    })
-  }
+      );
+    });
+  };
 
   const getPrimaryAddress = async () => {
     try {
@@ -230,7 +236,7 @@ function Checkout() {
       });
       // console.log(`getPrimaryAddress`, res.data.primaryAddress[0]);
       setPrimaryAddress(res.data.primaryAddress[0]);
-      setValue(res.data.primaryAddress[0].id.toString())
+      setValue(res.data.primaryAddress[0].id.toString());
     } catch (error) {
       console.log(error);
     }
@@ -252,16 +258,20 @@ function Checkout() {
 
   const btnConfirmAddress = async () => {
     try {
-      let res = await axios.patch(`${API_URL}/profile/primaryaddress`, {
-        id: value
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      let res = await axios.patch(
+        `${API_URL}/profile/primaryaddress`,
+        {
+          id: value,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      })
+      );
       // console.log("btnConfirmAddress", res);
 
-      if(res.data.status){
+      if (res.data.status) {
         alert(res.data.message);
         modalChangeAddress.onClose();
         getPrimaryAddress();
@@ -269,7 +279,7 @@ function Checkout() {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   //-----------------------------------------------------------------------------------------------
 
@@ -458,6 +468,9 @@ function Checkout() {
     getallAddress();
     getPrimaryAddress();
     getUserAddress();
+  }, []);
+
+  useEffect(() => {
     getProvince();
     getCity();
   }, [provinceId]);
@@ -488,11 +501,11 @@ function Checkout() {
           mx={"auto"}
           flexDir={{ base: "column", md: "row" }}
           justifyContent={"space-evenly"}
-          gap={"8"}
+          gap={{ base: "8", md: "3", lg: "8" }}
         >
           <Flex
             color={"white"}
-            w={{ base: "full", md: "65%" }}
+            w={{ base: "full", md: "60%", lg: "65%" }}
             flexDir={"column"}
             gap={"6"}
           >
@@ -513,9 +526,15 @@ function Checkout() {
                         <Text fontWeight={"semibold"} mb="4">
                           {`${user.name}, ${user.phone}`}
                         </Text>
-                        <Text flexWrap={"wrap"} mb="4">
-                          {`${primaryAddress.address}, ${primaryAddress.city}, ${primaryAddress.province}, ${primaryAddress.postalCode}`}
-                        </Text>
+                        {addressList.length == 0 ? (
+                          <Text>
+                            No address detected, please add a new address.
+                          </Text>
+                        ) : (
+                          <Text flexWrap={"wrap"} mb="4">
+                            {`${primaryAddress?.address}, ${primaryAddress?.city}, ${primaryAddress?.province}, ${primaryAddress?.postalCode}`}
+                          </Text>
+                        )}
                       </Box>
                       <Text
                         as={"button"}
@@ -556,84 +575,191 @@ function Checkout() {
             </Box>
           </Flex>
           {/* =====================================================================Price DLL */}
-          <Flex color={"white"} w={{ base: "full", md: "25%" }}>
-            <Card
-              color={"white"}
-              bg={"inherit"}
-              boxShadow={"dark-lg"}
-              w={"full"}
-            >
+          <Flex
+            color={"white"}
+            w={{ base: "full", md: "30%", lg: "25%" }}
+            flexWrap={"wrap"}
+            boxShadow={"dark-lg"}
+          >
+            <Card color={"white"} bg={"inherit"} w={"full"}>
               <CardHeader>
-                <Heading size="md">Total</Heading>
+                <Heading size="lg">Total</Heading>
               </CardHeader>
 
               <CardBody>
                 <Stack divider={<StackDivider />} spacing="4">
                   <Box>
                     <Flex justifyContent={"space-between"} mt="2">
-                      <Text fontSize="md">SubTotal</Text>
-                      <Text fontSize="md" fontWeight={"semibold"}>
+                      <Text fontSize={{ base: "md", md: "sm", lg: "md" }}>
+                        SubTotal
+                      </Text>
+                      <Text
+                        fontSize={{ base: "md", md: "sm", lg: "md" }}
+                        fontWeight={"semibold"}
+                      >
                         {formating(sessionStorage.getItem("total all item"))}
                       </Text>
                     </Flex>
 
                     <Flex justifyContent={"space-between"} mt="2">
-                      <Text fontSize="md">Tax (10%)</Text>
-                      <Text fontSize="md" fontWeight={"semibold"}>
+                      <Text fontSize={{ base: "md", md: "sm", lg: "md" }}>
+                        Tax (10%)
+                      </Text>
+                      <Text
+                        fontSize={{ base: "md", md: "sm", lg: "md" }}
+                        fontWeight={"semibold"}
+                      >
                         {formating(
                           sessionStorage.getItem("total all item") * 0.1
                         )}
                       </Text>
                     </Flex>
                     <Flex justifyContent={"space-between"} mt="2">
-                      <Text fontSize="md">Delivery Cost</Text>
-                      <Text fontSize="md" fontWeight={"semibold"}>
-                        number
+                      <Text fontSize={{ base: "md", md: "sm", lg: "md" }}>
+                        Delivery Cost
                       </Text>
+                      {addressList.length === 0 ? (
+                        <Text
+                          fontSize={{ base: "md", md: "sm", lg: "md" }}
+                          fontWeight={"semibold"}
+                        >
+                          -
+                        </Text>
+                      ) : (
+                        <Text
+                          fontSize={{ base: "md", md: "sm", lg: "md" }}
+                          fontWeight={"semibold"}
+                        >
+                          number
+                        </Text>
+                      )}
                     </Flex>
                   </Box>
                   <Flex justifyContent={"space-between"} my="2">
-                    <Text fontSize="md">Total</Text>
-                    <Text
-                      fontSize="md"
-                      color={"#34D399"}
-                      fontWeight={"semibold"}
-                    >
-                      {formating(
-                        sessionStorage.getItem("total all item") * 0.1
-                      )}
+                    <Text fontSize={{ base: "md", md: "sm", lg: "md" }}>
+                      Total
                     </Text>
+                    {addressList.length === 0 ? (
+                      <Text
+                        fontSize={{ base: "md", md: "sm", lg: "md" }}
+                        color={"#34D399"}
+                        fontWeight={"semibold"}
+                      >
+                        -
+                      </Text>
+                    ) : (
+                      <Text
+                        fontSize={{ base: "md", md: "sm", lg: "md" }}
+                        color={"#34D399"}
+                        fontWeight={"semibold"}
+                      >
+                        {formating(
+                          sessionStorage.getItem("total all item") * 0.1
+                        )}
+                      </Text>
+                    )}
                   </Flex>
-                  <Box mt="2">
-                    <Text fontSize="md">Choose paymnet button</Text>
-                  </Box>
                 </Stack>
               </CardBody>
             </Card>
+            {addressList.length === 0 ? null : (
+              <>
+                <Card color={"white"} bg={"inherit"} w={"full"}>
+                  <CardBody>
+                    <Heading fontSize={{ base: "lg", lg: "md" }} mb="5">
+                      Shipping Method
+                    </Heading>
+                    <Stack spacing="4">
+                      <RadioGroup>
+                        <Radio
+                          w="full"
+                          size={"sm"}
+                          alignItems={"center"}
+                          mx={"auto"}
+                        >
+                          <Flex
+                            flexWrap={"wrap"}
+                            justifyContent={"space-between"}
+                            w={{
+                              base: "351px",
+                              md: "159px",
+                              lg: "190px",
+                              xl: "300px",
+                            }}
+                            fontSize={{ base: "sm", lg: "sm" }}
+                          >
+                            <Text textTransform="uppercase">
+                              sicepat - siunit
+                            </Text>
+                            <Text mt={1}>{formating(12000)}</Text>
+                          </Flex>
+                          <Text fontSize="xs" opacity={"0.4"}>
+                            SICEPAT - SiUntung 1-2 days
+                          </Text>
+                        </Radio>
+                        <Divider my={4} />
+                        <Radio w="full" size={"sm"} alignItems={"center"}>
+                          <Flex
+                            flexWrap={"wrap"}
+                            justifyContent={"space-between"}
+                            w={{
+                              base: "351px",
+                              md: "159px",
+                              lg: "190px",
+                              xl: "300px",
+                            }}
+                            fontSize={{ base: "sm", lg: "sm" }}
+                          >
+                            <Text textTransform="uppercase">sicepat - REG</Text>
+                            <Text mt={1}>{formating(15000)}</Text>
+                          </Flex>
+                          <Text fontSize="xs" opacity={"0.4"}>
+                            SICEPAT - Layanan Reguler 1-2 days
+                          </Text>
+                        </Radio>
+                        <Divider my={4} />
+                      </RadioGroup>
+                    </Stack>
+                  </CardBody>
+                  <CardFooter justifyContent={"center"}>
+                    <Button
+                      variant={"solid"}
+                      backgroundColor={"#019d5a"}
+                      color={"black"}
+                      _hover={{
+                        color: "white",
+                        scale: "105",
+                        bgColor: "#34D399",
+                      }}
+                      mt="4"
+                    >
+                      Continue with Payment
+                    </Button>
+                  </CardFooter>
+                </Card>
+              </>
+            )}
           </Flex>
         </Flex>
       )}
 
       {/* --------------- modal change address ----------------- */}
 
-      <Modal isOpen={modalChangeAddress.isOpen} onClose={modalChangeAddress.onClose}>
+      <Modal
+        isOpen={modalChangeAddress.isOpen}
+        onClose={modalChangeAddress.onClose}
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>My Address</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <RadioGroup
-              defaultValue={value}
-              onChange={setValue}
-              value={value}
-            >
-              <Stack>
-                {printAllAddress()}
-              </Stack>
+            <RadioGroup defaultValue={value} onChange={setValue} value={value}>
+              <Stack>{printAllAddress()}</Stack>
             </RadioGroup>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme='blue' mr={3} >
+            <Button colorScheme="blue" mr={3}>
               Close
             </Button>
             <Button onClick={btnConfirmAddress}>Confirm</Button>
@@ -697,17 +823,13 @@ function Checkout() {
             </Box>
           </ModalBody>
           <ModalFooter>
-            <Button
-              onClick={btnSaveNewAddress}
-              colorScheme='blue'
-              mr={3} >
+            <Button onClick={btnSaveNewAddress} colorScheme="blue" mr={3}>
               Save
             </Button>
             <Button onClick={onBtnCancelModalAdd}>Cancel</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
-
     </>
   );
 }
