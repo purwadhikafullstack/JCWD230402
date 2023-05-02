@@ -383,6 +383,33 @@ module.exports = {
       console.log(`req.params`, req.params);
       console.log(`req.body`, req.body);
 
+      let findStock = await model.type.findOne({
+        where: {
+          id: req.params.id
+        }
+      })
+
+      console.log(`findStock`, findStock);
+      if (req.body.stock - findStock.dataValues.stock < 0) {
+        let stockMutation = await model.stockMutation.create({
+          typeId: req.params.id,
+          subtraction: Math.abs(req.body.stock - findStock.dataValues.stock),
+          statusId: 7,
+          onLocation: 1,
+          requestId: 3,
+        })
+        console.log(`stockMutation`, stockMutation);
+      } else {
+        let stockMutation = await model.stockMutation.create({
+          typeId: req.params.id,
+          addition: Math.abs(req.body.stock - findStock.dataValues.stock),
+          statusId: 7,
+          onLocation: 1,
+          requestId: 3,
+        })
+        console.log(`stockMutation`, stockMutation);
+      }
+      
       let editVariant = await model.type.update(
         {
           price: req.body.price,
@@ -397,7 +424,7 @@ module.exports = {
           },
         }
       );
-      // console.log("editVariant", editVariant);
+      console.log("editVariant", editVariant);
 
       return res.status(200).send({
         success: true,
