@@ -639,11 +639,12 @@ function Checkout() {
             </Box>
           </Flex>
           {/* =====================================================================Price DLL */}
-          <Flex
+          <Box
             color={"white"}
             w={{ base: "full", md: "30%", lg: "25%" }}
-            flexWrap={"wrap"}
+            // flexWrap={"wrap"}
             boxShadow={"dark-lg"}
+            h={`fit-content`}
           >
             <Card color={"white"} bg={"inherit"} w={"full"}>
               <CardHeader>
@@ -760,7 +761,7 @@ function Checkout() {
                 </Card>
               </>
             )}
-          </Flex>
+          </Box>
         </Flex>
       )}
 
