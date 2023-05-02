@@ -92,7 +92,7 @@ function Warehouse() {
   };
 
   const printProvince = () => {
-    // console.log(`province`, province);
+    console.log(`province`, province);
     return province.map((val, idx) => {
       return (
         <option

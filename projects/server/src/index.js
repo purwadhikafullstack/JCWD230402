@@ -31,15 +31,17 @@ app.use("/admin", adminRouter);
 const categoryRouter = require("./Routers/categoryRouter");
 app.use("/category", categoryRouter);
 
-
 const productRouter = require("./Routers/productRouter");
 app.use("/product", productRouter);
+
 const profileRouter = require('./Routers/profileRouter');
 app.use('/profile', profileRouter);
 
-
 const detailRouter = require("./Routers/detailRouter");
 app.use("/detail", detailRouter);
+
+const checkout = require("./Routers/checkoutRouter");
+app.use("/checkout", checkout);
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);

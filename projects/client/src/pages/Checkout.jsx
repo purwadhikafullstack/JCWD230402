@@ -62,8 +62,10 @@ function Checkout() {
   const [postalCode, setPostalCode] = React.useState();
   const [newAddress, setNewAddress] = React.useState("");
   const [city_id, setCity_id] = React.useState("");
+  const [ongkirList, setOngkirList] = React.useState([])
+  const [ongkirValue, setOngkirValue] = React.useState("");
 
-  // console.log(`value`, value);
+  console.log(`ongkirValue`, ongkirValue);
 
   function formating(params) {
     let total = new Intl.NumberFormat("id-ID", {
@@ -272,7 +274,7 @@ function Checkout() {
       // console.log("btnConfirmAddress", res);
 
       if (res.data.status) {
-        alert(res.data.message);
+        // alert(res.data.message);
         modalChangeAddress.onClose();
         getPrimaryAddress();
       }
@@ -280,6 +282,64 @@ function Checkout() {
       console.log(error);
     }
   };
+
+  const distance = async () => {
+    try {
+      let distance = await axios.post(`${API_URL}/checkout/`, {
+        customerAddress: primaryAddress.location,
+        city_id: primaryAddress.city_id
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      // console.log(`distance`, distance);
+      setOngkirList(distance.data.data[0].costs)
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const printOngkir = () => {
+    console.log(`ongkirList`, ongkirList);
+    return ongkirList.map((val, idx) => {
+      let temp = idx.toString();
+      return (
+        <>
+          <Radio
+            w="full"
+            size={"sm"}
+            alignItems={"center"}
+            mx={"auto"}
+            value={temp}
+          >
+            <Flex
+              flexWrap={"wrap"}
+              justifyContent={"space-between"}
+              w={{
+                base: "300px",
+                md: "159px",
+                lg: "190px",
+                xl: "300px",
+              }}
+              fontSize={{ base: "sm", lg: "sm" }}
+            >
+              <Text textTransform="uppercase">
+                {`JNE - ${val.service}`}
+              </Text>
+              <Text mt={1}>{formating(val.cost[0].value)}</Text>
+            </Flex>
+            <Text fontSize="xs" opacity={"0.4"}>
+              {`${val.description} - ${val.cost[0].etd} days`}
+            </Text>
+          </Radio>
+          <Divider my={4} />
+        </>
+      )
+    })
+  }
 
   //-----------------------------------------------------------------------------------------------
 
@@ -307,7 +367,7 @@ function Checkout() {
                     w={"full"}
                     rounded={"xl"}
                     alt="product picture"
-                    src={`${val.product.productImage}`}
+                    src={`${API_URL}${val.product.productImage}`}
                   />
                 </Flex>
               </Flex>
@@ -464,6 +524,10 @@ function Checkout() {
   };
 
   useEffect(() => {
+    distance()
+  }, [primaryAddress]);
+
+  useEffect(() => {
     getCart();
     getallAddress();
     getPrimaryAddress();
@@ -603,19 +667,6 @@ function Checkout() {
 
                     <Flex justifyContent={"space-between"} mt="2">
                       <Text fontSize={{ base: "md", md: "sm", lg: "md" }}>
-                        Tax (10%)
-                      </Text>
-                      <Text
-                        fontSize={{ base: "md", md: "sm", lg: "md" }}
-                        fontWeight={"semibold"}
-                      >
-                        {formating(
-                          sessionStorage.getItem("total all item") * 0.1
-                        )}
-                      </Text>
-                    </Flex>
-                    <Flex justifyContent={"space-between"} mt="2">
-                      <Text fontSize={{ base: "md", md: "sm", lg: "md" }}>
                         Delivery Cost
                       </Text>
                       {addressList.length === 0 ? (
@@ -630,9 +681,23 @@ function Checkout() {
                           fontSize={{ base: "md", md: "sm", lg: "md" }}
                           fontWeight={"semibold"}
                         >
-                          number
+                          {ongkirValue == "" ? "-" : formating(ongkirList[ongkirValue].cost[0].value)}
                         </Text>
                       )}
+                    </Flex>
+
+                    <Flex justifyContent={"space-between"} mt="2">
+                      <Text fontSize={{ base: "md", md: "sm", lg: "md" }}>
+                        Tax (10%)
+                      </Text>
+                      <Text
+                        fontSize={{ base: "md", md: "sm", lg: "md" }}
+                        fontWeight={"semibold"}
+                      >
+                        {ongkirValue == "" ? "-" : formating(
+                          (parseInt(sessionStorage.getItem("total all item")) + ongkirList[ongkirValue].cost[0].value) * 0.1
+                        )}
+                      </Text>
                     </Flex>
                   </Box>
                   <Flex justifyContent={"space-between"} my="2">
@@ -653,8 +718,10 @@ function Checkout() {
                         color={"#34D399"}
                         fontWeight={"semibold"}
                       >
-                        {formating(
-                          sessionStorage.getItem("total all item") * 0.1
+                        {ongkirValue == "" ? "-" : formating(
+                          parseInt(sessionStorage.getItem("total all item")) +
+                          ongkirList[ongkirValue].cost[0].value +
+                          ((parseInt(sessionStorage.getItem("total all item")) + ongkirList[ongkirValue].cost[0].value) * 0.1)
                         )}
                       </Text>
                     )}
@@ -670,54 +737,8 @@ function Checkout() {
                       Shipping Method
                     </Heading>
                     <Stack spacing="4">
-                      <RadioGroup>
-                        <Radio
-                          w="full"
-                          size={"sm"}
-                          alignItems={"center"}
-                          mx={"auto"}
-                        >
-                          <Flex
-                            flexWrap={"wrap"}
-                            justifyContent={"space-between"}
-                            w={{
-                              base: "351px",
-                              md: "159px",
-                              lg: "190px",
-                              xl: "300px",
-                            }}
-                            fontSize={{ base: "sm", lg: "sm" }}
-                          >
-                            <Text textTransform="uppercase">
-                              sicepat - siunit
-                            </Text>
-                            <Text mt={1}>{formating(12000)}</Text>
-                          </Flex>
-                          <Text fontSize="xs" opacity={"0.4"}>
-                            SICEPAT - SiUntung 1-2 days
-                          </Text>
-                        </Radio>
-                        <Divider my={4} />
-                        <Radio w="full" size={"sm"} alignItems={"center"}>
-                          <Flex
-                            flexWrap={"wrap"}
-                            justifyContent={"space-between"}
-                            w={{
-                              base: "351px",
-                              md: "159px",
-                              lg: "190px",
-                              xl: "300px",
-                            }}
-                            fontSize={{ base: "sm", lg: "sm" }}
-                          >
-                            <Text textTransform="uppercase">sicepat - REG</Text>
-                            <Text mt={1}>{formating(15000)}</Text>
-                          </Flex>
-                          <Text fontSize="xs" opacity={"0.4"}>
-                            SICEPAT - Layanan Reguler 1-2 days
-                          </Text>
-                        </Radio>
-                        <Divider my={4} />
+                      <RadioGroup onChange={setOngkirValue} value={ongkirValue}>
+                        {printOngkir()}
                       </RadioGroup>
                     </Stack>
                   </CardBody>
@@ -748,6 +769,7 @@ function Checkout() {
       <Modal
         isOpen={modalChangeAddress.isOpen}
         onClose={modalChangeAddress.onClose}
+        size={{ base: "xs", md: "md" }}
       >
         <ModalOverlay />
         <ModalContent>
@@ -759,16 +781,20 @@ function Checkout() {
             </RadioGroup>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3}>
-              Close
+            <Button colorScheme="blue" mr={3} onClick={btnConfirmAddress}>
+              Confirm
             </Button>
-            <Button onClick={btnConfirmAddress}>Confirm</Button>
+            <Button onClick={modalChangeAddress.onClose}>Cancel</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
 
       {/* ------------- modal add new address -------------------- */}
-      <Modal isOpen={modalAddAddress.isOpen} onClose={modalAddAddress.onClose}>
+      <Modal
+        isOpen={modalAddAddress.isOpen}
+        onClose={modalAddAddress.onClose}
+        size={{ base: "xs", md: "md" }}
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Add New Address</ModalHeader>
