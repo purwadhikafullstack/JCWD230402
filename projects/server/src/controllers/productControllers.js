@@ -355,20 +355,9 @@ module.exports = {
           include: [{ model: model.status, attributes: ["id", "status"] }],
         });
 
-        // let maxMin = await model.type.findOne({
-        //     where: {
-        //         productId: req.query.id
-        //     },
-        //     attributes: [
-        //         [sequelize.fn("max", sequelize.col("price")), "maxPrice"],
-        //         [sequelize.fn("min", sequelize.col("price")), "minPrice"]
-        //     ]
-        // })
-
         res.status(200).send({
           success: true,
           data: get,
-          price: maxMin,
         });
       } else {
         let get = await model.type.findAll({
@@ -378,23 +367,11 @@ module.exports = {
           include: [{ model: model.status, attributes: ["id", "status"] }],
         });
 
-        // let maxMin = await model.type.findOne({
-        //     where: {
-        //         productId: req.query.id
-        //     },
-        //     attributes: [
-        //         [sequelize.fn("max", sequelize.col("price")), "maxPrice"],
-        //         [sequelize.fn("min", sequelize.col("price")), "minPrice"]
-        //     ]
-        // })
-
         res.status(200).send({
           success: true,
           data: get,
-          // price: maxMin
         });
       }
-      // console.log(`getVariant`, get);
     } catch (error) {
       console.log(error);
       next(error);

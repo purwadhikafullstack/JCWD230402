@@ -40,8 +40,6 @@ import { useSelector } from 'react-redux';
 import CreatableSelect from 'react-select/creatable';
 import uploadImg from "../img/1156518-200.png"
 
-
-
 function Product() {
 
     const modalAdd = useDisclosure();
@@ -91,7 +89,6 @@ function Product() {
         getAllWarehouse();
         getColor();
         getMemory();
-        // minMaxPrice(productList.map(val => val.id));
     }, [page])
 
 
@@ -209,7 +206,6 @@ function Product() {
                     <Td>{val.name}</Td>
                     <Td>{val.category.type}</Td>
                     <Td>
-                        {/* {`Rp. ${maxMinPrice.minPrice} - ${maxMinPrice.maxPrice}`} */}
                         {`Rp. ${val.types[0].price } - ${val.types[val.types.length - 1].price}`}
                         
                     </Td>
@@ -466,15 +462,6 @@ function Product() {
 
     const inputFile = React.useRef(null);
 
-    // const checkFileSize = (file) => {
-    //     const maxSize = 2 * 1024 * 1024;
-    //     let overSize = false
-    //     if (file.size > maxSize) {
-    //         overSize = true
-    //     }
-    //     return overSize
-    // }
-
     const onChangeFile = (event) => {
         // const files = [event.target.files];
         // const overSize = checkFileSize(files);
@@ -485,9 +472,6 @@ function Product() {
         // }
         setFileProduct(event.target.files[0]);
     };
-
-    // console.log(`fileProduct`, fileProduct);
-
 
     // ------------------------------ EDIT VARIANT ------------------------------------
 
@@ -513,8 +497,6 @@ function Product() {
                         "Authorization": `Bearer ${token}`
                     }
                 })
-                // console.log(`res price: `, res);
-                // setMaxMinPrice(res.data.price);
                 setVariationsEdit(res.data.data);
             } else {
                 let res = await axios.get(`${API_URL}/product/variant?id=${id}&warehouseId=${warehouseId}`, {
@@ -528,11 +510,6 @@ function Product() {
             console.log(error);
         }
     }
-
-    console.log(`variationsEdit`, variationsEdit);
-    // console.log(`setMaxMinPrice`, maxMinPrice);
-    // console.log(`fileProductEdit`, fileProductEdit);
-    // console.log(`fileProductEditNew`, fileProductEditNew);
 
     const addVariationEdit = () => {
         const newVariaton = {
@@ -663,9 +640,6 @@ function Product() {
             console.log(error);
         }
     };
-
-    // console.log("isDisabled", isDisabled);
-    // console.log("activeIndex", activeIndex);
 
     return (
         <Box my={"20px"} textColor="white">
