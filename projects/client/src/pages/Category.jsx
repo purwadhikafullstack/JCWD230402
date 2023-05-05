@@ -27,6 +27,7 @@ import {
   Icon,
   Text,
   useToast,
+  Spinner,
 } from "@chakra-ui/react";
 import { MdOutlineAdd } from "react-icons/md";
 import { API_URL } from "../helper";
@@ -59,6 +60,7 @@ function Category() {
   const [sortby, setSortby] = React.useState(defaultSort);
   const [order, setOrder] = React.useState(defaultOrder);
   const [filter, setFilter] = React.useState(defaultFilter);
+  const [loading, setLoading] = React.useState(true);
 
   let token = localStorage.getItem("gadgetwarehouse_adminlogin");
 
@@ -133,7 +135,10 @@ function Category() {
       );
 
       // console.log(`res getCategory`, res);
-
+      setLoading(false);
+      if (!res.data.data) {
+        navigate("*");
+      }
       setCategoryList(res.data.data);
       setTotalData(res.data.datanum);
     } catch (error) {
@@ -316,125 +321,149 @@ function Category() {
   };
 
   return (
-    <Box my={"20px"} textColor="white">
-      <Flex justifyContent={"space-between"}>
-        <Heading size={"lg"} fontStyle="inherit">
-          Category List
-        </Heading>
-        <SearchBar setprops={setprops} onSearchBtn={onSearchBtn} />
-        <Button
-          onClick={modalAdd.onOpen}
-          _hover={"none"}
-          bgColor={"#1BFD9C"}
-          style={{ color: "black" }}
-          leftIcon={<MdOutlineAdd />}
+    <>
+      {loading === true ? (
+        <Flex
+          justifyContent={"center"}
+          my={{ base: "24", md: "96" }}
+          color={"white"}
+          maxW={"100vw"}
+          mx={"auto"}
         >
-          Add Category
-        </Button>
-      </Flex>
-
-      {/* ----------------------------------------------MODAL ADD------------------------------------------------ */}
-      <Modal
-        initialFocusRef={initialRef}
-        finalFocusRef={finalRef}
-        isOpen={modalAdd.isOpen}
-        onClose={modalAdd.onClose}
-        size={"xl"}
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>New Category</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody pb={6}>
-            <FormControl>
-              <FormLabel>Category Name</FormLabel>
-              <Input onChange={(e) => setCategory(e.target.value)} />
-            </FormControl>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={btnSaveCategory}>
-              Save
-            </Button>
-            <Button onClick={btnCancelAddCategory}>Cancel</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-      {/* ----------------------------------------------MODAL EDIT------------------------------------------------ */}
-      <Modal
-        initialFocusRef={initialRef}
-        finalFocusRef={finalRef}
-        isOpen={modalEdit.isOpen}
-        onClose={modalEdit.onClose}
-        size={"xl"}
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Edit Category</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody pb={6}>
-            <FormControl>
-              <FormLabel>Category Name</FormLabel>
-              <Input
-                onChange={(e) => setCategory(e.target.value)}
-                placeholder={"User Name"}
-                defaultValue={category}
-              />
-            </FormControl>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button onClick={btnSaveEditCategory} colorScheme="blue" mr={3}>
-              Save
-            </Button>
-            <Button onClick={btnCancelEditCategory}>Cancel</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-
-      <TableContainer mt={"20px"}>
-        <Table>
-          <Thead>
-            <Tr>
-              <Th textColor={"white"}>No</Th>
-              <Th textColor={"white"}>
-                <Text
-                  as="button"
-                  onClick={() => {
-                    sorting("type");
-                  }}
-                >
-                  CATEGORY NAME
-                  <Icon
-                    ml={3}
-                    as={
-                      sortby === "type" && order === "ASC"
-                        ? BsChevronDown
-                        : BsChevronUp
-                    }
-                    display="inline"
-                  />
-                </Text>
-              </Th>
-              <Th textColor={"white"}>STATUS</Th>
-              <Th></Th>
-            </Tr>
-          </Thead>
-          <Tbody>{printCategory()}</Tbody>
-        </Table>
-      </TableContainer>
-
-      {
-        <div className="justify-end flex">
-          <Pagination
-            paginate={paginate}
-            size={size}
-            totalData={totalData}
-            page={page}
+          <Spinner
+            thickness="4px"
+            speed="0.65s"
+            emptyColor="gray.200"
+            color="blue.500"
+            size="xl"
           />
-        </div>
-      }
-    </Box>
+        </Flex>
+      ) : (
+        < Box my={"20px"} textColor="white">
+          <Flex justifyContent={"space-between"}>
+            <Heading size={"lg"} fontStyle="inherit">
+              Category List
+            </Heading>
+            <SearchBar setprops={setprops} onSearchBtn={onSearchBtn} />
+            {
+              roleId == 1 ? (
+                <Button
+                  onClick={modalAdd.onOpen}
+                  _hover={"none"}
+                  bgColor={"#1BFD9C"}
+                  style={{ color: "black" }}
+                  leftIcon={<MdOutlineAdd />}
+                >
+                  Add Category
+                </Button>
+              ) : null
+            }
+          </Flex>
+
+          {/* ----------------------------------------------MODAL ADD------------------------------------------------ */}
+          <Modal
+            initialFocusRef={initialRef}
+            finalFocusRef={finalRef}
+            isOpen={modalAdd.isOpen}
+            onClose={modalAdd.onClose}
+            size={"xl"}
+          >
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>New Category</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody pb={6}>
+                <FormControl>
+                  <FormLabel>Category Name</FormLabel>
+                  <Input onChange={(e) => setCategory(e.target.value)} />
+                </FormControl>
+              </ModalBody>
+
+              <ModalFooter>
+                <Button colorScheme="blue" mr={3} onClick={btnSaveCategory}>
+                  Save
+                </Button>
+                <Button onClick={btnCancelAddCategory}>Cancel</Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+          {/* ----------------------------------------------MODAL EDIT------------------------------------------------ */}
+          <Modal
+            initialFocusRef={initialRef}
+            finalFocusRef={finalRef}
+            isOpen={modalEdit.isOpen}
+            onClose={modalEdit.onClose}
+            size={"xl"}
+          >
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Edit Category</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody pb={6}>
+                <FormControl>
+                  <FormLabel>Category Name</FormLabel>
+                  <Input
+                    onChange={(e) => setCategory(e.target.value)}
+                    placeholder={"User Name"}
+                    defaultValue={category}
+                  />
+                </FormControl>
+              </ModalBody>
+
+              <ModalFooter>
+                <Button onClick={btnSaveEditCategory} colorScheme="blue" mr={3}>
+                  Save
+                </Button>
+                <Button onClick={btnCancelEditCategory}>Cancel</Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+
+          <TableContainer mt={"20px"}>
+            <Table>
+              <Thead>
+                <Tr>
+                  <Th textColor={"white"}>No</Th>
+                  <Th textColor={"white"}>
+                    <Text
+                      as="button"
+                      onClick={() => {
+                        sorting("type");
+                      }}
+                    >
+                      CATEGORY NAME
+                      <Icon
+                        ml={3}
+                        as={
+                          sortby === "type" && order === "ASC"
+                            ? BsChevronDown
+                            : BsChevronUp
+                        }
+                        display="inline"
+                      />
+                    </Text>
+                  </Th>
+                  <Th textColor={"white"}>STATUS</Th>
+                  {roleId === 1 ? <Th></Th> : null}
+                </Tr>
+              </Thead>
+              <Tbody>{printCategory()}</Tbody>
+            </Table>
+          </TableContainer>
+
+          {
+            <div className="justify-end flex">
+              <Pagination
+                paginate={paginate}
+                size={size}
+                totalData={totalData}
+                page={page}
+              />
+            </div>
+          }
+        </Box>
+      )}
+    </>
   );
 }
 

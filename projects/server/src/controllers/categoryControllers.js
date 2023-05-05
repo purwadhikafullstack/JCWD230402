@@ -44,7 +44,11 @@ module.exports = {
       let order = req.query.order;
 
       if (!page && !size && !sortby && !order) {
-        let get = await model.category.findAll();
+        let get = await model.category.findAll({
+          where: {
+            isDisabled: 0
+          }
+        });
 
         return res.status(200).send({
           success: true,

@@ -110,7 +110,13 @@ module.exports = {
 
         return res.status(200).send(data);
       } else {
-        let data = await model.warehouse.findAll();
+        let data = await model.warehouse.findAll(
+          {
+            where: {
+              isDisabled: 0
+            }
+          }
+        );
         console.log(`data semua warehouse`, data);
 
         return res.status(200).send(data);

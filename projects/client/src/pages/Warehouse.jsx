@@ -18,6 +18,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Select,
+  Spinner,
   Table,
   TableContainer,
   Tbody,
@@ -46,6 +47,7 @@ function Warehouse() {
 
   const initialRef = React.useRef(null);
   const finalRef = React.useRef(null);
+  const [loading, setLoading] = React.useState(true);
 
   //-------------------------------PAGINATION AND FILTER -----------------------------------------------------------------------
 
@@ -217,6 +219,10 @@ function Warehouse() {
 
       setTotalData(res.data.count);
       setWarehouseList(res.data.rows);
+      setLoading(false);
+      if (!res.data) {
+        navigate("*");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -429,311 +435,331 @@ function Warehouse() {
   };
 
   return (
-    <Box mt={{md:"20px", lg:"20px", xl:"20px"}} textColor="white">
-      <Flex justifyContent={"space-between"}>
-        <Heading size={{ md: "md", lg: "lg" }} fontStyle="inherit">
-          Warehouse List
-        </Heading>
-        <SearchBar setprops={setprops} onSearchBtn={onSearchBtn} />
-
-        {roleId == 1 ? (
-          <Button
-            onClick={modalAdd.onOpen}
-            _hover={"none"}
-            bgColor={"#1BFD9C"}
-            style={{ color: "black" }}
-            leftIcon={<MdOutlineAdd />}
-            size={{ md: "sm", lg: "md" }}
-          >
-            Add Warehouse
-          </Button>
-        ) : null}
-      </Flex>
-
-      {/* ----------------------------------------------MODAL ADD-------------------------------------------------------------------------------------------------- */}
-      <Modal
-        initialFocusRef={initialRef}
-        finalFocusRef={finalRef}
-        isOpen={modalAdd.isOpen}
-        onClose={modalAdd.onClose}
-        size={"xl"}
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>New Warehouse</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody pb={6}>
-            <Flex>
-              <Box>
-                <FormControl>
-                  <FormLabel>Warehouse Name</FormLabel>
-                  <Input
-                    onChange={(e) => {
-                      setName(e.target.value);
-                    }}
-                    ref={initialRef}
-                    placeholder="Warehouse Name"
-                  />
-                </FormControl>
-
-                <FormControl mt={2}>
-                  <FormLabel>Email</FormLabel>
-                  <Input
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                    }}
-                    placeholder="Email"
-                  />
-                </FormControl>
-
-                <FormControl mt={2}>
-                  <FormLabel>Phone</FormLabel>
-                  <Input
-                    onChange={(e) => {
-                      setPhone(e.target.value);
-                    }}
-                    placeholder="Phone"
-                  />
-                </FormControl>
-
-                <FormControl mt={2}>
-                  <FormLabel>Province</FormLabel>
-                  <Select
-                    onChange={(e) => {
-                      setProvinceId(e.target.value);
-                      // setProvinceName(e.target.value.split(",")[1]);
-                    }}
-                    placeholder={"-- Select --"}
-                  >
-                    {printProvince()}
-                  </Select>
-                </FormControl>
-              </Box>
-
-              <Box pl={4}>
-                <FormControl>
-                  <FormLabel>City</FormLabel>
-                  <Select
-                    onChange={(e) => {
-                      // setCityName(e.target.value.split(",")[0]);
-                      // setPostalCode(e.target.value.split(",")[1]);
-                      setCity_id(e.target.value);
-                    }}
-                    placeholder={"-- Select --"}
-                  >
-                    {printCity()}
-                  </Select>
-                </FormControl>
-
-                <FormControl mt={2}>
-                  <FormLabel>Address</FormLabel>
-                  <Textarea
-                    onChange={(e) => {
-                      setAddress(e.target.value);
-                    }}
-                    placeholder="Address"
-                    maxLength={300}
-                    resize={"none"}
-                  />
-                </FormControl>
-
-                <FormControl mt={2}>
-                  <FormLabel>Postal Code</FormLabel>
-                  <Input
-                    isDisabled={true}
-                    placeholder={postalCode}
-                    _placeholder={{ opacity: 1, color: "black" }}
-                  ></Input>
-                </FormControl>
-              </Box>
-            </Flex>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button onClick={btnSaveWarehouse} colorScheme="blue" mr={3}>
-              Save
-            </Button>
-            <Button onClick={onBtnCancelModalAdd}>Cancel</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-      {/* ----------------------------------------------MODAL EDIT-------------------------------------------------------------------------------------------------- */}
-      <Modal
-        initialFocusRef={initialRef}
-        finalFocusRef={finalRef}
-        isOpen={modalEdit.isOpen}
-        onClose={modalEdit.onClose}
-        size={"xl"}
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Edit Warehouse</ModalHeader>
-          <ModalCloseButton
-            onClick={() => {
-              setPostalCode(null);
-            }}
+    <>
+      {loading === true ? (
+        <Flex
+          justifyContent={"center"}
+          my={{ base: "24", md: "96" }}
+          color={"white"}
+          maxW={"100vw"}
+          mx={"auto"}
+        >
+          <Spinner
+            thickness="4px"
+            speed="0.65s"
+            emptyColor="gray.200"
+            color="blue.500"
+            size="xl"
           />
-          <ModalBody pb={6}>
-            <Flex>
-              <Box>
-                <FormControl>
-                  <FormLabel>Warehouse Name</FormLabel>
-                  <Input
-                    defaultValue={name}
-                    onChange={(e) => {
-                      setName(e.target.value);
-                    }}
-                    ref={initialRef}
-                    placeholder="Warehouse Name"
-                  />
-                </FormControl>
+        </Flex>
+      ) : (
+        <Box mt={{ md: "20px", lg: "20px", xl: "20px" }} textColor="white">
+          <Flex justifyContent={"space-between"}>
+            <Heading size={{ md: "md", lg: "lg" }} fontStyle="inherit">
+              Warehouse List
+            </Heading>
+            <SearchBar setprops={setprops} onSearchBtn={onSearchBtn} />
 
-                <FormControl mt={2}>
-                  <FormLabel>Email</FormLabel>
-                  <Input
-                    defaultValue={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                    }}
-                    placeholder="Email"
-                  />
-                </FormControl>
+            {roleId == 1 ? (
+              <Button
+                onClick={modalAdd.onOpen}
+                _hover={"none"}
+                bgColor={"#1BFD9C"}
+                style={{ color: "black" }}
+                leftIcon={<MdOutlineAdd />}
+                size={{ md: "sm", lg: "md" }}
+              >
+                Add Warehouse
+              </Button>
+            ) : null}
+          </Flex>
 
-                <FormControl mt={2}>
-                  <FormLabel>Phone</FormLabel>
-                  <Input
-                    defaultValue={phone}
-                    onChange={(e) => {
-                      setPhone(e.target.value);
-                    }}
-                    placeholder="Phone"
-                  />
-                </FormControl>
+          {/* ----------------------------------------------MODAL ADD-------------------------------------------------------------------------------------------------- */}
+          <Modal
+            initialFocusRef={initialRef}
+            finalFocusRef={finalRef}
+            isOpen={modalAdd.isOpen}
+            onClose={modalAdd.onClose}
+            size={"xl"}
+          >
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>New Warehouse</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody pb={6}>
+                <Flex>
+                  <Box>
+                    <FormControl>
+                      <FormLabel>Warehouse Name</FormLabel>
+                      <Input
+                        onChange={(e) => {
+                          setName(e.target.value);
+                        }}
+                        ref={initialRef}
+                        placeholder="Warehouse Name"
+                      />
+                    </FormControl>
 
-                <FormControl mt={2}>
-                  <FormLabel>Province</FormLabel>
-                  <Select
-                    onChange={(e) => {
-                      setProvinceId(e.target.value);
-                    }}
-                    defaultValue={`${provinceId}`}
-                  >
-                    {printProvince()}
-                  </Select>
-                </FormControl>
-              </Box>
+                    <FormControl mt={2}>
+                      <FormLabel>Email</FormLabel>
+                      <Input
+                        onChange={(e) => {
+                          setEmail(e.target.value);
+                        }}
+                        placeholder="Email"
+                      />
+                    </FormControl>
 
-              <Box pl={4}>
-                <FormControl>
-                  <FormLabel>City</FormLabel>
-                  <Select
-                    onChange={(e) => {
-                      setCity_id(e.target.value);
-                    }}
-                    defaultValue={`${city_id}`}
-                  >
-                    {printCity()}
-                  </Select>
-                </FormControl>
+                    <FormControl mt={2}>
+                      <FormLabel>Phone</FormLabel>
+                      <Input
+                        onChange={(e) => {
+                          setPhone(e.target.value);
+                        }}
+                        placeholder="Phone"
+                      />
+                    </FormControl>
 
-                <FormControl mt={2}>
-                  <FormLabel>Address</FormLabel>
-                  <Textarea
-                    onChange={(e) => {
-                      setAddress(e.target.value);
-                    }}
-                    placeholder="Address"
-                    defaultValue={address}
-                    maxLength={300}
-                    resize={"none"}
-                  />
-                </FormControl>
+                    <FormControl mt={2}>
+                      <FormLabel>Province</FormLabel>
+                      <Select
+                        onChange={(e) => {
+                          setProvinceId(e.target.value);
+                          // setProvinceName(e.target.value.split(",")[1]);
+                        }}
+                        placeholder={"-- Select --"}
+                      >
+                        {printProvince()}
+                      </Select>
+                    </FormControl>
+                  </Box>
 
-                <FormControl mt={2}>
-                  <FormLabel>Postal Code</FormLabel>
-                  <Input
-                    isDisabled={true}
-                    placeholder={postalCode}
-                    _placeholder={{ opacity: 1, color: "black" }}
-                    defaultValue={postalCode}
-                  ></Input>
-                </FormControl>
-              </Box>
-            </Flex>
-          </ModalBody>
+                  <Box pl={4}>
+                    <FormControl>
+                      <FormLabel>City</FormLabel>
+                      <Select
+                        onChange={(e) => {
+                          // setCityName(e.target.value.split(",")[0]);
+                          // setPostalCode(e.target.value.split(",")[1]);
+                          setCity_id(e.target.value);
+                        }}
+                        placeholder={"-- Select --"}
+                      >
+                        {printCity()}
+                      </Select>
+                    </FormControl>
 
-          <ModalFooter>
-            <Button onClick={btnSaveEditWarehouse} colorScheme="blue" mr={3}>
-              Save
-            </Button>
-            <Button onClick={onBtnCancelModalEdit}>Cancel</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+                    <FormControl mt={2}>
+                      <FormLabel>Address</FormLabel>
+                      <Textarea
+                        onChange={(e) => {
+                          setAddress(e.target.value);
+                        }}
+                        placeholder="Address"
+                        maxLength={300}
+                        resize={"none"}
+                      />
+                    </FormControl>
 
-      {/* <InputGroup mt={"28px"} w={{ sm: "40", md: "96", lg: "96" }}>
+                    <FormControl mt={2}>
+                      <FormLabel>Postal Code</FormLabel>
+                      <Input
+                        isDisabled={true}
+                        placeholder={postalCode}
+                        _placeholder={{ opacity: 1, color: "black" }}
+                      ></Input>
+                    </FormControl>
+                  </Box>
+                </Flex>
+              </ModalBody>
+
+              <ModalFooter>
+                <Button onClick={btnSaveWarehouse} colorScheme="blue" mr={3}>
+                  Save
+                </Button>
+                <Button onClick={onBtnCancelModalAdd}>Cancel</Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+          {/* ----------------------------------------------MODAL EDIT-------------------------------------------------------------------------------------------------- */}
+          <Modal
+            initialFocusRef={initialRef}
+            finalFocusRef={finalRef}
+            isOpen={modalEdit.isOpen}
+            onClose={modalEdit.onClose}
+            size={"xl"}
+          >
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Edit Warehouse</ModalHeader>
+              <ModalCloseButton
+                onClick={() => {
+                  setPostalCode(null);
+                }}
+              />
+              <ModalBody pb={6}>
+                <Flex>
+                  <Box>
+                    <FormControl>
+                      <FormLabel>Warehouse Name</FormLabel>
+                      <Input
+                        defaultValue={name}
+                        onChange={(e) => {
+                          setName(e.target.value);
+                        }}
+                        ref={initialRef}
+                        placeholder="Warehouse Name"
+                      />
+                    </FormControl>
+
+                    <FormControl mt={2}>
+                      <FormLabel>Email</FormLabel>
+                      <Input
+                        defaultValue={email}
+                        onChange={(e) => {
+                          setEmail(e.target.value);
+                        }}
+                        placeholder="Email"
+                      />
+                    </FormControl>
+
+                    <FormControl mt={2}>
+                      <FormLabel>Phone</FormLabel>
+                      <Input
+                        defaultValue={phone}
+                        onChange={(e) => {
+                          setPhone(e.target.value);
+                        }}
+                        placeholder="Phone"
+                      />
+                    </FormControl>
+
+                    <FormControl mt={2}>
+                      <FormLabel>Province</FormLabel>
+                      <Select
+                        onChange={(e) => {
+                          setProvinceId(e.target.value);
+                        }}
+                        defaultValue={`${provinceId}`}
+                      >
+                        {printProvince()}
+                      </Select>
+                    </FormControl>
+                  </Box>
+
+                  <Box pl={4}>
+                    <FormControl>
+                      <FormLabel>City</FormLabel>
+                      <Select
+                        onChange={(e) => {
+                          setCity_id(e.target.value);
+                        }}
+                        defaultValue={`${city_id}`}
+                      >
+                        {printCity()}
+                      </Select>
+                    </FormControl>
+
+                    <FormControl mt={2}>
+                      <FormLabel>Address</FormLabel>
+                      <Textarea
+                        onChange={(e) => {
+                          setAddress(e.target.value);
+                        }}
+                        placeholder="Address"
+                        defaultValue={address}
+                        maxLength={300}
+                        resize={"none"}
+                      />
+                    </FormControl>
+
+                    <FormControl mt={2}>
+                      <FormLabel>Postal Code</FormLabel>
+                      <Input
+                        isDisabled={true}
+                        placeholder={postalCode}
+                        _placeholder={{ opacity: 1, color: "black" }}
+                        defaultValue={postalCode}
+                      ></Input>
+                    </FormControl>
+                  </Box>
+                </Flex>
+              </ModalBody>
+
+              <ModalFooter>
+                <Button onClick={btnSaveEditWarehouse} colorScheme="blue" mr={3}>
+                  Save
+                </Button>
+                <Button onClick={onBtnCancelModalEdit}>Cancel</Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+
+          {/* <InputGroup mt={"28px"} w={{ sm: "40", md: "96", lg: "96" }}>
                 <InputLeftElement pointerEvents="none" children={<MdSearch size={"22"} color='gray.800' />} />
                 <Input type="text" placeholder="Search List" bg="white" color="gray.800" />
             </InputGroup> */}
 
-      <TableContainer mt={"10px"}>
-        <Table>
-          <Thead>
-            <Tr>
-              <Th textColor={"white"}>No</Th>
-              <Th textColor={"white"}>
-                <Text
-                  as="button"
-                  onClick={() => {
-                    sorting("name");
-                  }}
-                >
-                  NAME
-                  <Icon
-                    ml={3}
-                    as={
-                      sortby === "name" && order === "ASC"
-                        ? BsChevronDown
-                        : BsChevronUp
-                    }
-                    display="inline"
-                  />
-                </Text>
-              </Th>
-              <Th textColor={"white"}>
-                <Text
-                  as="button"
-                  onClick={() => {
-                    sorting("email");
-                  }}
-                >
-                  EMAIL
-                  <Icon
-                    ml={3}
-                    as={
-                      sortby === "email" && order === "ASC"
-                        ? BsChevronDown
-                        : BsChevronUp
-                    }
-                    display="inline"
-                  />
-                </Text>
-              </Th>
-              <Th textColor={"white"}>Phone</Th>
-              <Th textColor={"white"}>Address</Th>
-              <Th textColor={"white"}>Status</Th>
-              {roleId == 1 ? <Th></Th> : null}
-            </Tr>
-          </Thead>
-          <Tbody>{printWarehouse()}</Tbody>
-        </Table>
-      </TableContainer>
-      {
-        <div className="justify-end flex ">
-          <Pagination paginate={paginate} size={size} totalData={totalData} />
-        </div>
-      }
-    </Box>
+          <TableContainer mt={"10px"}>
+            <Table>
+              <Thead>
+                <Tr>
+                  <Th textColor={"white"}>No</Th>
+                  <Th textColor={"white"}>
+                    <Text
+                      as="button"
+                      onClick={() => {
+                        sorting("name");
+                      }}
+                    >
+                      NAME
+                      <Icon
+                        ml={3}
+                        as={
+                          sortby === "name" && order === "ASC"
+                            ? BsChevronDown
+                            : BsChevronUp
+                        }
+                        display="inline"
+                      />
+                    </Text>
+                  </Th>
+                  <Th textColor={"white"}>
+                    <Text
+                      as="button"
+                      onClick={() => {
+                        sorting("email");
+                      }}
+                    >
+                      EMAIL
+                      <Icon
+                        ml={3}
+                        as={
+                          sortby === "email" && order === "ASC"
+                            ? BsChevronDown
+                            : BsChevronUp
+                        }
+                        display="inline"
+                      />
+                    </Text>
+                  </Th>
+                  <Th textColor={"white"}>Phone</Th>
+                  <Th textColor={"white"}>Address</Th>
+                  <Th textColor={"white"}>Status</Th>
+                  {roleId == 1 ? <Th></Th> : null}
+                </Tr>
+              </Thead>
+              <Tbody>{printWarehouse()}</Tbody>
+            </Table>
+          </TableContainer>
+          {
+            <div className="justify-end flex ">
+              <Pagination paginate={paginate} size={size} totalData={totalData} />
+            </div>
+          }
+        </Box>
+      )}
+    </>
   );
 }
 
