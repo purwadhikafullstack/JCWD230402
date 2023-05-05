@@ -12,14 +12,15 @@ import { FiSearch } from "react-icons/fi";
 const SearchBar = (props) => {
   return (
     <Stack spacing={4}>
-      <InputGroup>
+      <InputGroup size={{ md: "sm", lg: "md"}}>
         <Input
           type="search"
           variant="filled"
           placeholder="Search..."
-          bgColor="whiteAlpha.300"
+          bgColor="inherit"
           onChange={(e) => props.setprops(e.target.value)}
           color="white"
+          focusBorderColor="green.500"
         />
         <InputRightAddon
           pointerEvents="visible"
@@ -28,8 +29,7 @@ const SearchBar = (props) => {
             props.onSearchBtn();
           }}
           border="none"
-          bgColor="#1BFD9C"
-          color="black"
+          bgColor="inherit"
           _active={{ bg: "black", color: "white" }}
         >
           <Icon as={FiSearch} />

@@ -19,7 +19,7 @@ function Sidebar() {
 
   return (
 
-    <div className="flex flex-col top-0 left-0 md:w-56 bg-bgglass h-screen border-r">
+    <div className="flex flex-col top-0 left-0 bg-bgglass h-screen border-r">
       <div className="lg:flex items-center hidden lg:justify-center h-14 border-b">
         <h1 className='text-[#1BFD9C] font-bold text-xs md:text-base'>{name}</h1>
       </div>

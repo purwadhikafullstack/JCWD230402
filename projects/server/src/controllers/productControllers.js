@@ -174,7 +174,7 @@ module.exports = {
         },
         include: [
           { model: model.category, attributes: ["type"] },
-          { model: model.type, attributes: ["price"] },
+          { model: model.type, attributes: ["price", "warehouseId"] },
         ],
         // order: [[sortby, order]],
         order: [[model.type, "price", "ASC"]],

@@ -55,7 +55,7 @@ function Category() {
   const initialRef = React.useRef(null);
   const finalRef = React.useRef(null);
   const [page, setPage] = React.useState(defautlPage); // const [size, setSize] = React.useState(5)
-  const [size] = React.useState(5);
+  const [size] = React.useState(8);
   const [sortby, setSortby] = React.useState(defaultSort);
   const [order, setOrder] = React.useState(defaultOrder);
   const [filter, setFilter] = React.useState(defaultFilter);
