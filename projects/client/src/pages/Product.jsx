@@ -20,6 +20,7 @@ import {
     ModalHeader,
     ModalOverlay,
     Select,
+    Spinner,
     Stack,
     Switch,
     Table,
@@ -39,6 +40,7 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import CreatableSelect from 'react-select/creatable';
 import uploadImg from "../img/1156518-200.png"
+import { useNavigate } from 'react-router-dom';
 
 function Product() {
 
@@ -47,6 +49,8 @@ function Product() {
     const initialRef = React.useRef(null);
     const finalRef = React.useRef(null);
     const [page, setPage] = React.useState(0);
+    const [loading, setLoading] = React.useState(true);
+    const navigate = useNavigate();
 
     const [category, setCategory] = React.useState([]);
     const [productName, setProductName] = React.useState("");
@@ -187,6 +191,10 @@ function Product() {
             console.log(`res getProduct`, res);
             setProductList(res.data.data)
             setTotalData(res.data.datanum)
+            setLoading(false);
+            if (!res.data) {
+                navigate("*");
+            }
 
         } catch (error) {
             console.log(error);
@@ -637,489 +645,463 @@ function Product() {
     };
 
     return (
-        <Box my={"20px"} textColor="white">
-            <Flex justifyContent={'space-between'}>
-                <Heading size={"lg"} fontStyle="inherit" >
-                    Product List
-                </Heading>
-                <Flex>
-                    {
-                        roleId == 1 ?
-                            <Button onClick={modalAdd.onOpen} _hover={"none"} bgColor={"#1BFD9C"} style={{ color: "black" }} leftIcon={<MdOutlineAdd />}>
-                                Add Product
-                            </Button> : null
-                    }
+        <>
+            {loading === true ? (
+                <Flex
+                    justifyContent={"center"}
+                    my={{ base: "24", md: "96" }}
+                    color={"white"}
+                    maxW={"100vw"}
+                    mx={"auto"}
+                >
+                    <Spinner
+                        thickness="4px"
+                        speed="0.65s"
+                        emptyColor="gray.200"
+                        color="blue.500"
+                        size="xl"
+                    />
                 </Flex>
-            </Flex>
-
-            {/* ----------------------------------------------MODAL ADD------------------------------------------------ */}
-            <Modal
-                initialFocusRef={initialRef}
-                finalFocusRef={finalRef}
-                isOpen={modalAdd.isOpen}
-                onClose={modalAdd.onClose}
-                size={"6xl"}
-            >
-                <ModalOverlay />
-                <ModalContent>
-                    <ModalHeader>New Product</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody pb={6}>
-                        <Flex justifyContent={'space-between'}>
-                            <Box w={"19%"}>
-                                <FormControl >
-                                    <FormLabel>Product Name</FormLabel>
-                                    <Input
-                                        type={"text"}
-                                        onChange={(e) => setProductName(e.target.value)}
-                                        placeholder={"Product Name"}
-                                    />
-                                </FormControl>
-
-                                <FormControl mt={2}  >
-                                    <Flex alignItems={"center"}>
-                                        <FormLabel>Product Image</FormLabel>
-                                        {
-                                            !fileProduct ? null :
-                                                <Button
-                                                    variant={"unstyled"}
-                                                    onClick={() => setFileProduct(null)}
-                                                >
-                                                    {<MdDeleteForever fontSize={20} />}
-                                                </Button>
-                                        }
-                                    </Flex>
-
-                                    <Image
-                                        src={!fileProduct ? uploadImg :
-                                            URL.createObjectURL(fileProduct)}
-                                        style={{
-                                            width: "75px", height: "75px", aspectRatio: "1/1", objectFit: "contain"
-                                        }}
-                                        onClick={() => {
-                                            inputFile.current.click()
-                                        }}
-                                    />
-                                    <input
-                                        type="file"
-                                        id='file'
-                                        ref={inputFile}
-                                        style={{ display: "none" }}
-                                        onChange={onChangeFile}
-                                    />
-                                </FormControl>
-
-                                <FormControl mt={2}>
-                                    <FormLabel>Category</FormLabel>
-                                    <Select
-                                        onChange={(e) => setCategoryId(e.target.value)}
-                                        placeholder={"-- Select --"}
-                                    >
-                                        {printCategory()}
-                                    </Select>
-
-                                </FormControl>
-
-                                <FormControl mt={2}>
-                                    <FormLabel>Description</FormLabel>
-                                    <Textarea
-                                        onChange={(e) => setDescription(e.target.value)}
-                                        placeholder='Description'
-                                        maxLength={300}
-                                        resize={'none'}
-                                    />
-                                </FormControl>
-                            </Box>
-
-                            <Box
-                                // border={"1px solid red" }
-                                h={"350px"}
-                                w={"80%"}
-                                overflowX={"hidden"}
-                                overflow="auto"
-                            >
-                                <TableContainer>
-                                    <Table size='sm'>
-                                        <Thead>
-                                            <Tr>
-                                                <Th>Color</Th>
-                                                <Th>Memory</Th>
-                                                <Th>Price</Th>
-                                                <Th>Warehouse</Th>
-                                                <Th>Stock</Th>
-                                                <Th>
-                                                    {<IconButton
-                                                        onClick={addVariation}
-                                                        variant='link'
-                                                        size={'md'}
-                                                        textColor={"black"}
-                                                        icon={<MdOutlineAdd />}
-                                                    />
-                                                    }
-                                                </Th>
-                                            </Tr>
-                                        </Thead>
-                                        <Tbody>
-                                            {
-                                                variations.map((variation, idx) => (
-                                                    <Tr key={variation.id}>
-                                                        <Td>
-                                                            {
-                                                                <CreatableSelect
-                                                                    menuPosition='fixed'
-                                                                    isClearable
-                                                                    isDisabled={isLoading}
-                                                                    isLoading={isLoading}
-                                                                    onChange={(newValue) => handleVariationChangeColor(idx, newValue)}
-                                                                    onCreateOption={handleCreateColor}
-                                                                    options={optionsColor}
-                                                                    // value={variation.colorId}
-                                                                    defaultValue={variation.colorId}
-                                                                />
-                                                            }
-                                                        </Td>
-                                                        <Td>
-                                                            {
-                                                                <CreatableSelect
-                                                                    menuPosition='fixed'
-                                                                    isClearable
-                                                                    isDisabled={isLoading}
-                                                                    isLoading={isLoading}
-                                                                    onChange={(newValue) => handleVariationChangeMemory(idx, newValue)}
-                                                                    onCreateOption={handleCreateMemory}
-                                                                    options={optionsMemory}
-                                                                    // value={valueMemory}
-                                                                    defaultValue={variation.memoryId}
-                                                                />
-                                                            }
-                                                        </Td>
-                                                        <Td>
-                                                            {
-                                                                <Input
-                                                                    size={"sm"}
-                                                                    width="24"
-                                                                    variant={"filled"}
-                                                                    onChange={(e) => handleVariationChangePrice(idx, e.target.value)}
-                                                                />
-                                                            }
-                                                        </Td>
-                                                        <Td>
-                                                            {<Select
-                                                                size={"sm"}
-                                                                variant={"filled"}
-                                                                onChange={(e) => handleVariationChangeWarehouse(idx, e.target.value)}
-                                                                placeholder={"-- Select --"}
-                                                            >
-                                                                {printAllWarehouse()}
-                                                            </Select>
-                                                            }
-                                                        </Td>
-                                                        <Td>{<Input size={"sm"} width="24" variant={"filled"} onChange={(e) => handleVariationChangeStock(idx, e.target.value)} />}</Td>
-                                                        <Td>
-                                                            {
-                                                                <Button
-                                                                    onClick={() => RemoveVariation(idx)}
-                                                                    size={"sm"}
-                                                                    variant={"outline"}
-                                                                    colorScheme={"red"}
-                                                                >
-                                                                    Remove
-                                                                </Button>
-                                                            }
-                                                        </Td>
-                                                    </Tr>
-                                                ))
-                                            }
-
-                                        </Tbody>
-                                    </Table>
-                                </TableContainer>
-                            </Box>
+            ) : (
+                <Box my={"20px"} textColor="white">
+                    <Flex justifyContent={'space-between'}>
+                        <Heading size={"lg"} fontStyle="inherit" >
+                            Product List
+                        </Heading>
+                        <Flex>
+                            {
+                                roleId == 1 ?
+                                    <Button onClick={modalAdd.onOpen} _hover={"none"} bgColor={"#1BFD9C"} style={{ color: "black" }} leftIcon={<MdOutlineAdd />}>
+                                        Add Product
+                                    </Button> : null
+                            }
                         </Flex>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button
-                            colorScheme='blue'
-                            mr={3}
-                            onClick={btnSaveAddProduct}
-                        >
-                            Save
-                        </Button>
-                        <Button
-                            onClick={onBtnCancelModalAdd}
-                        >
-                            Cancel</Button>
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
-            {/* ----------------------------------------------MODAL EDIT------------------------------------------------ */}
-            <Modal
-                initialFocusRef={initialRef}
-                finalFocusRef={finalRef}
-                isOpen={modalEdit.isOpen}
-                onClose={modalEdit.onClose}
-                size={"6xl"}
-            >
-                <ModalOverlay />
-                <ModalContent>
-                    <ModalHeader>Edit Product</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody pb={6}>
-                        <Flex justifyContent={'space-between'}>
-                            <Box w={"18%"}>
-                                <FormControl >
-                                    <FormLabel>Product Name</FormLabel>
-                                    <Input
-                                        type={"text"}
-                                        onChange={(e) => setProductName(e.target.value)}
-                                        placeholder={"Product Name"}
-                                        defaultValue={productName}
+                    </Flex>
 
-                                    />
-                                </FormControl>
+                    {/* ----------------------------------------------MODAL ADD------------------------------------------------ */}
+                    <Modal
+                        initialFocusRef={initialRef}
+                        finalFocusRef={finalRef}
+                        isOpen={modalAdd.isOpen}
+                        onClose={modalAdd.onClose}
+                        size={"6xl"}
+                    >
+                        <ModalOverlay />
+                        <ModalContent>
+                            <ModalHeader>New Product</ModalHeader>
+                            <ModalCloseButton />
+                            <ModalBody pb={6}>
+                                <Flex justifyContent={'space-between'}>
+                                    <Box w={"19%"}>
+                                        <FormControl >
+                                            <FormLabel>Product Name</FormLabel>
+                                            <Input
+                                                type={"text"}
+                                                onChange={(e) => setProductName(e.target.value)}
+                                                placeholder={"Product Name"}
+                                            />
+                                        </FormControl>
 
-                                <FormControl mt={2}  >
-                                    <Flex alignItems={"center"}>
-                                        <FormLabel>Product Image</FormLabel>
-                                        {
-                                            !fileProductEdit ? null :
-                                                <Button
-                                                    variant={"unstyled"}
-                                                    onClick={() => setFileProductEdit(null)}
-                                                >
-                                                    {<MdDeleteForever fontSize={20} />}
-                                                </Button>
-                                        }
-                                    </Flex>
+                                        <FormControl mt={2}  >
+                                            <Flex alignItems={"center"}>
+                                                <FormLabel>Product Image</FormLabel>
+                                                {
+                                                    !fileProduct ? null :
+                                                        <Button
+                                                            variant={"unstyled"}
+                                                            onClick={() => setFileProduct(null)}
+                                                        >
+                                                            {<MdDeleteForever fontSize={20} />}
+                                                        </Button>
+                                                }
+                                            </Flex>
 
-                                    <Image
-                                        src={
-                                            fileProductEditNew ? URL.createObjectURL(fileProductEditNew) : `${API_URL}${fileProductEdit}`
-                                        }
-                                        style={{
-                                            width: "80px", height: "80px", aspectRatio: "1/1", objectFit: "contain"
-                                        }}
-                                        onClick={() => {
-                                            inputFile.current.click()
-                                        }}
-                                    />
-                                    <input
-                                        type="file"
-                                        id='file'
-                                        ref={inputFile}
-                                        style={{ display: "none" }}
-                                        onChange={onChangeFileEdit}
-                                    />
-                                </FormControl>
+                                            <Image
+                                                src={!fileProduct ? uploadImg :
+                                                    URL.createObjectURL(fileProduct)}
+                                                style={{
+                                                    width: "75px", height: "75px", aspectRatio: "1/1", objectFit: "contain"
+                                                }}
+                                                onClick={() => {
+                                                    inputFile.current.click()
+                                                }}
+                                            />
+                                            <input
+                                                type="file"
+                                                id='file'
+                                                ref={inputFile}
+                                                style={{ display: "none" }}
+                                                onChange={onChangeFile}
+                                            />
+                                        </FormControl>
 
-                                <FormControl mt={2}>
-                                    <FormLabel>Category</FormLabel>
-                                    <Select
-                                        onChange={(e) => setCategoryId(e.target.value)}
-                                        placeholder={"-- Select --"}
-                                        defaultValue={categoryId}
+                                        <FormControl mt={2}>
+                                            <FormLabel>Category</FormLabel>
+                                            <Select
+                                                onChange={(e) => setCategoryId(e.target.value)}
+                                                placeholder={"-- Select --"}
+                                            >
+                                                {printCategory()}
+                                            </Select>
+
+                                        </FormControl>
+
+                                        <FormControl mt={2}>
+                                            <FormLabel>Description</FormLabel>
+                                            <Textarea
+                                                onChange={(e) => setDescription(e.target.value)}
+                                                placeholder='Description'
+                                                maxLength={300}
+                                                resize={'none'}
+                                            />
+                                        </FormControl>
+                                    </Box>
+
+                                    <Box
+                                        // border={"1px solid red" }
+                                        h={"350px"}
+                                        w={"80%"}
+                                        overflowX={"hidden"}
+                                        overflow="auto"
                                     >
-                                        {printCategory()}
-                                    </Select>
-
-                                </FormControl>
-
-                                <FormControl mt={2}>
-                                    <FormLabel>Description</FormLabel>
-                                    <Textarea
-                                        onChange={(e) => setDescription(e.target.value)}
-                                        placeholder='Description'
-                                        maxLength={300}
-                                        resize={'none'}
-                                        defaultValue={description}
-                                    />
-                                </FormControl>
-                            </Box>
-
-                            <Box
-                                // border={"1px solid red" }
-                                h={"350px"}
-                                w={"81%"}
-                                overflowX={"hidden"}
-                                overflow="auto"
-                            >
-                                <TableContainer >
-                                    <Table size='sm'>
-                                        <Thead>
-                                            <Tr>
-                                                <Th>Color</Th>
-                                                <Th>Memory</Th>
-                                                <Th>Price</Th>
-                                                <Th>Disc (%)</Th>
-                                                <Th>Warehouse</Th>
-                                                <Th>Stock</Th>
-                                                {/* <Th>Status</Th> */}
-                                                <Th>
-                                                    {<IconButton
-                                                        onClick={addVariationEdit}
-                                                        variant='link'
-                                                        size={'md'}
-                                                        textColor={"black"}
-                                                        icon={<MdOutlineAdd />}
-                                                    />
+                                        <TableContainer>
+                                            <Table size='sm'>
+                                                <Thead>
+                                                    <Tr>
+                                                        <Th>Color</Th>
+                                                        <Th>Memory</Th>
+                                                        <Th>Price</Th>
+                                                        <Th>Warehouse</Th>
+                                                        <Th>Stock</Th>
+                                                        <Th>
+                                                            {<IconButton
+                                                                onClick={addVariation}
+                                                                variant='link'
+                                                                size={'md'}
+                                                                textColor={"black"}
+                                                                icon={<MdOutlineAdd />}
+                                                            />
+                                                            }
+                                                        </Th>
+                                                    </Tr>
+                                                </Thead>
+                                                <Tbody>
+                                                    {
+                                                        variations.map((variation, idx) => (
+                                                            <Tr key={variation.id}>
+                                                                <Td>
+                                                                    {
+                                                                        <CreatableSelect
+                                                                            menuPosition='fixed'
+                                                                            isClearable
+                                                                            isDisabled={isLoading}
+                                                                            isLoading={isLoading}
+                                                                            onChange={(newValue) => handleVariationChangeColor(idx, newValue)}
+                                                                            onCreateOption={handleCreateColor}
+                                                                            options={optionsColor}
+                                                                            // value={variation.colorId}
+                                                                            defaultValue={variation.colorId}
+                                                                        />
+                                                                    }
+                                                                </Td>
+                                                                <Td>
+                                                                    {
+                                                                        <CreatableSelect
+                                                                            menuPosition='fixed'
+                                                                            isClearable
+                                                                            isDisabled={isLoading}
+                                                                            isLoading={isLoading}
+                                                                            onChange={(newValue) => handleVariationChangeMemory(idx, newValue)}
+                                                                            onCreateOption={handleCreateMemory}
+                                                                            options={optionsMemory}
+                                                                            // value={valueMemory}
+                                                                            defaultValue={variation.memoryId}
+                                                                        />
+                                                                    }
+                                                                </Td>
+                                                                <Td>
+                                                                    {
+                                                                        <Input
+                                                                            size={"sm"}
+                                                                            width="24"
+                                                                            variant={"filled"}
+                                                                            onChange={(e) => handleVariationChangePrice(idx, e.target.value)}
+                                                                        />
+                                                                    }
+                                                                </Td>
+                                                                <Td>
+                                                                    {<Select
+                                                                        size={"sm"}
+                                                                        variant={"filled"}
+                                                                        onChange={(e) => handleVariationChangeWarehouse(idx, e.target.value)}
+                                                                        placeholder={"-- Select --"}
+                                                                    >
+                                                                        {printAllWarehouse()}
+                                                                    </Select>
+                                                                    }
+                                                                </Td>
+                                                                <Td>{<Input size={"sm"} width="24" variant={"filled"} onChange={(e) => handleVariationChangeStock(idx, e.target.value)} />}</Td>
+                                                                <Td>
+                                                                    {
+                                                                        <Button
+                                                                            onClick={() => RemoveVariation(idx)}
+                                                                            size={"sm"}
+                                                                            variant={"outline"}
+                                                                            colorScheme={"red"}
+                                                                        >
+                                                                            Remove
+                                                                        </Button>
+                                                                    }
+                                                                </Td>
+                                                            </Tr>
+                                                        ))
                                                     }
-                                                </Th>
-                                            </Tr>
-                                        </Thead>
-                                        <Tbody>
-                                            {
-                                                variationsEdit.map((variationEdit, idx) => (
 
-                                                    <Tr key={variationEdit.id}>
-                                                        <Td>
-                                                            {
-                                                                <CreatableSelect
-                                                                    menuPosition='fixed'
-                                                                    isClearable
-                                                                    isLoading={isLoading}
-                                                                    onChange={(newValue) => handleVariationChangeColorEdit(idx, newValue)}
-                                                                    onCreateOption={handleCreateColor}
-                                                                    options={optionsColor}
-                                                                    // value={1}
-                                                                    // defaultValue={(colorList) => { console.log(`colorlist`, colorList); }}
-                                                                    defaultInputValue={() => {
-                                                                        let value = optionsColor.filter(val => variationEdit.colorId == val.value)
-                                                                        if (value.length) {
-                                                                            return value[0].label
-                                                                        } else {
-                                                                            return null
-                                                                        }
-                                                                    }}
-                                                                />
+                                                </Tbody>
+                                            </Table>
+                                        </TableContainer>
+                                    </Box>
+                                </Flex>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button
+                                    colorScheme='blue'
+                                    mr={3}
+                                    onClick={btnSaveAddProduct}
+                                >
+                                    Save
+                                </Button>
+                                <Button
+                                    onClick={onBtnCancelModalAdd}
+                                >
+                                    Cancel</Button>
+                            </ModalFooter>
+                        </ModalContent>
+                    </Modal>
+                    {/* ----------------------------------------------MODAL EDIT------------------------------------------------ */}
+                    <Modal
+                        initialFocusRef={initialRef}
+                        finalFocusRef={finalRef}
+                        isOpen={modalEdit.isOpen}
+                        onClose={modalEdit.onClose}
+                        size={"6xl"}
+                    >
+                        <ModalOverlay />
+                        <ModalContent>
+                            <ModalHeader>Edit Product</ModalHeader>
+                            <ModalCloseButton />
+                            <ModalBody pb={6}>
+                                <Flex justifyContent={'space-between'}>
+                                    <Box w={"18%"}>
+                                        <FormControl >
+                                            <FormLabel>Product Name</FormLabel>
+                                            <Input
+                                                type={"text"}
+                                                onChange={(e) => setProductName(e.target.value)}
+                                                placeholder={"Product Name"}
+                                                defaultValue={productName}
+
+                                            />
+                                        </FormControl>
+
+                                        <FormControl mt={2}  >
+                                            <Flex alignItems={"center"}>
+                                                <FormLabel>Product Image</FormLabel>
+                                                {
+                                                    !fileProductEdit ? null :
+                                                        <Button
+                                                            variant={"unstyled"}
+                                                            onClick={() => setFileProductEdit(null)}
+                                                        >
+                                                            {<MdDeleteForever fontSize={20} />}
+                                                        </Button>
+                                                }
+                                            </Flex>
+
+                                            <Image
+                                                src={
+                                                    fileProductEditNew ? URL.createObjectURL(fileProductEditNew) : `${API_URL}${fileProductEdit}`
+                                                }
+                                                style={{
+                                                    width: "80px", height: "80px", aspectRatio: "1/1", objectFit: "contain"
+                                                }}
+                                                onClick={() => {
+                                                    inputFile.current.click()
+                                                }}
+                                            />
+                                            <input
+                                                type="file"
+                                                id='file'
+                                                ref={inputFile}
+                                                style={{ display: "none" }}
+                                                onChange={onChangeFileEdit}
+                                            />
+                                        </FormControl>
+
+                                        <FormControl mt={2}>
+                                            <FormLabel>Category</FormLabel>
+                                            <Select
+                                                onChange={(e) => setCategoryId(e.target.value)}
+                                                placeholder={"-- Select --"}
+                                                defaultValue={categoryId}
+                                            >
+                                                {printCategory()}
+                                            </Select>
+
+                                        </FormControl>
+
+                                        <FormControl mt={2}>
+                                            <FormLabel>Description</FormLabel>
+                                            <Textarea
+                                                onChange={(e) => setDescription(e.target.value)}
+                                                placeholder='Description'
+                                                maxLength={300}
+                                                resize={'none'}
+                                                defaultValue={description}
+                                            />
+                                        </FormControl>
+                                    </Box>
+
+                                    <Box
+                                        // border={"1px solid red" }
+                                        h={"350px"}
+                                        w={"81%"}
+                                        overflowX={"hidden"}
+                                        overflow="auto"
+                                    >
+                                        <TableContainer >
+                                            <Table size='sm'>
+                                                <Thead>
+                                                    <Tr>
+                                                        <Th>Color</Th>
+                                                        <Th>Memory</Th>
+                                                        <Th>Price</Th>
+                                                        <Th>Disc (%)</Th>
+                                                        <Th>Warehouse</Th>
+                                                        <Th>Stock</Th>
+                                                        {/* <Th>Status</Th> */}
+                                                        <Th>
+                                                            {<IconButton
+                                                                onClick={addVariationEdit}
+                                                                variant='link'
+                                                                size={'md'}
+                                                                textColor={"black"}
+                                                                icon={<MdOutlineAdd />}
+                                                            />
                                                             }
-                                                        </Td>
-                                                        <Td>
-                                                            {
-                                                                <CreatableSelect
-                                                                    menuPosition='fixed'
-                                                                    isClearable
-                                                                    isDisabled={isLoading}
-                                                                    isLoading={isLoading}
-                                                                    onChange={(newValue) => handleVariationChangeMemoryEdit(idx, newValue)}
-                                                                    onCreateOption={handleCreateMemory}
-                                                                    options={optionsMemory}
-                                                                    // value={valueMemory}
-                                                                    // defaultValue={variationEdit.memoryId}
-                                                                    defaultInputValue={() => {
-                                                                        let value = optionsMemory.filter(val => variationEdit.memoryId == val.value)
-                                                                        if (value.length) {
-                                                                            return value[0].label
-                                                                        } else {
-                                                                            return null
-                                                                        }
-                                                                    }}
-                                                                // disabled={variationEdit.id == isDisabled}
-                                                                // isDisabled={variationEdit.id ? isDisabled : !isDisabled}
-                                                                />
-                                                            }
-                                                        </Td>
-                                                        <Td>
-                                                            {
-                                                                <Input
-                                                                    size={"sm"}
-                                                                    width="24"
-                                                                    variant={"filled"}
-                                                                    onChange={(e) => handleVariationChangePriceEdit(idx, e.target.value)}
-                                                                    defaultValue={variationEdit.price}
-                                                                    disabled={activeIndex?.id != variationEdit?.id ? isDisabled : !isDisabled}
-                                                                />
-                                                            }
-                                                        </Td>
-                                                        <Td>
-                                                            {
-                                                                <Input
-                                                                    size={"sm"}
-                                                                    width="12"
-                                                                    variant={"filled"}
-                                                                    onChange={(e) => handleVariationChangeDiscountEdit(idx, e.target.value)}
-                                                                    defaultValue={variationEdit.discount}
-                                                                    disabled={activeIndex?.id != variationEdit?.id ? isDisabled : !isDisabled}
-                                                                />
-                                                            }
-                                                        </Td>
-                                                        <Td>
-                                                            {
-                                                                <Select
-                                                                    size={"sm"}
-                                                                    variant={"filled"}
-                                                                    onChange={(e) => handleVariationChangeWarehouseEdit(idx, e.target.value)}
-                                                                    placeholder={"-- Select --"}
-                                                                    defaultValue={variationEdit.warehouseId}
-                                                                    disabled={variationEdit.id ? true : false}
-                                                                >
-                                                                    {printAllWarehouse()}
-                                                                </Select>
-                                                            }
-                                                        </Td>
-                                                        <Td>
-                                                            {
-                                                                <Input
-                                                                    size={"sm"}
-                                                                    width="14"
-                                                                    variant={"filled"}
-                                                                    onChange={(e) => handleVariationChangeStockEdit(idx, e.target.value)}
-                                                                    defaultValue={variationEdit.stock}
-                                                                    disabled={activeIndex?.id != variationEdit?.id ? isDisabled : !isDisabled}
-                                                                />
-                                                            }
-                                                        </Td>
-                                                        {/* <Td>
+                                                        </Th>
+                                                    </Tr>
+                                                </Thead>
+                                                <Tbody>
+                                                    {
+                                                        variationsEdit.map((variationEdit, idx) => (
+
+                                                            <Tr key={variationEdit.id}>
+                                                                <Td>
+                                                                    {
+                                                                        <CreatableSelect
+                                                                            menuPosition='fixed'
+                                                                            isClearable
+                                                                            isLoading={isLoading}
+                                                                            onChange={(newValue) => handleVariationChangeColorEdit(idx, newValue)}
+                                                                            onCreateOption={handleCreateColor}
+                                                                            options={optionsColor}
+                                                                            // value={1}
+                                                                            // defaultValue={(colorList) => { console.log(`colorlist`, colorList); }}
+                                                                            defaultInputValue={() => {
+                                                                                let value = optionsColor.filter(val => variationEdit.colorId == val.value)
+                                                                                if (value.length) {
+                                                                                    return value[0].label
+                                                                                } else {
+                                                                                    return null
+                                                                                }
+                                                                            }}
+                                                                        />
+                                                                    }
+                                                                </Td>
+                                                                <Td>
+                                                                    {
+                                                                        <CreatableSelect
+                                                                            menuPosition='fixed'
+                                                                            isClearable
+                                                                            isDisabled={isLoading}
+                                                                            isLoading={isLoading}
+                                                                            onChange={(newValue) => handleVariationChangeMemoryEdit(idx, newValue)}
+                                                                            onCreateOption={handleCreateMemory}
+                                                                            options={optionsMemory}
+                                                                            // value={valueMemory}
+                                                                            // defaultValue={variationEdit.memoryId}
+                                                                            defaultInputValue={() => {
+                                                                                let value = optionsMemory.filter(val => variationEdit.memoryId == val.value)
+                                                                                if (value.length) {
+                                                                                    return value[0].label
+                                                                                } else {
+                                                                                    return null
+                                                                                }
+                                                                            }}
+                                                                        // disabled={variationEdit.id == isDisabled}
+                                                                        // isDisabled={variationEdit.id ? isDisabled : !isDisabled}
+                                                                        />
+                                                                    }
+                                                                </Td>
+                                                                <Td>
+                                                                    {
+                                                                        <Input
+                                                                            size={"sm"}
+                                                                            width="24"
+                                                                            variant={"filled"}
+                                                                            onChange={(e) => handleVariationChangePriceEdit(idx, e.target.value)}
+                                                                            defaultValue={variationEdit.price}
+                                                                            disabled={activeIndex?.id != variationEdit?.id ? isDisabled : !isDisabled}
+                                                                        />
+                                                                    }
+                                                                </Td>
+                                                                <Td>
+                                                                    {
+                                                                        <Input
+                                                                            size={"sm"}
+                                                                            width="12"
+                                                                            variant={"filled"}
+                                                                            onChange={(e) => handleVariationChangeDiscountEdit(idx, e.target.value)}
+                                                                            defaultValue={variationEdit.discount}
+                                                                            disabled={activeIndex?.id != variationEdit?.id ? isDisabled : !isDisabled}
+                                                                        />
+                                                                    }
+                                                                </Td>
+                                                                <Td>
+                                                                    {
+                                                                        <Select
+                                                                            size={"sm"}
+                                                                            variant={"filled"}
+                                                                            onChange={(e) => handleVariationChangeWarehouseEdit(idx, e.target.value)}
+                                                                            placeholder={"-- Select --"}
+                                                                            defaultValue={variationEdit.warehouseId}
+                                                                            disabled={variationEdit.id ? true : false}
+                                                                        >
+                                                                            {printAllWarehouse()}
+                                                                        </Select>
+                                                                    }
+                                                                </Td>
+                                                                <Td>
+                                                                    {
+                                                                        <Input
+                                                                            size={"sm"}
+                                                                            width="14"
+                                                                            variant={"filled"}
+                                                                            onChange={(e) => handleVariationChangeStockEdit(idx, e.target.value)}
+                                                                            defaultValue={variationEdit.stock}
+                                                                            disabled={activeIndex?.id != variationEdit?.id ? isDisabled : !isDisabled}
+                                                                        />
+                                                                    }
+                                                                </Td>
+                                                                {/* <Td>
                                                             {
                                                                 variationEdit.status.status
                                                             }
                                                         </Td> */}
-                                                        <Td>
-                                                            {
-                                                                !variationEdit.id ? (
-                                                                    <Button
-                                                                        onClick={() => RemoveVariationEdit(idx)}
-                                                                        size={"sm"}
-                                                                        ml={1}
-                                                                        variant={"outline"}
-                                                                        colorScheme={"red"}
-                                                                    >
-                                                                        Remove
-                                                                    </Button>
-                                                                ) :
-                                                                    activeIndex?.id == variationEdit?.id ?
-                                                                        <>
-                                                                            <Button
-                                                                                onClick={() => editVariant()}
-                                                                                size={"sm"}
-                                                                                variant={"outline"}
-                                                                                colorScheme={"blue"}
-                                                                            >
-                                                                                Save
-                                                                            </Button>
-                                                                            <Button
-                                                                                onClick={() => {
-                                                                                    // setIsDisabled(!isDisabled);
-                                                                                    setActiveIndex(null)
-                                                                                }}
-                                                                                size={"sm"}
-                                                                                ml={1}
-                                                                                variant={"outline"}
-                                                                                colorScheme={"red"}
-                                                                            >
-                                                                                Cancel
-                                                                            </Button>
-                                                                        </> : <>
-                                                                            <Button
-                                                                                onClick={() => {
-                                                                                    // setIsDisabled(isDisabled)
-                                                                                    setActiveIndex(variationEdit)
-                                                                                }}
-                                                                                size={"sm"}
-                                                                                variant={"outline"}
-                                                                                colorScheme={"blue"}
-                                                                            >
-                                                                                Edit
-                                                                            </Button>
+                                                                <Td>
+                                                                    {
+                                                                        !variationEdit.id ? (
                                                                             <Button
                                                                                 onClick={() => RemoveVariationEdit(idx)}
                                                                                 size={"sm"}
@@ -1129,63 +1111,109 @@ function Product() {
                                                                             >
                                                                                 Remove
                                                                             </Button>
-                                                                        </>
-                                                            }
+                                                                        ) :
+                                                                            activeIndex?.id == variationEdit?.id ?
+                                                                                <>
+                                                                                    <Button
+                                                                                        onClick={() => editVariant()}
+                                                                                        size={"sm"}
+                                                                                        variant={"outline"}
+                                                                                        colorScheme={"blue"}
+                                                                                    >
+                                                                                        Save
+                                                                                    </Button>
+                                                                                    <Button
+                                                                                        onClick={() => {
+                                                                                            // setIsDisabled(!isDisabled);
+                                                                                            setActiveIndex(null)
+                                                                                        }}
+                                                                                        size={"sm"}
+                                                                                        ml={1}
+                                                                                        variant={"outline"}
+                                                                                        colorScheme={"red"}
+                                                                                    >
+                                                                                        Cancel
+                                                                                    </Button>
+                                                                                </> : <>
+                                                                                    <Button
+                                                                                        onClick={() => {
+                                                                                            // setIsDisabled(isDisabled)
+                                                                                            setActiveIndex(variationEdit)
+                                                                                        }}
+                                                                                        size={"sm"}
+                                                                                        variant={"outline"}
+                                                                                        colorScheme={"blue"}
+                                                                                    >
+                                                                                        Edit
+                                                                                    </Button>
+                                                                                    <Button
+                                                                                        onClick={() => RemoveVariationEdit(idx)}
+                                                                                        size={"sm"}
+                                                                                        ml={1}
+                                                                                        variant={"outline"}
+                                                                                        colorScheme={"red"}
+                                                                                    >
+                                                                                        Remove
+                                                                                    </Button>
+                                                                                </>
+                                                                    }
 
 
-                                                        </Td>
-                                                    </Tr>
-                                                ))
-                                            }
+                                                                </Td>
+                                                            </Tr>
+                                                        ))
+                                                    }
 
-                                        </Tbody>
-                                    </Table>
-                                </TableContainer>
-                            </Box>
-                        </Flex>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button
-                            colorScheme='blue'
-                            mr={3}
-                            onClick={() => { btnSaveEditProduct() }}
-                        >
-                            Save
-                        </Button>
-                        <Button
-                            onClick={onBtnCancelModalEdit}
-                        >
-                            Cancel</Button>
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
+                                                </Tbody>
+                                            </Table>
+                                        </TableContainer>
+                                    </Box>
+                                </Flex>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button
+                                    colorScheme='blue'
+                                    mr={3}
+                                    onClick={() => { btnSaveEditProduct() }}
+                                >
+                                    Save
+                                </Button>
+                                <Button
+                                    onClick={onBtnCancelModalEdit}
+                                >
+                                    Cancel</Button>
+                            </ModalFooter>
+                        </ModalContent>
+                    </Modal>
 
-            <TableContainer mt={"20px"}>
-                <Table>
-                    <Thead>
-                        <Tr >
-                            <Th textColor={"white"}>No</Th>
-                            <Th textColor={"white"}>Product Image</Th>
-                            <Th textColor={"white"}>Product Name</Th>
-                            <Th textColor={"white"}>Product Category</Th>
-                            <Th textColor={"white"}>Price</Th>
-                            <Th textColor={"white"}>Status</Th>
-                            <Th></Th>
-                        </Tr>
-                    </Thead>
-                    <Tbody >
-                        {printProduct()}
-                    </Tbody>
-                </Table>
-            </TableContainer>
-            {
-                <div className='justify-end flex'>
-                    <Pagination
-                        paginate={paginate} size={size} totalData={totalData}
-                    />
-                </div>
-            }
-        </Box >
+                    <TableContainer mt={"20px"}>
+                        <Table>
+                            <Thead>
+                                <Tr >
+                                    <Th textColor={"white"}>No</Th>
+                                    <Th textColor={"white"}>Product Image</Th>
+                                    <Th textColor={"white"}>Product Name</Th>
+                                    <Th textColor={"white"}>Product Category</Th>
+                                    <Th textColor={"white"}>Price</Th>
+                                    <Th textColor={"white"}>Status</Th>
+                                    <Th></Th>
+                                </Tr>
+                            </Thead>
+                            <Tbody >
+                                {printProduct()}
+                            </Tbody>
+                        </Table>
+                    </TableContainer>
+                    {
+                        <div className='justify-end flex'>
+                            <Pagination
+                                paginate={paginate} size={size} totalData={totalData}
+                            />
+                        </div>
+                    }
+                </Box >
+            )}
+        </>
     );
 }
 
