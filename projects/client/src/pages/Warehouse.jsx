@@ -6,6 +6,7 @@ import {
   FormControl,
   FormLabel,
   Heading,
+  Icon,
   Input,
   InputGroup,
   InputLeftElement,
@@ -21,16 +22,21 @@ import {
   TableContainer,
   Tbody,
   Td,
+  Text,
   Textarea,
   Th,
   Thead,
   Tr,
   useDisclosure,
 } from "@chakra-ui/react";
+import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import axios from "axios";
 import { MdOutlineAdd, MdPhone, MdSearch } from "react-icons/md";
 import { API_URL } from "../helper";
 import { useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import Pagination from "../components/Pagination";
+import SearchBar from "../components/SearchBar";
 
 function Warehouse() {
   const roleId = useSelector((state) => state.adminReducer.roleId);
@@ -40,6 +46,24 @@ function Warehouse() {
 
   const initialRef = React.useRef(null);
   const finalRef = React.useRef(null);
+
+  //-------------------------------PAGINATION AND FILTER -----------------------------------------------------------------------
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+
+  const defautlPage = parseInt(params.get("page")) - 1 || 0;
+  const defaultSort = params.get("sortby") || "name";
+  const defaultOrder = params.get("orderby") || "ASC";
+  const defaultFilter = params.get("filter") || "";
+
+  const [page, setPage] = React.useState(defautlPage);
+  const [size] = React.useState(8);
+  const [sortby, setSortby] = React.useState(defaultSort);
+  const [order, setOrder] = React.useState(defaultOrder);
+  const [filter, setFilter] = React.useState(defaultFilter);
+  const [totalData, setTotalData] = React.useState(0);
 
   //----------------------GET PROVINCE AND CITY-----------------------------------------------------------------------------------------
 
@@ -52,6 +76,7 @@ function Warehouse() {
   // const [province_id, setProvince_id] = React.useState()
   const [city_id, setCity_id] = React.useState("");
   const [uuid, setuuid] = React.useState("");
+
   let token = localStorage.getItem("gadgetwarehouse_adminlogin");
 
   const getProvince = async () => {
@@ -92,7 +117,7 @@ function Warehouse() {
   };
 
   const printProvince = () => {
-    console.log(`province`, province);
+    // console.log(`province`, province);
     return province.map((val, idx) => {
       return (
         <option
@@ -183,13 +208,15 @@ function Warehouse() {
 
   const getAllWarehouse = async () => {
     try {
-      let res = await axios.get(`${API_URL}/warehouse/`, {
+      let res = await axios.get(`${API_URL}/warehouse/?page=${page}&size=${size}&sortby=${sortby}&order=${order}&name=${filter}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      // console.log(`getallwarehouse`, res.data);
-      setWarehouseList(res.data);
+      console.log(`getallwarehouse`, res.data);
+
+      setTotalData(res.data.count);
+      setWarehouseList(res.data.rows);
     } catch (error) {
       console.log(error);
     }
@@ -338,14 +365,76 @@ function Warehouse() {
     }
   };
 
-  console.log(`ini cityID`, city_id);
+  //--------------------- SORTING AND PAGINATION ------------------------
+
+  const sorting = (sortbywhat) => {
+    if (sortby !== sortbywhat) {
+      setSortby(sortbywhat);
+      setOrder("ASC");
+      params.set("sortby", sortbywhat);
+      params.set("orderby", "ASC");
+      navigate({ search: params.toString() }); // buat update url
+    } else {
+      if (order === "DESC") {
+        setSortby(sortbywhat); // mau sort by apa
+        setOrder("ASC"); // ordernya asc atau DESC
+        params.set("sortby", sortbywhat);
+        params.set("orderby", "ASC");
+        navigate({ search: params.toString() });
+      } else {
+        setSortby(sortbywhat);
+        setOrder("DESC");
+        params.set("sortby", sortbywhat);
+        params.set("orderby", "DESC");
+        navigate({ search: params.toString() });
+      }
+    }
+  };
+
+  React.useEffect(() => {
+    getAllWarehouse();
+  }, [sortby, order, page]);
+
+  const paginate = (pageNumber) => {
+    // console.log(`pagenumber`, pageNumber.selected);
+    setPage(pageNumber.selected);
+    params.set("page", pageNumber.selected + 1);
+    if (pageNumber.selected !== 0) {
+      navigate({ search: params.toString() }); // buat update url
+      // sama kaya navigate(`?${params.toString()}`);
+    } else {
+      params.delete("page");
+      navigate({ search: params.toString() }); // buat update url
+    }
+    // console.log("location on pagination click", location);
+  };
+
+  //--------------------- SEARCH BAR ---------------------------------------
+
+  const setprops = (setname) => {
+    setFilter(setname);
+  };
+
+  const onSearchBtn = () => {
+    setPage(0);
+    params.delete("page");
+    getAllWarehouse(); // change to get yg lu mau pake
+    if (filter.length === 0) {
+      params.delete("filter");
+      navigate({ search: params.toString() });
+    } else {
+      params.set("filter", filter);
+      navigate({ search: params.toString() });
+    }
+  };
 
   return (
-    <Box my={"20px"} textColor="white">
+    <Box mt={{md:"20px", lg:"20px", xl:"20px"}} textColor="white">
       <Flex justifyContent={"space-between"}>
-        <Heading size={"lg"} fontStyle="inherit">
+        <Heading size={{ md: "md", lg: "lg" }} fontStyle="inherit">
           Warehouse List
         </Heading>
+        <SearchBar setprops={setprops} onSearchBtn={onSearchBtn} />
 
         {roleId == 1 ? (
           <Button
@@ -354,6 +443,7 @@ function Warehouse() {
             bgColor={"#1BFD9C"}
             style={{ color: "black" }}
             leftIcon={<MdOutlineAdd />}
+            size={{ md: "sm", lg: "md" }}
           >
             Add Warehouse
           </Button>
@@ -586,13 +676,49 @@ function Warehouse() {
                 <Input type="text" placeholder="Search List" bg="white" color="gray.800" />
             </InputGroup> */}
 
-      <TableContainer mt={"20px"}>
+      <TableContainer mt={"10px"}>
         <Table>
           <Thead>
             <Tr>
               <Th textColor={"white"}>No</Th>
-              <Th textColor={"white"}>Name</Th>
-              <Th textColor={"white"}>Email</Th>
+              <Th textColor={"white"}>
+                <Text
+                  as="button"
+                  onClick={() => {
+                    sorting("name");
+                  }}
+                >
+                  NAME
+                  <Icon
+                    ml={3}
+                    as={
+                      sortby === "name" && order === "ASC"
+                        ? BsChevronDown
+                        : BsChevronUp
+                    }
+                    display="inline"
+                  />
+                </Text>
+              </Th>
+              <Th textColor={"white"}>
+                <Text
+                  as="button"
+                  onClick={() => {
+                    sorting("email");
+                  }}
+                >
+                  EMAIL
+                  <Icon
+                    ml={3}
+                    as={
+                      sortby === "email" && order === "ASC"
+                        ? BsChevronDown
+                        : BsChevronUp
+                    }
+                    display="inline"
+                  />
+                </Text>
+              </Th>
               <Th textColor={"white"}>Phone</Th>
               <Th textColor={"white"}>Address</Th>
               <Th textColor={"white"}>Status</Th>
@@ -602,6 +728,11 @@ function Warehouse() {
           <Tbody>{printWarehouse()}</Tbody>
         </Table>
       </TableContainer>
+      {
+        <div className="justify-end flex ">
+          <Pagination paginate={paginate} size={size} totalData={totalData} />
+        </div>
+      }
     </Box>
   );
 }

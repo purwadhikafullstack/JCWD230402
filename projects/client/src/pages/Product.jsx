@@ -185,7 +185,6 @@ function Product() {
             })
 
             console.log(`res getProduct`, res);
-            
             setProductList(res.data.data)
             setTotalData(res.data.datanum)
 
@@ -206,8 +205,8 @@ function Product() {
                     <Td>{val.name}</Td>
                     <Td>{val.category.type}</Td>
                     <Td>
-                        {`Rp. ${val.types[0].price } - ${val.types[val.types.length - 1].price}`}
-                        
+                        {`Rp. ${val.types[0].price} - ${val.types[val.types.length - 1].price}`}
+
                     </Td>
                     <Td textColor={val.isDisabled == true ? "red.500" : "green.500"}>{val.isDisabled == false ? "Available" : "Unavailable"}</Td>
                     {
@@ -347,7 +346,7 @@ function Product() {
     const getAllWarehouse = async () => {
         try {
             if (roleId == 1) {
-                let res = await axios.get(`${API_URL}/warehouse/`, {
+                let res = await axios.get(`${API_URL}/warehouse/allwarehouse`, {
                     headers: {
                         "Authorization": `Bearer ${token}`
                     }
@@ -355,7 +354,7 @@ function Product() {
                 // console.log(`getAllWarehouse`, res);
                 setWarehouseList(res.data)
             } else {
-                let res = await axios.get(`${API_URL}/warehouse/?warehouseId=${warehouseId}`, {
+                let res = await axios.get(`${API_URL}/warehouse/allwarehouse?warehouseId=${warehouseId}`, {
                     headers: {
                         "Authorization": `Bearer ${token}`
                     }
@@ -363,9 +362,6 @@ function Product() {
                 // console.log(`getAllWarehouse`, res);
                 setWarehouseList(res.data)
             }
-
-
-
         } catch (error) {
             console.log(error);
         }
@@ -381,7 +377,6 @@ function Product() {
             )
         })
     }
-
     //-------------------------------- Creatable Color ------------------------------------
 
     const getColor = async () => {
@@ -771,6 +766,7 @@ function Product() {
                                                         <Td>
                                                             {
                                                                 <CreatableSelect
+                                                                    menuPosition='fixed'
                                                                     isClearable
                                                                     isDisabled={isLoading}
                                                                     isLoading={isLoading}
@@ -785,6 +781,7 @@ function Product() {
                                                         <Td>
                                                             {
                                                                 <CreatableSelect
+                                                                    menuPosition='fixed'
                                                                     isClearable
                                                                     isDisabled={isLoading}
                                                                     isLoading={isLoading}
@@ -972,12 +969,13 @@ function Product() {
                                         <Tbody>
                                             {
                                                 variationsEdit.map((variationEdit, idx) => (
+
                                                     <Tr key={variationEdit.id}>
                                                         <Td>
                                                             {
                                                                 <CreatableSelect
+                                                                    menuPosition='fixed'
                                                                     isClearable
-                                                                    isDisabled={isLoading}
                                                                     isLoading={isLoading}
                                                                     onChange={(newValue) => handleVariationChangeColorEdit(idx, newValue)}
                                                                     onCreateOption={handleCreateColor}
@@ -998,6 +996,7 @@ function Product() {
                                                         <Td>
                                                             {
                                                                 <CreatableSelect
+                                                                    menuPosition='fixed'
                                                                     isClearable
                                                                     isDisabled={isLoading}
                                                                     isLoading={isLoading}

@@ -62,7 +62,7 @@ function UserManagement() {
   const finalRef = React.useRef(null);
 
   const [page, setPage] = React.useState(defautlPage);
-  const [size] = React.useState(5);
+  const [size] = React.useState(8);
   const [sortby, setSortby] = React.useState(defaultSort);
   const [order, setOrder] = React.useState(defaultOrder);
   const [filter, setFilter] = React.useState(defaultFilter);
@@ -268,7 +268,7 @@ function UserManagement() {
 
   const getAllWarehouse = async () => {
     try {
-      let res = await axios.get(`${API_URL}/warehouse/`, {
+      let res = await axios.get(`${API_URL}/warehouse/warehouseproduct`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -580,6 +580,18 @@ function UserManagement() {
                   </Select>
                 </FormControl>
 
+                <FormControl mt={2}>
+                  <FormLabel>Role</FormLabel>
+                  <Select
+                    width={"64"}
+                    placeholder={"-- Select --"}
+                    onChange={(e) => setRole(e.target.value)}
+                  >
+                    <option value="1">Super Admin</option>
+                    <option value="2">Admin</option>
+                  </Select>
+                </FormControl>
+
                 {role === "2" ? (
                   <FormControl mt={2}>
                     <FormLabel>Warehouse</FormLabel>
@@ -592,16 +604,6 @@ function UserManagement() {
                   </FormControl>
                 ) : null}
 
-                <FormControl mt={2}>
-                  <FormLabel>Role</FormLabel>
-                  <Select
-                    placeholder={"-- Select --"}
-                    onChange={(e) => setRole(e.target.value)}
-                  >
-                    <option value="1">Super Admin</option>
-                    <option value="2">Admin</option>
-                  </Select>
-                </FormControl>
               </Box>
             </Flex>
           </ModalBody>
@@ -691,6 +693,19 @@ function UserManagement() {
                 </FormControl>
 
                 <FormControl mt={2}>
+                  <FormLabel>Role</FormLabel>
+                  <Select
+                    width={"64"}
+                    placeholder={"-- Select --"}
+                    onChange={(e) => setRole(e.target.value)}
+                    defaultValue={role}
+                  >
+                    <option value="1">Super Admin</option>
+                    <option value="2">Admin</option>
+                  </Select>
+                </FormControl>
+
+                <FormControl mt={2}>
                   <FormLabel>Warehouse</FormLabel>
                   <Select
                     placeholder={"-- Select --"}
@@ -701,17 +716,7 @@ function UserManagement() {
                   </Select>
                 </FormControl>
 
-                <FormControl mt={2}>
-                  <FormLabel>Role</FormLabel>
-                  <Select
-                    placeholder={"-- Select --"}
-                    onChange={(e) => setRole(e.target.value)}
-                    defaultValue={role}
-                  >
-                    <option value="1">Super Admin</option>
-                    <option value="2">Admin</option>
-                  </Select>
-                </FormControl>
+
               </Box>
             </Flex>
           </ModalBody>

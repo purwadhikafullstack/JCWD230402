@@ -97,7 +97,7 @@ function App() {
           roleId ? (
             <div className="bg-bgglass flex w-full">
               <Sidebar />
-              <main className="mt-2 md:mt-2 px-4 md:px-16 w-full">
+              <main className=" md:px-4 lg:px-8 xl:px-16 md:w-11/12 lg:w-10/12 xl:w-screen ">
                 <Routes>
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/admin" element={<AdminLogin />} />
