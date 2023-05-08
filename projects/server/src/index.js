@@ -8,7 +8,7 @@ const bearerToken = require("express-bearer-token");
 app.use(cors());
 app.use(bearerToken());
 app.use(express.json());
-app.use(express.static('src/public'))
+app.use(express.static("src/public"));
 
 app.use("/", express.static(__dirname + "/public"));
 
@@ -34,14 +34,17 @@ app.use("/category", categoryRouter);
 const productRouter = require("./Routers/productRouter");
 app.use("/product", productRouter);
 
-const profileRouter = require('./Routers/profileRouter');
-app.use('/profile', profileRouter);
+const profileRouter = require("./Routers/profileRouter");
+app.use("/profile", profileRouter);
 
 const detailRouter = require("./Routers/detailRouter");
 app.use("/detail", detailRouter);
 
 const checkout = require("./Routers/checkoutRouter");
 app.use("/checkout", checkout);
+
+const order = require("./Routers/orderRouter");
+app.use("/order", order);
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);

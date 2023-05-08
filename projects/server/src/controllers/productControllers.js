@@ -385,9 +385,9 @@ module.exports = {
 
       let findStock = await model.type.findOne({
         where: {
-          id: req.params.id
-        }
-      })
+          id: req.params.id,
+        },
+      });
 
       console.log(`findStock`, findStock);
       if (req.body.stock - findStock.dataValues.stock < 0) {
@@ -397,7 +397,7 @@ module.exports = {
           statusId: 7,
           onLocation: 1,
           requestId: 3,
-        })
+        });
         console.log(`stockMutation`, stockMutation);
       } else {
         let stockMutation = await model.stockMutation.create({
@@ -406,10 +406,10 @@ module.exports = {
           statusId: 7,
           onLocation: 1,
           requestId: 3,
-        })
+        });
         console.log(`stockMutation`, stockMutation);
       }
-      
+
       let editVariant = await model.type.update(
         {
           price: req.body.price,
@@ -814,6 +814,7 @@ module.exports = {
         });
 
         if (findtype.length !== 0) {
+          // if item in stock
           let checkCart = await model.cart.findAll({
             where: {
               [sequelize.Op.and]: [
@@ -853,7 +854,7 @@ module.exports = {
             return res.status(200).send({ data: createCart });
           }
         } else {
-          // if checktype gagal
+          // if item out of stock
           return res
             .status(400)
             .send({ success: false, message: "Item currently out of stock" });
@@ -866,14 +867,14 @@ module.exports = {
   },
   getCart: async (req, res, next) => {
     try {
-      // find customer id based on email
+      // find customer id based on token
       let findCustomerId = await model.customer.findOne({
         where: {
           uuid: req.decript.uuid,
         },
       });
 
-      // find item number for pagination
+      // find item number for limit
       const count = await model.cart.count({
         where: {
           customerId: findCustomerId.dataValues.id,

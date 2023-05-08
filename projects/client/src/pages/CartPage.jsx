@@ -93,6 +93,7 @@ function CartPage() {
 
   const printCart = () => {
     return cartList.map((val, idx) => {
+      console.log("aaaaaaaaaaaaa", priceList[idx]);
       return (
         <CardCart
           color={val.color.color}
