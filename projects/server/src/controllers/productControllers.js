@@ -64,6 +64,7 @@ module.exports = {
               discountedPrice: variant.price,
               warehouseId: variant.warehouseId,
               statusId: 4,
+              booked: 0
             },
             {
               // transaction: ormTransaction,
@@ -114,6 +115,7 @@ module.exports = {
                 discountedPrice: variations[i].price,
                 warehouseId: variations[i].warehouseId,
                 statusId: 4,
+                booked: 0
               },
               {
                 // transaction: ormTransaction,
@@ -395,7 +397,10 @@ module.exports = {
           statusId: 7,
           onLocation: 1,
           requestId: 3,
-        });
+
+          creatorId: req.body.creatorId
+        })
+
         console.log(`stockMutation`, stockMutation);
       } else {
         let stockMutation = await model.stockMutation.create({
@@ -404,7 +409,9 @@ module.exports = {
           statusId: 7,
           onLocation: 1,
           requestId: 3,
-        });
+          creatorId: req.body.creatorId
+        })
+
         console.log(`stockMutation`, stockMutation);
       }
 

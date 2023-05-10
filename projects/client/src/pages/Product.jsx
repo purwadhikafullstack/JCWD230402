@@ -629,6 +629,7 @@ function Product() {
                 price: activeIndex.price,
                 stock: activeIndex.stock,
                 discount: activeIndex.discount,
+                creatorId: warehouseId
             }, {
                 headers: {
                     "Authorization": `Bearer ${token}`

@@ -7,7 +7,9 @@ const productController = require("./productControllers");
 const detailController = require("./detailController");
 const profileController = require("./profileControllers");
 const checkoutController = require("./checkoutControllers");
+const stockMutationController = require("./stockMutationController");
 const orderController = require("./orderControllers");
+
 
 module.exports = {
   authController,
@@ -19,5 +21,6 @@ module.exports = {
   detailController,
   profileController,
   checkoutController,
+  stockMutationController
   orderController,
 };

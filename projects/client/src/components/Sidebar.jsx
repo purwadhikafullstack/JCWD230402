@@ -1,5 +1,5 @@
 import React from 'react'
-import { MdGroups2, MdCategory, MdWarehouse, MdShoppingCart } from 'react-icons/md'
+import { MdGroups2, MdCategory, MdWarehouse, MdShoppingCart, MdInventory } from 'react-icons/md'
 import { TbReportSearch } from 'react-icons/tb'
 import { useDispatch, useSelector } from "react-redux";
 import { adminlogoutAction } from "../reducers/admin";
@@ -56,6 +56,14 @@ function Sidebar() {
                 <MdWarehouse />
               </span>
               <span className="hidden lg:inline ml-2 text-sm tracking-wide truncate">Warehouse</span>
+            </Link>
+          </li>
+          <li>
+            <Link to="/stockmanagement" className="relative flex flex-row items-center h-11 focus:outline-none hover:bg-white text-white hover:text-[#1BFD9C] border-l-4 border-transparent hover:border-indigo-500 pr-6">
+              <span className="inline-flex justify-center items-center ml-4">
+                <MdInventory />
+              </span>
+              <span className="hidden lg:inline ml-2 text-sm tracking-wide truncate">Stock Management</span>
             </Link>
           </li>
           <li>

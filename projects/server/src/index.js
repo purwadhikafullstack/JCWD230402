@@ -43,8 +43,13 @@ app.use("/detail", detailRouter);
 const checkout = require("./Routers/checkoutRouter");
 app.use("/checkout", checkout);
 
+
+const stockMutation = require("./Routers/stockMutationRouter");
+app.use("/stockmutation", stockMutation);
+
 const order = require("./Routers/orderRouter");
 app.use("/order", order);
+
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);
