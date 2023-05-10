@@ -131,6 +131,7 @@ function CustomerOrder() {
         </Flex>
       );
     } else {
+      console.log("orderlist", orderList);
       return orderList.map((val, idx) => {
         return (
           <>
@@ -653,12 +654,12 @@ function CustomerOrder() {
           >
             <TabList mr="3" overflowX={"scroll"}>
               <Tab id="0">All</Tab>
-              <Tab id="8">Awaiting Payment</Tab>
-              <Tab id="9">Waiting for Confirmation</Tab>
-              <Tab id="10">Processing</Tab>
-              <Tab id="11">Sent</Tab>
-              <Tab id="12">Received</Tab>
-              <Tab id="13">Cancelled</Tab>
+              <Tab id="9">Awaiting Payment</Tab>
+              <Tab id="10">Waiting for Confirmation</Tab>
+              <Tab id="11">Processing</Tab>
+              <Tab id="12">Sent</Tab>
+              <Tab id="13">Received</Tab>
+              <Tab id="14">Cancelled</Tab>
             </TabList>
             <TabIndicator
               mt="-1.5px"

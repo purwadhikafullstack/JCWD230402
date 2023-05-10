@@ -10,7 +10,6 @@ const checkoutController = require("./checkoutControllers");
 const stockMutationController = require("./stockMutationController");
 const orderController = require("./orderControllers");
 
-
 module.exports = {
   authController,
   rajaongkirController,
@@ -21,6 +20,6 @@ module.exports = {
   detailController,
   profileController,
   checkoutController,
-  stockMutationController
+  stockMutationController,
   orderController,
 };
