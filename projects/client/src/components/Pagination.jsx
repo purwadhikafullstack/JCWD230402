@@ -4,11 +4,11 @@ import ReactPaginate from "react-paginate";
 import { Flex } from "@chakra-ui/react";
 
 const Pagination = (props) => {
-  console.log("ini props.totaldata", props.totalData);
-  console.log("ini props.size", props.size);
+  // console.log("ini props.totaldata", props.totalData);
+  // console.log("ini props.size", props.size);
   const pageCount = Math.ceil(props.totalData / props.size);
 
-  console.log("pageCount = ", pageCount);
+  // console.log("pageCount = ", pageCount);
 
   return (
     <Flex>

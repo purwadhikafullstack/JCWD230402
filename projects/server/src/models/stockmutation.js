@@ -24,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       supplierId: DataTypes.INTEGER,
       targetId: DataTypes.INTEGER,
       creatorId: DataTypes.INTEGER,
+      initialStock: DataTypes.INTEGER,
     },
     {
       sequelize,

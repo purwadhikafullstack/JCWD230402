@@ -39,6 +39,7 @@ import { FcGoogle } from "react-icons/fc";
 import { BsFacebook } from "react-icons/bs";
 import { NavLink } from "react-router-dom";
 import { loginAction } from "../reducers/auth";
+import { cartAction } from "../reducers/cart";
 
 function ProductPage() {
   const statusId = useSelector((state) => state.authReducer.statusId);
@@ -358,26 +359,23 @@ function ProductPage() {
       );
     }
   };
-  // const getDetails = async () => {
-  //   try {
-  //     let response = await axios.get(
-  //       `${API_URL}/detail/product/?query=${nameFromURL}`
-  //     );
-  //     setLoading(false);
-  //     setDetailsList(response.data);
-  //   } catch (error) {
-  //     console.log("error getdetails", error);
-  //   }
-  // };
-  // const printDetails = () => {
-  //   console.log(`detailsList`, detailsList.No);
-  //   // return detailsList.map((val) => {
-  //   //   console.log("value detailsList = ", val);
-  //   //   return <h1>i am gay</h1>;
-  //   // });
-  // };
 
   //================================================================== on Cart button click
+  const getCart = async () => {
+    try {
+      const token = localStorage.getItem("Gadgetwarehouse_userlogin");
+      let res = await axios.get(`${API_URL}/product/cart/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      dispatch(cartAction(res.data.datanum));
+    } catch (error) {
+      console.log("error getCart", error);
+    }
+  };
+
   const onCartClick = async () => {
     try {
       if (!statusId || statusId === 1) {
@@ -399,8 +397,14 @@ function ProductPage() {
             },
           }
         );
-        // if success page reload
-        window.location.reload();
+        toast({
+          title: "Item Added to Cart",
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+        });
+        // if success get cart
+        getCart();
       }
     } catch (error) {
       if (error.response.data.message) {
@@ -416,6 +420,7 @@ function ProductPage() {
       }
     }
   };
+
   const showpassword = () => {
     if (visible === "password") {
       setVisible("text");
