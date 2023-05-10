@@ -21,10 +21,19 @@ module.exports = (sequelize, DataTypes) => {
     onLocation: DataTypes.BOOLEAN,
     requestId: DataTypes.INTEGER,
     supplierId: DataTypes.INTEGER,
-    targetId: DataTypes.INTEGER
+    targetId: DataTypes.INTEGER,
+    creatorId: DataTypes.INTEGER,
+    initialStock: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'stockMutation',
   });
+
+  stockMutation.associate = (models) => {
+    stockMutation.belongsTo(models.type, { foreignKey: "typeId" });
+    stockMutation.belongsTo(models.status, { foreignKey: "statusId" });
+    stockMutation.belongsTo(models.warehouse, { foreignKey: "supplierId" });
+  };
+
   return stockMutation;
 };

@@ -22,6 +22,7 @@ module.exports = (sequelize, DataTypes) => {
 
   status.associate = (models) => {
     status.hasMany(models.type, { foreignKey: "statusId" });
+    status.hasMany(models.stockMutation, { foreignKey: "statusId" });
   }
 
   return status;

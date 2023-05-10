@@ -31,6 +31,7 @@ import { API_URL } from "./helper";
 import { loginAction } from "./reducers/auth";
 import { adminloginAction } from "./reducers/admin";
 import { useDispatch, useSelector } from "react-redux";
+import StockManagement from "./pages/StockManagement";
 
 function App() {
   const [message, setMessage] = useState("");
@@ -113,6 +114,7 @@ function App() {
                   <Route path="/category" element={<Category />} />
                   <Route path="*" element={<PageNotFound />} />
                   <Route path="/product" element={<Product />} />
+                  <Route path="/stockmanagement" element={<StockManagement />} />
                 </Routes>
               </main>
             </div>
