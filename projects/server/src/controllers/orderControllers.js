@@ -865,7 +865,7 @@ module.exports = {
           limit: parseInt(size),
           attributes: { exclude: ["id", "adminId", "customerId"] },
           where: {
-            statusId: parseInt(req.query.status) + 7,
+            statusId: parseInt(req.query.status) + 8,
             customerId: customerId,
           },
           include: [
