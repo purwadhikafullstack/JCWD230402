@@ -22,6 +22,7 @@ import {
   ProductPage,
   Product,
   Checkout,
+  CustomerOrder,
 } from "./pages";
 
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
@@ -37,7 +38,7 @@ function App() {
   const [message, setMessage] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation()
+  const location = useLocation();
 
   useEffect(() => {
     (async () => {
@@ -65,8 +66,6 @@ function App() {
       console.log(error);
     }
   };
-  
-  console.log(`location`, location);
 
   const adminkeepLogin = async () => {
     try {
@@ -81,7 +80,7 @@ function App() {
         localStorage.setItem("gadgetwarehouse_adminlogin", res.data.token);
         dispatch(adminloginAction(res.data));
         if (location.pathname == "/") {
-          navigate("/dashboard")
+          navigate("/dashboard");
         }
       }
     } catch (error) {
@@ -119,62 +118,63 @@ function App() {
               </main>
             </div>
           ) : // ini customer
-            statusId ? (
-              <div>
-                <Navbar />
-                <main className="mt-2 md:mt-2 px-2 md:px-10 w-full">
-                  <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route
-                      path="/product/all-products"
-                      element={<AllProduct />}
-                    />
-                    <Route
-                      path="/product/:productname"
-                      element={<ProductPage />}
-                    />
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/request" element={<RequestPassword />} />
-                    <Route path="/reset/:token" element={<ResetPassword />} />
-                    <Route path="/verify/:token" element={<Verification />} />
-                    <Route path="*" element={<PageNotFound />} />
-                    <Route
-                      path="/Customerprofile"
-                      element={<CustomerProfile />}
-                    />
-                    <Route path="/CartPage" element={<CartPage />} />
-                    <Route path="/checkout" element={<Checkout />} />
-                  </Routes>
-                </main>
-                <Footer />
-              </div>
-            ) : (
-              // ini untuk yang belum login
-              <div>
-                <Navbar />
-                <main className="mt-2 md:mt-2 px-2 md:px-10 w-full">
-                  <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route
-                      path="/product/all-products"
-                      element={<AllProduct />}
-                    />
-                    <Route
-                      path="/product/:productname"
-                      element={<ProductPage />}
-                    />
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="*" element={<PageNotFound />} />
-                    <Route path="/verify/:token" element={<Verification />} />
-                    <Route path="/admin" element={<AdminLogin />} />
-                    <Route path="/CartPage" element={<CartPage />} />
-                  </Routes>
-                </main>
-                <Footer />
-              </div>
-            )
+          statusId ? (
+            <div>
+              <Navbar />
+              <main className="mt-2 md:mt-2 px-2 md:px-10 w-full">
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route
+                    path="/product/all-products"
+                    element={<AllProduct />}
+                  />
+                  <Route
+                    path="/product/:productname"
+                    element={<ProductPage />}
+                  />
+                  <Route path="/register" element={<Register />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/request" element={<RequestPassword />} />
+                  <Route path="/reset/:token" element={<ResetPassword />} />
+                  <Route path="/verify/:token" element={<Verification />} />
+                  <Route path="*" element={<PageNotFound />} />
+                  <Route
+                    path="/Customerprofile"
+                    element={<CustomerProfile />}
+                  />
+                  <Route path="/CartPage" element={<CartPage />} />
+                  <Route path="/checkout" element={<Checkout />} />
+                  <Route path="/MyOrder" element={<CustomerOrder />} />
+                </Routes>
+              </main>
+              <Footer />
+            </div>
+          ) : (
+            // ini untuk yang belum login
+            <div>
+              <Navbar />
+              <main className="mt-2 md:mt-2 px-2 md:px-10 w-full">
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route
+                    path="/product/all-products"
+                    element={<AllProduct />}
+                  />
+                  <Route
+                    path="/product/:productname"
+                    element={<ProductPage />}
+                  />
+                  <Route path="/register" element={<Register />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="*" element={<PageNotFound />} />
+                  <Route path="/verify/:token" element={<Verification />} />
+                  <Route path="/admin" element={<AdminLogin />} />
+                  <Route path="/CartPage" element={<CartPage />} />
+                </Routes>
+              </main>
+              <Footer />
+            </div>
+          )
         }
       </div>
     </AnimatePresence>

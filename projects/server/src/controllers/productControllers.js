@@ -178,9 +178,8 @@ module.exports = {
           { model: model.category, attributes: ["type"] },
           { model: model.type, attributes: ["price", "warehouseId"] },
         ],
-        // order: [[sortby, order]],
+
         order: [[model.type, "price", "ASC"]],
-        // order: sortby == 'product' ? [[sortby, order]] : [[model.type, sortby, order]]
       });
 
       console.log(`getProduct`, get);
@@ -188,7 +187,6 @@ module.exports = {
       return res.status(200).send({
         data: get.rows,
         datanum: get.rows.length,
-        // maxMin
       });
     } catch (error) {
       console.log(error);
@@ -387,9 +385,9 @@ module.exports = {
 
       let findStock = await model.type.findOne({
         where: {
-          id: req.params.id
-        }
-      })
+          id: req.params.id,
+        },
+      });
 
       console.log(`findStock`, findStock);
       if (req.body.stock - findStock.dataValues.stock < 0) {
@@ -399,8 +397,10 @@ module.exports = {
           statusId: 7,
           onLocation: 1,
           requestId: 3,
+
           creatorId: req.body.creatorId
         })
+
         console.log(`stockMutation`, stockMutation);
       } else {
         let stockMutation = await model.stockMutation.create({
@@ -411,9 +411,10 @@ module.exports = {
           requestId: 3,
           creatorId: req.body.creatorId
         })
+
         console.log(`stockMutation`, stockMutation);
       }
-      
+
       let editVariant = await model.type.update(
         {
           price: req.body.price,
@@ -818,6 +819,7 @@ module.exports = {
         });
 
         if (findtype.length !== 0) {
+          // if item in stock
           let checkCart = await model.cart.findAll({
             where: {
               [sequelize.Op.and]: [
@@ -857,7 +859,7 @@ module.exports = {
             return res.status(200).send({ data: createCart });
           }
         } else {
-          // if checktype gagal
+          // if item out of stock
           return res
             .status(400)
             .send({ success: false, message: "Item currently out of stock" });
@@ -870,14 +872,14 @@ module.exports = {
   },
   getCart: async (req, res, next) => {
     try {
-      // find customer id based on email
+      // find customer id based on token
       let findCustomerId = await model.customer.findOne({
         where: {
           uuid: req.decript.uuid,
         },
       });
 
-      // find item number for pagination
+      // find item number for limit
       const count = await model.cart.count({
         where: {
           customerId: findCustomerId.dataValues.id,

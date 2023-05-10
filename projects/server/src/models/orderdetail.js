@@ -25,5 +25,9 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "orderDetail",
     }
   );
+  orderDetail.associate = (models) => {
+    orderDetail.belongsTo(models.order, { foreignKey: "orderId" });
+    orderDetail.belongsTo(models.type, { foreignKey: "typeId" });
+  };
   return orderDetail;
 };

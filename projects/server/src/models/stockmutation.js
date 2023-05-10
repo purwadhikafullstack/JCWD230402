@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
 
+
   stockMutation.init({
     typeId: DataTypes.INTEGER,
     addition: DataTypes.INTEGER,
@@ -34,6 +35,7 @@ module.exports = (sequelize, DataTypes) => {
     stockMutation.belongsTo(models.status, { foreignKey: "statusId" });
     stockMutation.belongsTo(models.warehouse, { foreignKey: "supplierId" });
   };
+
 
   return stockMutation;
 };

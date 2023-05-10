@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { API_URL } from "../helper";
 import axios from "axios";
+import { cartAction } from "../reducers/cart";
+import { useDispatch } from "react-redux";
 
 import {
   Text,
@@ -33,12 +35,14 @@ import {
   Select,
   Textarea,
   CardFooter,
+  useToast,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
 import { FiPlus } from "react-icons/fi";
 
 function Checkout() {
+  const toast = useToast();
   const navigate = useNavigate();
   const fromSession = sessionStorage.getItem("total all item");
   const token = localStorage.getItem("Gadgetwarehouse_userlogin");
@@ -62,10 +66,10 @@ function Checkout() {
   const [postalCode, setPostalCode] = React.useState();
   const [newAddress, setNewAddress] = React.useState("");
   const [city_id, setCity_id] = React.useState("");
-  const [ongkirList, setOngkirList] = React.useState([])
+  const [ongkirList, setOngkirList] = React.useState([]);
   const [ongkirValue, setOngkirValue] = React.useState("");
-
-  console.log(`ongkirValue`, ongkirValue);
+  const [selectedWarehouse, setSelectedWarehouse] = useState("");
+  const dispatch = useDispatch();
 
   function formating(params) {
     let total = new Intl.NumberFormat("id-ID", {
@@ -88,6 +92,7 @@ function Checkout() {
       if (!res.data.data) {
         navigate("*");
       }
+      dispatch(cartAction(res.data.datanum));
       setCartList(res.data.data);
       setPriceList(res.data.pricing);
     } catch (error) {
@@ -285,25 +290,29 @@ function Checkout() {
 
   const distance = async () => {
     try {
-      let distance = await axios.post(`${API_URL}/checkout/`, {
-        customerAddress: primaryAddress.location,
-        city_id: primaryAddress.city_id
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      let distance = await axios.post(
+        `${API_URL}/checkout/`,
+        {
+          customerAddress: primaryAddress.location,
+          city_id: primaryAddress.city_id,
         },
-      })
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       // console.log(`distance`, distance);
-      setOngkirList(distance.data.data[0].costs)
-
+      setOngkirList(distance.data.data[0].costs);
+      setSelectedWarehouse(distance.data.warehouse);
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const printOngkir = () => {
-    console.log(`ongkirList`, ongkirList);
+    // console.log(`ongkirList`, ongkirList);
     return ongkirList.map((val, idx) => {
       let temp = idx.toString();
       return (
@@ -326,9 +335,7 @@ function Checkout() {
               }}
               fontSize={{ base: "sm", lg: "sm" }}
             >
-              <Text textTransform="uppercase">
-                {`JNE - ${val.service}`}
-              </Text>
+              <Text textTransform="uppercase">{`JNE - ${val.service}`}</Text>
               <Text mt={1}>{formating(val.cost[0].value)}</Text>
             </Flex>
             <Text fontSize="xs" opacity={"0.4"}>
@@ -337,14 +344,15 @@ function Checkout() {
           </Radio>
           <Divider my={4} />
         </>
-      )
-    })
-  }
+      );
+    });
+  };
 
   //-----------------------------------------------------------------------------------------------
 
   const printSummary = () => {
     return cartList.map((val, idx) => {
+      // console.log(`pricelist`, priceList);
       return (
         <>
           {/* card body */}
@@ -523,8 +531,47 @@ function Checkout() {
     });
   };
 
+  const onBtnConfirmCheckout = async () => {
+    try {
+      let res = await axios.post(
+        `${API_URL}/order/`,
+        {
+          deliveryFee: ongkirList[ongkirValue].cost[0].value,
+          finalPrice:
+            parseInt(sessionStorage.getItem("total all item")) +
+            ongkirList[ongkirValue].cost[0].value +
+            (parseInt(sessionStorage.getItem("total all item")) +
+              ongkirList[ongkirValue].cost[0].value) *
+              0.1,
+          warehousechoice: selectedWarehouse,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (res.data.success) {
+        getCart();
+        navigate("/MyOrder");
+      }
+    } catch (error) {
+      if (error.response.message) {
+        toast({
+          title: "Failed to Place Order",
+          description: `${error.response.data.message}`,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
+      }
+      console.log("error confirm checkout", error);
+    }
+  };
+
   useEffect(() => {
-    distance()
+    distance();
   }, [primaryAddress]);
 
   useEffect(() => {
@@ -682,7 +729,9 @@ function Checkout() {
                           fontSize={{ base: "md", md: "sm", lg: "md" }}
                           fontWeight={"semibold"}
                         >
-                          {ongkirValue == "" ? "-" : formating(ongkirList[ongkirValue].cost[0].value)}
+                          {ongkirValue == ""
+                            ? "-"
+                            : formating(ongkirList[ongkirValue].cost[0].value)}
                         </Text>
                       )}
                     </Flex>
@@ -695,9 +744,15 @@ function Checkout() {
                         fontSize={{ base: "md", md: "sm", lg: "md" }}
                         fontWeight={"semibold"}
                       >
-                        {ongkirValue == "" ? "-" : formating(
-                          (parseInt(sessionStorage.getItem("total all item")) + ongkirList[ongkirValue].cost[0].value) * 0.1
-                        )}
+                        {ongkirValue == ""
+                          ? "-"
+                          : formating(
+                              (parseInt(
+                                sessionStorage.getItem("total all item")
+                              ) +
+                                ongkirList[ongkirValue].cost[0].value) *
+                                0.1
+                            )}
                       </Text>
                     </Flex>
                   </Box>
@@ -719,11 +774,19 @@ function Checkout() {
                         color={"#34D399"}
                         fontWeight={"semibold"}
                       >
-                        {ongkirValue == "" ? "-" : formating(
-                          parseInt(sessionStorage.getItem("total all item")) +
-                          ongkirList[ongkirValue].cost[0].value +
-                          ((parseInt(sessionStorage.getItem("total all item")) + ongkirList[ongkirValue].cost[0].value) * 0.1)
-                        )}
+                        {ongkirValue == ""
+                          ? "-"
+                          : formating(
+                              parseInt(
+                                sessionStorage.getItem("total all item")
+                              ) +
+                                ongkirList[ongkirValue].cost[0].value +
+                                (parseInt(
+                                  sessionStorage.getItem("total all item")
+                                ) +
+                                  ongkirList[ongkirValue].cost[0].value) *
+                                  0.1
+                            )}
                       </Text>
                     )}
                   </Flex>
@@ -754,6 +817,7 @@ function Checkout() {
                         bgColor: "#34D399",
                       }}
                       mt="4"
+                      onClick={onBtnConfirmCheckout}
                     >
                       Continue with Payment
                     </Button>
