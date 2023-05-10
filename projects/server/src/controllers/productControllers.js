@@ -176,9 +176,8 @@ module.exports = {
           { model: model.category, attributes: ["type"] },
           { model: model.type, attributes: ["price", "warehouseId"] },
         ],
-        // order: [[sortby, order]],
+
         order: [[model.type, "price", "ASC"]],
-        // order: sortby == 'product' ? [[sortby, order]] : [[model.type, sortby, order]]
       });
 
       console.log(`getProduct`, get);
@@ -186,7 +185,6 @@ module.exports = {
       return res.status(200).send({
         data: get.rows,
         datanum: get.rows.length,
-        // maxMin
       });
     } catch (error) {
       console.log(error);

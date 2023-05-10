@@ -50,7 +50,7 @@ function ProductCard(props) {
             {props.name}
           </Heading>
 
-          <NavLink>
+          <NavLink to={`/product/${forURL}`}>
             <Button
               backgroundColor={"transparent"}
               _hover={{ backgroundColor: "inherit" }}

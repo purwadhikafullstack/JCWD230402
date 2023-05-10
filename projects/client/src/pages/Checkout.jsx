@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { API_URL } from "../helper";
 import axios from "axios";
+import { cartAction } from "../reducers/cart";
+import { useDispatch } from "react-redux";
 
 import {
   Text,
@@ -33,12 +35,14 @@ import {
   Select,
   Textarea,
   CardFooter,
+  useToast,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
 import { FiPlus } from "react-icons/fi";
 
 function Checkout() {
+  const toast = useToast();
   const navigate = useNavigate();
   const fromSession = sessionStorage.getItem("total all item");
   const token = localStorage.getItem("Gadgetwarehouse_userlogin");
@@ -65,8 +69,7 @@ function Checkout() {
   const [ongkirList, setOngkirList] = React.useState([]);
   const [ongkirValue, setOngkirValue] = React.useState("");
   const [selectedWarehouse, setSelectedWarehouse] = useState("");
-
-  console.log("warehousechoice", selectedWarehouse);
+  const dispatch = useDispatch();
 
   function formating(params) {
     let total = new Intl.NumberFormat("id-ID", {
@@ -89,6 +92,7 @@ function Checkout() {
       if (!res.data.data) {
         navigate("*");
       }
+      dispatch(cartAction(res.data.datanum));
       setCartList(res.data.data);
       setPriceList(res.data.pricing);
     } catch (error) {
@@ -547,9 +551,20 @@ function Checkout() {
           },
         }
       );
+
+      if (res.data.success) {
+        getCart();
+        navigate("/MyOrder");
+      }
     } catch (error) {
       if (error.response.message) {
-        alert(`${error.response.message}`);
+        toast({
+          title: "Failed to Place Order",
+          description: `${error.response.data.message}`,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
       }
       console.log("error confirm checkout", error);
     }

@@ -4,30 +4,6 @@ const axios = require("axios");
 const { v4: uuidv4 } = require("uuid");
 
 module.exports = {
-  test: async (req, res, next) => {
-    try {
-      const uuid = uuidv4();
-
-      const findtype = await model.type.findAll({
-        where: {
-          productId: 1,
-          memoryId: 1,
-        },
-      });
-
-      if (findtype) {
-        console.log(findtype.dataValues);
-      } else {
-        console.log("pantek");
-      }
-
-      return res.status(200).send({ order: findtype });
-    } catch (error) {
-      console.log(error);
-      next(error);
-    }
-  },
-
   createOrder: async (req, res, next) => {
     try {
       // find customerId yg lagi login
@@ -197,10 +173,6 @@ module.exports = {
             return a.distance - b.distance;
           });
 
-          const availableWarehouse = allDistance[i].find(
-            (e) => e.id == chosenWarehouseId
-          );
-
           // untuk nyari value booked dri database yg bawa variasi, sbelum di update
           const findbooked = await model.type.findAll({
             where: {
@@ -269,6 +241,15 @@ module.exports = {
                   },
                 });
 
+                const updatedDelivererType = await model.type.findOne({
+                  where: {
+                    warehouseId: chosenWarehouseId,
+                    colorId: cart[i].dataValues.colorId,
+                    memoryId: cart[i].dataValues.memoryId,
+                    productId: cart[i].dataValues.productId,
+                  },
+                });
+
                 if (
                   updatedCart[i].dataValues.totalQty >
                   findInfo[0].dataValues.stock - findInfo[0].dataValues.booked
@@ -276,6 +257,7 @@ module.exports = {
                   //  bikin stock mutation utk dri warehouse terdekat meminta warehouse yg punya item tsb
                   await model.stockMutation.create({
                     typeId: findInfo[0].dataValues.id,
+                    initialStock: updatedDelivererType.dataValues.stock,
                     addition:
                       findInfo[0].dataValues.stock -
                       findInfo[0].dataValues.booked,
@@ -291,6 +273,7 @@ module.exports = {
                   // bikin stock mutation dri warehouse yg bawa item ke warehouse yg pling dkat
                   await model.stockMutation.create({
                     typeId: findInfo[0].dataValues.id,
+                    initialStock: findInfo[0].dataValues.stock,
                     subtraction:
                       findInfo[0].dataValues.stock -
                       findInfo[0].dataValues.booked,
@@ -336,6 +319,7 @@ module.exports = {
                   //  bikin stock mutation dri warehouse terdekat meminta warehouse yg punya item tsb
                   await model.stockMutation.create({
                     typeId: findInfo[0].dataValues.id,
+                    initialStock: updatedDelivererType.dataValues.stock,
                     addition: updatedCart[i].dataValues.totalQty,
                     supplierId: findInfo[0].dataValues.warehouseId,
                     targetId: chosenWarehouseId,
@@ -349,6 +333,7 @@ module.exports = {
                   // bikin stock mutation dri warehouse yg bawa item ke warehouse yg pling dkat
                   await model.stockMutation.create({
                     typeId: findInfo[0].dataValues.id,
+                    initialStock: findInfo[0].dataValues.stock,
                     subtraction: updatedCart[i].dataValues.totalQty,
                     supplierId: findInfo[0].dataValues.warehouseId,
                     targetId: chosenWarehouseId,
@@ -507,6 +492,7 @@ module.exports = {
                   // bikin stock mutation dri warehouse yg bawa item ke warehouse yg pling dkat
                   await model.stockMutation.create({
                     typeId: findInfo[0].dataValues.id,
+                    initialStock: findInfo[0].dataValues.stock,
                     subtraction:
                       findInfo[0].dataValues.stock -
                       findInfo[0].dataValues.booked,
@@ -549,32 +535,6 @@ module.exports = {
                     }
                   );
                 } else if (updatedCart[i].dataValues.totalQty > 0) {
-                  //  bikin stock mutation dri warehouse terdekat meminta warehouse yg punya item tsb
-                  await model.stockMutation.create({
-                    typeId: findInfo[0].dataValues.id,
-                    addition: updatedCart[i].dataValues.totalQty,
-                    supplierId: findInfo[0].dataValues.warehouseId,
-                    targetId: chosenWarehouseId,
-                    orderId: order.dataValues.id,
-                    statusId: 8,
-                    onLocation: 0,
-                    requestId: 1,
-                    creatorId: chosenWarehouseId,
-                  });
-
-                  // bikin stock mutation dri warehouse yg bawa item ke warehouse yg pling dkat
-                  await model.stockMutation.create({
-                    typeId: findInfo[0].dataValues.id,
-                    subtraction: updatedCart[i].dataValues.totalQty,
-                    supplierId: findInfo[0].dataValues.warehouseId,
-                    targetId: chosenWarehouseId,
-                    orderId: order.dataValues.id,
-                    statusId: 8,
-                    onLocation: 1,
-                    requestId: 2,
-                    creatorId: findInfo[0].dataValues.warehouseId,
-                  });
-
                   //  update stock supplier
                   await model.type.update(
                     {
@@ -601,6 +561,34 @@ module.exports = {
 
                   if (checkType) {
                     // klo ada
+
+                    //  bikin stock mutation dri warehouse terdekat meminta warehouse yg punya item tsb
+                    await model.stockMutation.create({
+                      typeId: findInfo[0].dataValues.id,
+                      initialStock: checkType.dataValues.stock,
+                      addition: updatedCart[i].dataValues.totalQty,
+                      supplierId: findInfo[0].dataValues.warehouseId,
+                      targetId: chosenWarehouseId,
+                      orderId: order.dataValues.id,
+                      statusId: 8,
+                      onLocation: 0,
+                      requestId: 1,
+                      creatorId: chosenWarehouseId,
+                    });
+
+                    // bikin stock mutation dri warehouse yg bawa item ke warehouse yg pling dkat
+                    await model.stockMutation.create({
+                      typeId: findInfo[0].dataValues.id,
+                      initialStock: findInfo[0].dataValues.stock,
+                      subtraction: updatedCart[i].dataValues.totalQty,
+                      supplierId: findInfo[0].dataValues.warehouseId,
+                      targetId: chosenWarehouseId,
+                      orderId: order.dataValues.id,
+                      statusId: 8,
+                      onLocation: 1,
+                      requestId: 2,
+                      creatorId: findInfo[0].dataValues.warehouseId,
+                    });
 
                     // update type
                     await model.type.update(
@@ -632,6 +620,35 @@ module.exports = {
                     });
                   } else {
                     // klo tidak ada
+
+                    //  bikin stock mutation dri warehouse terdekat meminta warehouse yg punya item tsb
+                    await model.stockMutation.create({
+                      typeId: findInfo[0].dataValues.id,
+
+                      addition: updatedCart[i].dataValues.totalQty,
+                      supplierId: findInfo[0].dataValues.warehouseId,
+                      targetId: chosenWarehouseId,
+                      orderId: order.dataValues.id,
+                      statusId: 8,
+                      onLocation: 0,
+                      requestId: 1,
+                      creatorId: chosenWarehouseId,
+                    });
+
+                    // bikin stock mutation dri warehouse yg bawa item ke warehouse yg pling dkat
+                    await model.stockMutation.create({
+                      typeId: findInfo[0].dataValues.id,
+                      initialStock: findInfo[0].dataValues.stock,
+                      subtraction: updatedCart[i].dataValues.totalQty,
+                      supplierId: findInfo[0].dataValues.warehouseId,
+                      targetId: chosenWarehouseId,
+                      orderId: order.dataValues.id,
+                      statusId: 8,
+                      onLocation: 1,
+                      requestId: 2,
+                      creatorId: findInfo[0].dataValues.warehouseId,
+                    });
+
                     // bikin type di di warehouse terdekat
                     const createType = await model.type.create({
                       price: findbooked[0].dataValues.price,
@@ -675,31 +692,6 @@ module.exports = {
               // case 2-2:  warehouse pertama memenuhi kebutuhan customer
             } else {
               console.log("w2 memenuhi kebutuhan");
-              // 1. bikin stock mutation dri warehouse terdekat meminta warehouse yg punya item tsb
-              await model.stockMutation.create({
-                typeId: findbooked[0].dataValues.id,
-                addition: cart[i].dataValues.totalQty,
-                supplierId: allDistance[i][0].id,
-                targetId: chosenWarehouseId,
-                orderId: order.dataValues.id,
-                statusId: 8,
-                onLocation: 0,
-                requestId: 1,
-                creatorId: chosenWarehouseId,
-              });
-
-              // 2. bikin stock mutation dri warehouse yg bawa item ke warehouse yg pling dkat
-              await model.stockMutation.create({
-                typeId: findbooked[0].dataValues.id,
-                subtraction: cart[i].dataValues.totalQty,
-                supplierId: allDistance[i][0].id,
-                targetId: chosenWarehouseId,
-                orderId: order.dataValues.id,
-                statusId: 8,
-                onLocation: 1,
-                requestId: 2,
-                creatorId: allDistance[i][0].id,
-              });
 
               // 3. check dlu typenya yg warehouseId == chosenWarehouseId dan bawa item yg user mau
               const checkType = await model.type.findOne({
@@ -713,6 +705,35 @@ module.exports = {
 
               if (checkType) {
                 //klo ada
+
+                // 1. bikin stock mutation dri warehouse terdekat meminta warehouse yg punya item tsb
+                await model.stockMutation.create({
+                  typeId: findbooked[0].dataValues.id,
+                  initialStock: checkType.dataValues.stock,
+                  addition: cart[i].dataValues.totalQty,
+                  supplierId: allDistance[i][0].id,
+                  targetId: chosenWarehouseId,
+                  orderId: order.dataValues.id,
+                  statusId: 8,
+                  onLocation: 0,
+                  requestId: 1,
+                  creatorId: chosenWarehouseId,
+                });
+
+                // 2. bikin stock mutation dri warehouse yg bawa item ke warehouse yg pling dkat
+                await model.stockMutation.create({
+                  typeId: findbooked[0].dataValues.id,
+                  initialStock: findbooked[0].dataValues.stock,
+                  subtraction: cart[i].dataValues.totalQty,
+                  supplierId: allDistance[i][0].id,
+                  targetId: chosenWarehouseId,
+                  orderId: order.dataValues.id,
+                  statusId: 8,
+                  onLocation: 1,
+                  requestId: 2,
+                  creatorId: allDistance[i][0].id,
+                });
+
                 // 3a .update type
                 await model.type.update(
                   {
@@ -740,6 +761,34 @@ module.exports = {
                 });
               } else {
                 // klo tidak ada
+
+                // 1. bikin stock mutation dri warehouse terdekat meminta warehouse yg punya item tsb
+                await model.stockMutation.create({
+                  typeId: findbooked[0].dataValues.id,
+                  addition: cart[i].dataValues.totalQty,
+                  supplierId: allDistance[i][0].id,
+                  targetId: chosenWarehouseId,
+                  orderId: order.dataValues.id,
+                  statusId: 8,
+                  onLocation: 0,
+                  requestId: 1,
+                  creatorId: chosenWarehouseId,
+                });
+
+                // 2. bikin stock mutation dri warehouse yg bawa item ke warehouse yg pling dkat
+                await model.stockMutation.create({
+                  typeId: findbooked[0].dataValues.id,
+                  initialStock: findbooked[0].dataValues.stock,
+                  subtraction: cart[i].dataValues.totalQty,
+                  supplierId: allDistance[i][0].id,
+                  targetId: chosenWarehouseId,
+                  orderId: order.dataValues.id,
+                  statusId: 8,
+                  onLocation: 1,
+                  requestId: 2,
+                  creatorId: allDistance[i][0].id,
+                });
+
                 // 3b. bikin type di di warehouse terdekat
                 const createType = await model.type.create({
                   price: findbooked[0].dataValues.price,
@@ -792,9 +841,188 @@ module.exports = {
           }
         }
         // console.log("allDistance", allDistance); // array of obj isinya id warehouse dan distance mreka sudah disort yg pling dkat
-
         return res.status(200).send({ success: true });
       }
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  },
+  myOrder: async (req, res, next) => {
+    try {
+      let page = req.query.page;
+      let size = req.query.size;
+
+      const findCustomerId = await model.customer.findOne({
+        where: {
+          uuid: req.decript.uuid,
+        },
+      });
+      const customerId = findCustomerId.dataValues.id;
+      if (req.query.status) {
+        const getorder = await model.order.findAndCountAll({
+          offset: parseInt(page * size),
+          limit: parseInt(size),
+          attributes: { exclude: ["id", "adminId", "customerId"] },
+          where: {
+            statusId: parseInt(req.query.status) + 7,
+            customerId: customerId,
+          },
+          include: [
+            {
+              model: model.orderDetail,
+              attributes: { exclude: ["id"] },
+              include: [
+                {
+                  model: model.type,
+                  attributes: [
+                    "discountedPrice",
+                    "colorId",
+                    "memoryId",
+                    "productId",
+                  ],
+                  include: [
+                    { model: model.color, attributes: ["color"] },
+                    { model: model.memory, attributes: ["memory"] },
+                    {
+                      model: model.product,
+                      attributes: {
+                        exclude: [
+                          "id",
+                          "isDisabled",
+                          "createdAt",
+                          "updatedAt",
+                          "description",
+                        ],
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              model: model.status,
+              attributes: { exclude: ["id", "createdAt", "updatedAt"] },
+            },
+          ],
+          order: [["createdAt", `${req.query.order}`]],
+        });
+
+        return res
+          .status(200)
+          .send({ data: getorder.rows, datanum: getorder.count });
+      } else {
+        const getorder = await model.order.findAndCountAll({
+          offset: parseInt(page * size),
+          limit: parseInt(size),
+          where: { customerId: customerId },
+          attributes: { exclude: ["id", "adminId", "customerId"] },
+          include: [
+            {
+              model: model.orderDetail,
+              attributes: { exclude: ["id"] },
+              include: [
+                {
+                  model: model.type,
+                  attributes: [
+                    "discountedPrice",
+                    "colorId",
+                    "memoryId",
+                    "productId",
+                  ],
+                  include: [
+                    { model: model.color, attributes: ["color"] },
+                    { model: model.memory, attributes: ["memory"] },
+                    {
+                      model: model.product,
+                      attributes: {
+                        exclude: [
+                          "id",
+                          "isDisabled",
+                          "createdAt",
+                          "updatedAt",
+                          "description",
+                        ],
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              model: model.status,
+              attributes: { exclude: ["id", "createdAt", "updatedAt"] },
+            },
+          ],
+          order: [["createdAt", `${req.query.order}`]],
+        });
+
+        return res
+          .status(200)
+          .send({ data: getorder.rows, datanum: getorder.count });
+      }
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  },
+  oneOrder: async (req, res, next) => {
+    try {
+      const findCustomerId = await model.customer.findOne({
+        where: {
+          uuid: req.decript.uuid,
+        },
+      });
+      const customerId = findCustomerId.dataValues.id;
+
+      const getorder = await model.order.findOne({
+        attributes: { exclude: ["id", "adminId", "customerId"] },
+        where: {
+          uuid: req.query.uuid,
+          customerId: customerId,
+        },
+        include: [
+          {
+            model: model.orderDetail,
+            attributes: { exclude: ["id"] },
+            include: [
+              {
+                model: model.type,
+                attributes: [
+                  "discountedPrice",
+                  "colorId",
+                  "memoryId",
+                  "productId",
+                ],
+                include: [
+                  { model: model.color, attributes: ["color"] },
+                  { model: model.memory, attributes: ["memory"] },
+                  {
+                    model: model.product,
+                    attributes: {
+                      exclude: [
+                        "id",
+                        "isDisabled",
+                        "createdAt",
+                        "updatedAt",
+                        "description",
+                      ],
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: model.status,
+            attributes: { exclude: ["id", "createdAt", "updatedAt"] },
+          },
+        ],
+      });
+
+      res.status(200).send({
+        data: getorder,
+      });
     } catch (error) {
       console.log(error);
       next(error);

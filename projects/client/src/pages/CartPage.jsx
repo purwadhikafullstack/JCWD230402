@@ -12,8 +12,9 @@ import {
 } from "@chakra-ui/react";
 import { API_URL } from "../helper";
 import axios from "axios";
-
+import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
+import { cartAction } from "../reducers/cart";
 
 function CartPage() {
   const navigate = useNavigate();
@@ -22,11 +23,11 @@ function CartPage() {
 
   const params = new URLSearchParams(location.search);
 
-  const [totalData, setTotalData] = useState(0);
   const [cartList, setCartList] = useState([]);
   const [priceList, setPriceList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [subTotal, setSubTotal] = useState("");
+  const dispatch = useDispatch();
 
   function formating(params) {
     let total = new Intl.NumberFormat("id-ID", {
@@ -57,6 +58,7 @@ function CartPage() {
       }
       setCartList(res.data.data);
       setPriceList(res.data.pricing);
+      dispatch(cartAction(res.data.datanum));
     } catch (error) {
       console.log("error getMemory", error);
     }

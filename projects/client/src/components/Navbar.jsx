@@ -9,13 +9,14 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logoutAction } from "../reducers/auth";
+import { cartEmpty } from "../reducers/cart";
 import axios from "axios";
 
 function Navbar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
-  const [cartlength, setCartLength] = useState(0);
+
   const toggleMenu = () => {
     setShowMenu(!showMenu);
   };
@@ -23,6 +24,13 @@ function Navbar() {
   const hideMenu = () => {
     setShowMenu(false);
   };
+
+  const cartlength = useSelector((state) => {
+    // console.log("state =", state);
+
+    return state.cartReducer.length;
+  });
+
   const email = useSelector((state) => state.authReducer.email);
   const name = useSelector((state) => state.authReducer.name);
   const statusId = useSelector((state) => state.authReducer.statusId);
@@ -31,28 +39,9 @@ function Navbar() {
   const logoutBtn = () => {
     localStorage.removeItem("Gadgetwarehouse_userlogin");
     dispatch(logoutAction());
+    dispatch(cartEmpty());
     navigate("/", { replace: true });
   };
-
-  const getCartnumber = async () => {
-    try {
-      const token = localStorage.getItem("Gadgetwarehouse_userlogin");
-      let res = await axios.get(`${API_URL}/product/cart`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setCartLength(res.data.datanum);
-    } catch (error) {
-      console.log("error dri getcartnumber", error);
-    }
-  };
-
-  useEffect(() => {
-    if (name) {
-      getCartnumber();
-    }
-  }, [name]);
 
   return (
     <header className="navbar fixed z-50 w-screen top-0 left-0 p-3 px-4 md:p-6 md:px-12 bg-bgglass backdrop-blur border-b-2 border-b-bgglass">
@@ -145,6 +134,7 @@ function Navbar() {
                   </li>
                   <li>
                     <NavLink
+                      to="/CartPage"
                       className="text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium"
                       onClick={hideMenu}
                     >
@@ -153,6 +143,7 @@ function Navbar() {
                   </li>
                   <li>
                     <NavLink
+                      to="/MyOrder"
                       className="text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium"
                       onClick={hideMenu}
                     >
