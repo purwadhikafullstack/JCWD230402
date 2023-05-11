@@ -135,6 +135,7 @@ module.exports = {
           customerId: customerId,
           deliveryFee: req.body.deliveryFee,
           finalPrice: req.body.finalPrice,
+          warehouseId: chosenWarehouseId,
           statusId: 9,
         });
 
@@ -1023,6 +1024,56 @@ module.exports = {
       res.status(200).send({
         data: getorder,
       });
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  },
+  payment: async (req, res, next) => {
+    try {
+      if (req.files) {
+        console.log("aaaaaaaaaaaaaaaaaaaaa", req.body.data);
+
+        let { order } = JSON.parse(req.body.data);
+        console.log("order = ", order);
+
+        const findOrderId = await model.order.findOne({
+          where: {
+            uuid: order,
+          },
+        });
+        console.log("bbbbbbbbbbbbbbbb", findOrderId);
+        const orderId = findOrderId.dataValues.id;
+
+        await model.order.update(
+          {
+            paymentProof: `/PaymentProof/${req.files[0]?.filename}`,
+            statusId: 10,
+          },
+          {
+            where: {
+              id: orderId,
+            },
+          }
+        );
+
+        await model.stockMutation.update(
+          {
+            statusId: 10,
+          },
+          {
+            where: {
+              orderId: orderId,
+            },
+          }
+        );
+
+        res.status(200).send({ success: true });
+      } else {
+        res
+          .status(400)
+          .send({ message: "Please ensure that an image is chosen" });
+      }
     } catch (error) {
       console.log(error);
       next(error);
