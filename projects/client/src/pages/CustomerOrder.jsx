@@ -32,17 +32,21 @@ import {
   TabIndicator,
   Stack,
   StackDivider,
+  useToast,
 } from "@chakra-ui/react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Pagination from "../components/Pagination";
+import uploadImg from "../img/1156518-200.png";
 
 function CustomerOrder() {
+  const toast = useToast();
   const location = useLocation();
   const navigate = useNavigate();
   const params = new URLSearchParams(location.search);
   let defautlPage = parseInt(params.get("page")) - 1 || 0;
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const modalDetails = useDisclosure();
+  const modalPayment = useDisclosure();
   const token = localStorage.getItem("Gadgetwarehouse_userlogin");
   const [loading, setLoading] = useState(true);
   const [modalLoading, setModalLoading] = useState(true);
@@ -50,9 +54,12 @@ function CustomerOrder() {
   const [orderList, setOrderList] = useState([]);
   const [orderBy, setOrderBy] = useState("DESC");
   const [oneOrderList, setOneOrderList] = useState(null);
-  const [page, setPage] = React.useState(defautlPage);
-  const [size] = React.useState(8); // to change how many items per page
-  const [totalData, setTotalData] = React.useState(0);
+  const [page, setPage] = useState(defautlPage);
+  const [size] = useState(8); // to change how many items per page
+  const [totalData, setTotalData] = useState(0);
+  const inputFile = React.useRef(null);
+  const [fileProduct, setFileProduct] = useState(null);
+  const [order, setOrder] = useState("");
 
   function formating(params) {
     let total = new Intl.NumberFormat("id-ID", {
@@ -89,7 +96,7 @@ function CustomerOrder() {
             },
           }
         );
-        console.log("aaaaaaaaaaaaa", res.data);
+
         setLoading(false);
         setOrderList(res.data.data);
         setTotalData(res.data.datanum);
@@ -131,8 +138,8 @@ function CustomerOrder() {
         </Flex>
       );
     } else {
-      console.log("orderlist", orderList);
       return orderList.map((val, idx) => {
+        console.log("orderList", val);
         return (
           <>
             <Box w={"full"} boxShadow={"dark-lg"} mb={"6"} rounded={"lg"}>
@@ -384,6 +391,10 @@ function CustomerOrder() {
                     </Text>
                   </Flex>
                   <Button
+                    onClick={() => {
+                      modalPayment.onOpen();
+                      setOrder(val.uuid);
+                    }}
                     letterSpacing={"normal"}
                     size={"sm"}
                     variant={"solid"}
@@ -421,6 +432,10 @@ function CustomerOrder() {
                     View Details
                   </Text>
                   <Button
+                    onClick={() => {
+                      modalPayment.onOpen();
+                      setOrder(val.uuid);
+                    }}
                     letterSpacing={"normal"}
                     size={"md"}
                     variant={"solid"}
@@ -437,6 +452,14 @@ function CustomerOrder() {
                 </Flex>
               </Box>
             </Box>
+            <Flex justifyContent={"center"} w={"full"}>
+              <Pagination
+                paginate={paginate}
+                size={size}
+                totalData={totalData}
+                page={page}
+              />
+            </Flex>
           </>
         );
       });
@@ -445,7 +468,7 @@ function CustomerOrder() {
 
   const getOneOrder = async (params) => {
     try {
-      onOpen();
+      modalDetails.onOpen();
       const res = await axios.get(`${API_URL}/order/oneorder?uuid=${params}`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -596,6 +619,7 @@ function CustomerOrder() {
       );
     });
   };
+
   const paginate = (pageNumber) => {
     // console.log(`pagenumber`, pageNumber.selected);
     setPage(pageNumber.selected);
@@ -607,6 +631,50 @@ function CustomerOrder() {
     } else {
       params.delete("page");
       navigate({ search: params.toString() }); // buat update url
+    }
+  };
+
+  const onChangeFile = (event) => {
+    setFileProduct(event.target.files[0]);
+  };
+
+  const btnConfirmPayment = async () => {
+    try {
+      if (fileProduct != null) {
+        let formData = new FormData();
+
+        formData.append(
+          "data",
+          JSON.stringify({
+            order: order,
+          })
+        );
+
+        formData.append("images", fileProduct);
+
+        const res = await axios.patch(`${API_URL}/order/payment`, formData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (res.data.success) {
+          getOrders();
+          setOrder("");
+          setFileProduct(null);
+          modalPayment.onClose();
+        }
+      } else {
+        toast({
+          title: "Failed to Upload Image",
+          description: `PLease Ensure that an image is chosen`,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -685,14 +753,7 @@ function CustomerOrder() {
                   </Select>
                 </Box>
                 {printOrders()}
-                <Flex justifyContent={"center"} w={"full"}>
-                  <Pagination
-                    paginate={paginate}
-                    size={size}
-                    totalData={totalData}
-                    page={page}
-                  />
-                </Flex>
+                <Flex justifyContent={"center"} w={"full"}></Flex>
               </TabPanel>
               {/* initially not mounted */}
               <TabPanel>
@@ -707,14 +768,7 @@ function CustomerOrder() {
                   </Select>
                 </Box>
                 {printOrders()}
-                <Flex justifyContent={"center"} w={"full"}>
-                  <Pagination
-                    paginate={paginate}
-                    size={size}
-                    totalData={totalData}
-                    page={page}
-                  />
-                </Flex>
+                <Flex justifyContent={"center"} w={"full"}></Flex>
               </TabPanel>
               <TabPanel>
                 <Box position={"relative"} mb="20" mt="3">
@@ -728,14 +782,7 @@ function CustomerOrder() {
                   </Select>
                 </Box>
                 {printOrders()}
-                <Flex justifyContent={"center"} w={"full"}>
-                  <Pagination
-                    paginate={paginate}
-                    size={size}
-                    totalData={totalData}
-                    page={page}
-                  />
-                </Flex>
+                <Flex justifyContent={"center"} w={"full"}></Flex>
               </TabPanel>
               <TabPanel>
                 <Box position={"relative"} mb="20" mt="3">
@@ -749,14 +796,7 @@ function CustomerOrder() {
                   </Select>
                 </Box>
                 {printOrders()}
-                <Flex justifyContent={"center"} w={"full"}>
-                  <Pagination
-                    paginate={paginate}
-                    size={size}
-                    totalData={totalData}
-                    page={page}
-                  />
-                </Flex>
+                <Flex justifyContent={"center"} w={"full"}></Flex>
               </TabPanel>
               <TabPanel>
                 <Box position={"relative"} mb="20" mt="3">
@@ -770,14 +810,7 @@ function CustomerOrder() {
                   </Select>
                 </Box>
                 {printOrders()}
-                <Flex justifyContent={"center"} w={"full"}>
-                  <Pagination
-                    paginate={paginate}
-                    size={size}
-                    totalData={totalData}
-                    page={page}
-                  />
-                </Flex>
+                <Flex justifyContent={"center"} w={"full"}></Flex>
               </TabPanel>
               <TabPanel>
                 <Box position={"relative"} mb="20" mt="3">
@@ -791,14 +824,7 @@ function CustomerOrder() {
                   </Select>
                 </Box>
                 {printOrders()}
-                <Flex justifyContent={"center"} w={"full"}>
-                  <Pagination
-                    paginate={paginate}
-                    size={size}
-                    totalData={totalData}
-                    page={page}
-                  />
-                </Flex>
+                <Flex justifyContent={"center"} w={"full"}></Flex>
               </TabPanel>
 
               <TabPanel>
@@ -813,21 +839,14 @@ function CustomerOrder() {
                   </Select>
                 </Box>
                 {printOrders()}
-                <Flex justifyContent={"center"} w={"full"}>
-                  <Pagination
-                    paginate={paginate}
-                    size={size}
-                    totalData={totalData}
-                    page={page}
-                  />
-                </Flex>
+                <Flex justifyContent={"center"} w={"full"}></Flex>
               </TabPanel>
             </TabPanels>
           </Tabs>
 
           <Modal
-            onClose={onClose}
-            isOpen={isOpen}
+            onClose={modalDetails.onClose}
+            isOpen={modalDetails.isOpen}
             size={{ base: "sm", md: "xl" }}
             scrollBehavior={"inside"}
           >
@@ -976,6 +995,82 @@ function CustomerOrder() {
               )}
 
               <ModalFooter></ModalFooter>
+            </ModalContent>
+          </Modal>
+          <Modal
+            onClose={modalPayment.onClose}
+            isOpen={modalPayment.isOpen}
+            size={{ base: "sm", md: "xl" }}
+            isCentered
+          >
+            <ModalOverlay />
+            <ModalContent bgColor={"#18181B"} textColor={"white"}>
+              <ModalHeader>Upload Payment</ModalHeader>
+              <ModalCloseButton
+                onClick={() => {
+                  setFileProduct(null);
+                  modalPayment.onClose();
+                }}
+              />
+              <ModalBody>
+                <FormControl>
+                  <Image
+                    alt="product picture"
+                    src={
+                      !fileProduct
+                        ? uploadImg
+                        : URL.createObjectURL(fileProduct)
+                    }
+                    style={{
+                      width: "75px",
+                      height: "75px",
+                      aspectRatio: "1/1",
+                      objectFit: "contain",
+                    }}
+                  />
+                  <input
+                    type="file"
+                    id="file"
+                    style={{ display: "block" }}
+                    ref={inputFile}
+                    onChange={onChangeFile}
+                  />
+                </FormControl>
+              </ModalBody>
+              <ModalFooter>
+                {fileProduct != null ? (
+                  <Button
+                    onClick={btnConfirmPayment}
+                    letterSpacing={"normal"}
+                    size={"md"}
+                    variant={"solid"}
+                    backgroundColor={"#019d5a"}
+                    color={"black"}
+                    _hover={{
+                      scale: "105",
+                      bgColor: "#34D399",
+                    }}
+                  >
+                    Confirm
+                  </Button>
+                ) : (
+                  <Button
+                    isDisabled={true}
+                    onClick={btnConfirmPayment}
+                    letterSpacing={"normal"}
+                    size={"md"}
+                    variant={"solid"}
+                    backgroundColor={"#019d5a"}
+                    color={"black"}
+                    _hover={{
+                      scale: "105",
+                      bgColor: "#34D399",
+                    }}
+                  >
+                    Confirm
+                  </Button>
+                )}
+              </ModalFooter>
             </ModalContent>
           </Modal>
         </Box>

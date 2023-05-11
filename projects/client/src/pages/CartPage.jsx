@@ -217,6 +217,9 @@ function CartPage() {
               Your Cart is Empty
             </Text>
             <Button
+              onClick={() => {
+                navigate("/product/all-products");
+              }}
               p="7"
               fontSize={"2xl"}
               variant={"filled"}
