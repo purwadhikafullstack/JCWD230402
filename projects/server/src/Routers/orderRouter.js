@@ -13,5 +13,8 @@ route.patch(
   uploader("/PaymentProof", "PAY").array("images", 1),
   orderController.payment
 );
+route.get("/", readToken, orderController.customerOrder);
+route.get("/allorder", readToken, orderController.getAllCustomerOrder);
+route.get("/orderdetails/:uuid", readToken, orderController.customerOrderDetails);
 
 module.exports = route;

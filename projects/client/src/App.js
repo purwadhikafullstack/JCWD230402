@@ -23,6 +23,7 @@ import {
   Product,
   Checkout,
   CustomerOrder,
+  Order,
 } from "./pages";
 
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
@@ -114,6 +115,7 @@ function App() {
                   <Route path="*" element={<PageNotFound />} />
                   <Route path="/product" element={<Product />} />
                   <Route path="/stockmanagement" element={<StockManagement />} />
+                  <Route path="/order" element={<Order />} />
                 </Routes>
               </main>
             </div>

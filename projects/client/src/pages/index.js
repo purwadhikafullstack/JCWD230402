@@ -17,3 +17,4 @@ export { default as CustomerProfile } from "./CustomerProfile";
 export { default as CartPage } from "./CartPage";
 export { default as Checkout } from "./Checkout";
 export { default as CustomerOrder } from "./CustomerOrder";
+export { default as Order } from "./Order";
