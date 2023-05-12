@@ -143,35 +143,72 @@ module.exports = {
 
     getRequest: async (req, res, next) => {
         try {
-            console.log(`ini req.params`, req.params);
-            let getRequest = await model.stockMutation.findAll({
-                where: {
-                    requestId: 1,
-                    supplierId: req.params.id,
-                    statusId: 6
-                },
-                include: [
-                    {
-                        model: model.type,
-                        include: [
-                            { model: model.warehouse, attributes: ["name"] },
-                            { model: model.product, attributes: ["name"] },
-                            { model: model.color, attributes: ["color"] },
-                            { model: model.memory, attributes: ["memory"] }
-                        ]
+            if (req.query.warehouseId) {
+                console.log(`ini req.query`, req.query);
+                let getRequest = await model.stockMutation.findAll({
+                    where: {
+                        requestId: 1,
+                        supplierId: req.query.warehouseId,
+                        statusId: 6
                     },
-                    {
-                        model: model.status, attributes: ["status"]
-                    }
-                ]
-            })
+                    include: [
+                        {
+                            model: model.type,
+                            include: [
+                                { model: model.warehouse, attributes: ["name"] },
+                                { model: model.product, attributes: ["name"] },
+                                { model: model.color, attributes: ["color"] },
+                                { model: model.memory, attributes: ["memory"] }
+                            ]
+                        },
+                        {
+                            model: model.status, attributes: ["status"]
+                        }
+                    ]
+                })
 
-            // console.log(`getRequest`, getRequest);
+                // console.log(`getRequest`, getRequest);
 
-            return res.status(200).send({
-                success: true,
-                data: getRequest
-            })
+                return res.status(200).send({
+                    success: true,
+                    data: getRequest
+                })
+
+            } else {
+                let getRequest = await model.stockMutation.findAll({
+                    where: {
+                        requestId: 1,
+                        statusId: 6
+                    },
+                    include: [
+                        {
+                            model: model.type,
+                            include: [
+                                { model: model.warehouse, attributes: ["name"] },
+                                { model: model.product, attributes: ["name"] },
+                                { model: model.color, attributes: ["color"] },
+                                { model: model.memory, attributes: ["memory"] }
+                            ]
+                        },
+                        {
+                            model: model.status, attributes: ["status"]
+                        },
+                        {
+                            model: model.warehouse, attributes: ["name"]
+                        }
+                    ],
+                    order: [
+                        ["id", "DESC"]
+                    ]
+                })
+
+                console.log(`getRequest`, getRequest);
+
+                return res.status(200).send({
+                    success: true,
+                    data: getRequest
+                })
+            }
 
         } catch (error) {
             console.log(error);
@@ -181,40 +218,77 @@ module.exports = {
 
     getSend: async (req, res, next) => {
         try {
-            console.log(`ini req.params`, req.params);
-            let getSend = await model.stockMutation.findAll({
-                where: {
-                    requestId: 1,
-                    creatorId: req.params.id,
-                    statusId: {
-                        [sequelize.Op.or]: [6, 8]
-                    }
-                },
-                include: [
-                    { model: model.warehouse, attributes: ["name"] },
-                    {
-                        model: model.type,
-                        include: [
-                            { model: model.product, attributes: ["name"] },
-                            { model: model.color, attributes: ["color"] },
-                            { model: model.memory, attributes: ["memory"] }
-                        ]
+            if (req.query.warehouseId) {
+                console.log(`ini req.query`, req.query);
+                let getSend = await model.stockMutation.findAll({
+                    where: {
+                        requestId: 1,
+                        creatorId: req.query.warehouseId,
+                        statusId: {
+                            [sequelize.Op.or]: [6, 8]
+                        }
                     },
-                    {
-                        model: model.status, attributes: ["status"]
-                    }
-                ],
-                order : [
-                    ["id", "DESC"]
-                ]
-            })
+                    include: [
+                        { model: model.warehouse, attributes: ["name"] },
+                        {
+                            model: model.type,
+                            include: [
+                                { model: model.product, attributes: ["name"] },
+                                { model: model.color, attributes: ["color"] },
+                                { model: model.memory, attributes: ["memory"] }
+                            ]
+                        },
+                        {
+                            model: model.status, attributes: ["status"]
+                        }
+                    ],
+                    order: [
+                        ["id", "DESC"]
+                    ]
+                })
 
-            // console.log(`getSend`, getSend);
+                // console.log(`getSend`, getSend);
 
-            return res.status(200).send({
-                success: true,
-                data: getSend
-            })
+                return res.status(200).send({
+                    success: true,
+                    data: getSend
+                })
+            } else {
+                console.log(`ini req.query`, req.query);
+                let getSend = await model.stockMutation.findAll({
+                    where: {
+                        requestId: 1,
+                        statusId: {
+                            [sequelize.Op.or]: [6, 8]
+                        }
+                    },
+                    include: [
+                        { model: model.warehouse, attributes: ["name"] },
+                        {
+                            model: model.type,
+                            include: [
+                                { model: model.product, attributes: ["name"] },
+                                { model: model.warehouse, attributes: ["name"] },
+                                { model: model.color, attributes: ["color"] },
+                                { model: model.memory, attributes: ["memory"] }
+                            ]
+                        },
+                        {
+                            model: model.status, attributes: ["status"]
+                        }
+                    ],
+                    order: [
+                        ["id", "DESC"]
+                    ]
+                })
+
+                // console.log(`getSend`, getSend);
+
+                return res.status(200).send({
+                    success: true,
+                    data: getSend
+                })
+            }
 
 
         } catch (error) {
