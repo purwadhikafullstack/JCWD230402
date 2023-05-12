@@ -330,12 +330,6 @@ function StockManagement() {
         }
     }
 
-
-
-
-
-
-
     return (
         <Box mt={{ md: "20px", lg: "20px", xl: "20px" }} textColor="white">
             <Flex justifyContent={"space-between"}>

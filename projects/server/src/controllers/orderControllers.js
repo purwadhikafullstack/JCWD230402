@@ -83,6 +83,7 @@ module.exports = {
         let result = 0;
 
         for (let j = 0; j < typeArr[i].length; j++) {
+          // console.log(`tttt`, typeArr[i][j].dataValues);
           result += typeArr[i][j].dataValues.available;
           tempArr.push(typeArr[i][j].dataValues.warehouse.dataValues);
         }
@@ -156,9 +157,9 @@ module.exports = {
             let a =
               Math.sin(dLat / 2) * Math.sin(dLat / 2) +
               Math.cos((lat1 * Math.PI) / 180) *
-                Math.cos((lat2 * Math.PI) / 180) *
-                Math.sin(dLon / 2) *
-                Math.sin(dLon / 2);
+              Math.cos((lat2 * Math.PI) / 180) *
+              Math.sin(dLon / 2) *
+              Math.sin(dLon / 2);
             let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
             let d = R * c;
 
@@ -849,6 +850,7 @@ module.exports = {
       next(error);
     }
   },
+
   myOrder: async (req, res, next) => {
     try {
       let page = req.query.page;
@@ -866,7 +868,7 @@ module.exports = {
           limit: parseInt(size),
           attributes: { exclude: ["id", "adminId", "customerId"] },
           where: {
-            statusId: parseInt(req.query.status) + 9,
+            statusId: parseInt(req.query.status) + 8,
             customerId: customerId,
           },
           include: [
@@ -967,6 +969,7 @@ module.exports = {
       next(error);
     }
   },
+
   oneOrder: async (req, res, next) => {
     try {
       const findCustomerId = await model.customer.findOne({
@@ -1029,6 +1032,7 @@ module.exports = {
       next(error);
     }
   },
+
   payment: async (req, res, next) => {
     try {
       if (req.files) {
@@ -1079,4 +1083,238 @@ module.exports = {
       next(error);
     }
   },
+
+  getAllCustomerOrder: async (req, res, next) => {
+    try {
+      let page = req.query.page;
+      let size = req.query.size;
+
+      if (req.query.status) {
+        let findOrder = await model.order.findAndCountAll({
+          offset: parseInt(page * size),
+          limit: parseInt(size),
+          where: {
+            statusId: parseInt(req.query.status) + 8,
+          },
+          include: [
+            {
+              model: model.customer,
+              attributes: ["uuid", "name"]
+            },
+            {
+              model: model.orderDetail,
+              attributes: { exclude: ["id"] },
+              include: [
+                {
+                  model: model.type,
+                  include: [
+                    { model: model.color, attributes: ["color"] },
+                    { model: model.memory, attributes: ["memory"] },
+                    {
+                      model: model.product,
+                      attributes: ["uuid", "name", "productImage", "description"]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              model: model.status,
+              attributes: ["status"]
+            }
+          ],
+          order: [["createdAt", `${req.query.order}`]]
+        });
+
+        return res.status(200).send({
+          success: true,
+          data: findOrder.rows,
+          datanum: findOrder.count
+        })
+      } else {
+        let findOrder = await model.order.findAndCountAll({
+          offset: parseInt(page * size),
+          limit: parseInt(size),
+          include: [
+            {
+              model: model.customer,
+              attributes: ["uuid", "name"]
+            },
+            {
+              model: model.orderDetail,
+              attributes: { exclude: ["id"] },
+              include: [
+                {
+                  model: model.type,
+                  include: [
+                    { model: model.color, attributes: ["color"] },
+                    { model: model.memory, attributes: ["memory"] },
+                    {
+                      model: model.product,
+                      attributes: ["uuid", "name", "productImage", "description"]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              model: model.status,
+              attributes: ["status"]
+            }
+          ],
+          order: [["createdAt", `${req.query.order}`]]
+        });
+
+        return res.status(200).send({
+          success: true,
+          data: findOrder.rows,
+          datanum: findOrder.count
+        })
+      }
+    } catch (error) {
+      console.log(error);
+      next(error)
+    }
+  },
+
+  customerOrder: async (req, res, next) => {
+    try {
+      let page = req.query.page;
+      let size = req.query.size;
+
+      if (req.query.status) {
+        let findOrder = await model.order.findAndCountAll({
+          offset: parseInt(page * size),
+          limit: parseInt(size),
+          where: {
+            warehouseId: req.query.warehouseId,
+            statusId: parseInt(req.query.status) + 8,
+          },
+          include: [
+            {
+              model: model.customer,
+              attributes: ["uuid", "name"]
+            },
+            {
+              model: model.orderDetail,
+              attributes: { exclude: ["id"] },
+              include: [
+                {
+                  model: model.type,
+                  include: [
+                    { model: model.color, attributes: ["color"] },
+                    { model: model.memory, attributes: ["memory"] },
+                    {
+                      model: model.product,
+                      attributes: ["uuid", "name", "productImage", "description"]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              model: model.status,
+              attributes: ["status"]
+            }
+          ],
+          order: [["createdAt", `${req.query.order}`]]
+        });
+
+        return res.status(200).send({
+          success: true,
+          data: findOrder.rows,
+          datanum: findOrder.count
+        })
+      } else {
+        let findOrder = await model.order.findAndCountAll({
+          offset: parseInt(page * size),
+          limit: parseInt(size),
+          where: {
+            warehouseId: req.query.warehouseId,
+          },
+          include: [
+            {
+              model: model.customer,
+              attributes: ["uuid", "name"]
+            },
+            {
+              model: model.orderDetail,
+              attributes: { exclude: ["id"] },
+              include: [
+                {
+                  model: model.type,
+                  include: [
+                    { model: model.color, attributes: ["color"] },
+                    { model: model.memory, attributes: ["memory"] },
+                    {
+                      model: model.product,
+                      attributes: ["uuid", "name", "productImage", "description"]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              model: model.status,
+              attributes: ["status"]
+            }
+          ],
+          order: [["createdAt", `${req.query.order}`]]
+        });
+
+        return res.status(200).send({
+          success: true,
+          data: findOrder.rows,
+          datanum: findOrder.count
+        })
+      }
+
+    } catch (error) {
+      console.log(error);
+      next(error)
+    }
+  },
+
+  customerOrderDetails: async (req, res, next) => {
+    try {
+      console.log(`req.params`, req.params);
+      let getOrderDetails = await model.order.findOne({
+        where: {
+          uuid: req.params.uuid
+        },
+        include: [
+          {
+            model: model.orderDetail,
+            include: [
+              {
+                model: model.type,
+                // attribute: ["price", "discountedPrice"],
+                include: [
+                  { model: model.color, attributes: ["color"] },
+                  { model: model.memory, attributes: ["memory"] },
+                  {
+                    model: model.product,
+                    attributes: ["uuid", "name", "productImage"]
+                  },
+                ]
+              }
+            ]
+          },
+          {
+            model: model.status,
+            attributes: ["status"]
+          }
+        ]
+      })
+
+      return res.status(200).send({
+        success: true,
+        data: getOrderDetails
+      })
+    } catch (error) {
+      console.log(error);
+      next(error)
+    }
+  },
+
 };

@@ -195,7 +195,7 @@ function CustomerOrder() {
                       w={"full"}
                       rounded={"xl"}
                       alt="product picture"
-                      src={`${val.orderDetails[0].type.product.productImage}`}
+                      src={`${API_URL}${val.orderDetails[0].type.product.productImage}`}
                     />
                   </Flex>
                   <Flex
@@ -521,7 +521,7 @@ function CustomerOrder() {
                     w={"full"}
                     rounded={"xl"}
                     alt="product picture"
-                    src={`${val.type.product.productImage}`}
+                    src={`${API_URL}${val.type.product.productImage}`}
                   />
                 </Flex>
                 <Flex
