@@ -496,31 +496,6 @@ function Order() {
                 </TabList>
                 <TabPanels>
                     <TabPanel>
-                        {/* <Flex mb={"8px"} justifyContent="space-between">
-                            {roleId == 1 ? <Select
-                                color={"#e8e8e8"}
-                                w={"3xs"}
-                                placeholder={"All Warehouse"}
-                                onChange={(e) => {
-                                    setWarehouseListId(e.target.value);
-                                    getOrder();
-                                }}
-                            >
-                                {printWarehouse()}
-                            </Select> : null}
-
-                            <Select
-                                onChange={(e) => {
-                                    setOrderBy(e.target.value);
-                                }}
-                                w={{ base: "36%", md: "16%", lg: "13%" }}
-                                float={"right"}
-                                color={"#e8e8e8"}
-                            >
-                                <option value="DESC">Newest</option>
-                                <option value="ASC">Oldest</option>
-                            </Select>
-                        </Flex> */}
                         <Flex mb={"8px"} justifyContent="right">
                             <Select
                                 onChange={(e) => {
@@ -539,106 +514,112 @@ function Order() {
                         </Box>
                     </TabPanel>
                     <TabPanel>
-                        <Box position={"relative"} mb="20" mt="3">
+                        <Flex mb={"8px"} justifyContent="right">
                             <Select
-                                // onChange={(e) => {
-                                //     setOrderBy(e.target.value);
-                                // }}
+                                onChange={(e) => {
+                                    setOrderBy(e.target.value);
+                                }}
                                 w={{ base: "36%", md: "16%", lg: "13%" }}
                                 float={"right"}
-                                color={"#1BF597"}
+                                color={"#e8e8e8"}
                             >
                                 <option value="DESC">Newest</option>
                                 <option value="ASC">Oldest</option>
                             </Select>
+                        </Flex>
+                        <Box>
+                            {printOrder()}
                         </Box>
-                        {printOrder()}
-                        <Flex justifyContent={"center"} w={"full"}></Flex>
                     </TabPanel>
                     <TabPanel>
-                        <Box position={"relative"} mb="20" mt="3">
+                        <Flex mb={"8px"} justifyContent="right">
                             <Select
-                                // onChange={(e) => {
-                                //     setOrderBy(e.target.value);
-                                // }}
+                                onChange={(e) => {
+                                    setOrderBy(e.target.value);
+                                }}
                                 w={{ base: "36%", md: "16%", lg: "13%" }}
                                 float={"right"}
-                                color={"#1BF597"}
+                                color={"#e8e8e8"}
                             >
                                 <option value="DESC">Newest</option>
                                 <option value="ASC">Oldest</option>
                             </Select>
+                        </Flex>
+                        <Box>
+                            {printOrder()}
                         </Box>
-                        {printOrder()}
-                        <Flex justifyContent={"center"} w={"full"}></Flex>
                     </TabPanel>
                     <TabPanel>
-                        <Box position={"relative"} mb="20" mt="3">
+                        <Flex mb={"8px"} justifyContent="right">
                             <Select
-                                // onChange={(e) => {
-                                //     setOrderBy(e.target.value);
-                                // }}
+                                onChange={(e) => {
+                                    setOrderBy(e.target.value);
+                                }}
                                 w={{ base: "36%", md: "16%", lg: "13%" }}
                                 float={"right"}
-                                color={"#1BF597"}
+                                color={"#e8e8e8"}
                             >
                                 <option value="DESC">Newest</option>
                                 <option value="ASC">Oldest</option>
                             </Select>
+                        </Flex>
+                        <Box>
+                            {printOrder()}
                         </Box>
-                        {printOrder()}
-                        <Flex justifyContent={"center"} w={"full"}></Flex>
                     </TabPanel>
                     <TabPanel>
-                        <Box position={"relative"} mb="20" mt="3">
+                        <Flex mb={"8px"} justifyContent="right">
                             <Select
-                                // onChange={(e) => {
-                                //     setOrderBy(e.target.value);
-                                // }}
+                                onChange={(e) => {
+                                    setOrderBy(e.target.value);
+                                }}
                                 w={{ base: "36%", md: "16%", lg: "13%" }}
                                 float={"right"}
-                                color={"#1BF597"}
+                                color={"#e8e8e8"}
                             >
                                 <option value="DESC">Newest</option>
                                 <option value="ASC">Oldest</option>
                             </Select>
+                        </Flex>
+                        <Box>
+                            {printOrder()}
                         </Box>
-                        {printOrder()}
-                        <Flex justifyContent={"center"} w={"full"}></Flex>
                     </TabPanel>
                     <TabPanel>
-                        <Box position={"relative"} mb="20" mt="3">
+                        <Flex mb={"8px"} justifyContent="right">
                             <Select
-                                // onChange={(e) => {
-                                //     setOrderBy(e.target.value);
-                                // }}
+                                onChange={(e) => {
+                                    setOrderBy(e.target.value);
+                                }}
                                 w={{ base: "36%", md: "16%", lg: "13%" }}
                                 float={"right"}
-                                color={"#1BF597"}
+                                color={"#e8e8e8"}
                             >
                                 <option value="DESC">Newest</option>
                                 <option value="ASC">Oldest</option>
                             </Select>
+                        </Flex>
+                        <Box>
+                            {printOrder()}
                         </Box>
-                        {printOrder()}
-                        <Flex justifyContent={"center"} w={"full"}></Flex>
                     </TabPanel>
                     <TabPanel>
-                        <Box position={"relative"} mb="20" mt="3">
+                        <Flex mb={"8px"} justifyContent="right">
                             <Select
-                                // onChange={(e) => {
-                                //     setOrderBy(e.target.value);
-                                // }}
+                                onChange={(e) => {
+                                    setOrderBy(e.target.value);
+                                }}
                                 w={{ base: "36%", md: "16%", lg: "13%" }}
                                 float={"right"}
-                                color={"#1BF597"}
+                                color={"#e8e8e8"}
                             >
                                 <option value="DESC">Newest</option>
                                 <option value="ASC">Oldest</option>
                             </Select>
+                        </Flex>
+                        <Box>
+                            {printOrder()}
                         </Box>
-                        {printOrder()}
-                        <Flex justifyContent={"center"} w={"full"}></Flex>
                     </TabPanel>
                 </TabPanels>
                 <Flex justifyContent={"center"}>
