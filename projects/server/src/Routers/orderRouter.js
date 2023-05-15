@@ -15,6 +15,17 @@ route.patch(
 );
 route.get("/", readToken, orderController.customerOrder);
 route.get("/allorder", readToken, orderController.getAllCustomerOrder);
-route.get("/orderdetails/:uuid", readToken, orderController.customerOrderDetails);
+route.get(
+  "/orderdetails/:uuid",
+  readToken,
+  orderController.customerOrderDetails
+);
+route.patch(
+  "/paymentconfirmation",
+  readToken,
+  orderController.paymentConfirmation
+);
+route.patch("/paymentrejection", readToken, orderController.paymentRejection);
+route.post("/sendproduct", readToken, orderController.sendProduct);
 
 module.exports = route;
