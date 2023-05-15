@@ -611,7 +611,34 @@ function Order() {
 
   async function onSendProduct(uuid) {
     try {
-    } catch (error) {}
+      const res = await axios.post(
+        `${API_URL}/order/sendproduct/`,
+        {
+          uuid: uuid,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      getOrder();
+      toast({
+        title: `${res.data.message}`,
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: `Failed to send Product`,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+      console.log("error send product", error);
+    }
   }
 
   React.useEffect(() => {

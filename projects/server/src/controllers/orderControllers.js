@@ -1593,11 +1593,15 @@ module.exports = {
         html: `<img src="" />
           <hr />
           <h3>Hello, ${email}</h3>
-          <h3>Your order with order number ${invoice}  is now on the way to you.</h3>
+          <h3>Your order with order number ${orderNo}  is now on the way to you.</h3>
           <br>
           <br>
           <p>Regards, Admin GadgetHouse</p>`,
       });
+
+      res
+        .status(200)
+        .send({ message: "product is now on the way to the customer" });
     } catch (error) {
       console.log(error);
       next(error);
