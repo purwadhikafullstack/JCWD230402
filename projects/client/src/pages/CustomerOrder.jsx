@@ -61,6 +61,12 @@ function CustomerOrder() {
   const [fileProduct, setFileProduct] = useState(null);
   const [order, setOrder] = useState("");
 
+  console.log("totaldata", totalData);
+
+  function shorten(params) {
+    return params.toUpperCase().split("-")[params.split("-").length - 1];
+  }
+
   function formating(params) {
     let total = new Intl.NumberFormat("id-ID", {
       style: "currency",
@@ -139,7 +145,6 @@ function CustomerOrder() {
       );
     } else {
       return orderList.map((val, idx) => {
-        console.log("orderList", val);
         return (
           <>
             <Box w={"full"} boxShadow={"dark-lg"} mb={"6"} rounded={"lg"}>
@@ -151,9 +156,9 @@ function CustomerOrder() {
                   </Text>
                   <Flex
                     backgroundColor={
-                      val.status === 12
+                      val.status === 13
                         ? "rgba(52,211,153,0.1)"
-                        : val.status === 13
+                        : val.status === 14
                         ? "rgba(255,0,0,0.3)"
                         : "rgba(240,220,91,0.5)"
                     }
@@ -161,7 +166,7 @@ function CustomerOrder() {
                     px={"5px"}
                   >
                     <Text
-                      color={val.status === 12 ? "#34D399" : "black"}
+                      color={val.status === 13 ? "#34D399" : "black"}
                       textAlign={"center"}
                       fontWeight={"semibold"}
                       fontSize={{ base: "xs", lg: "xs" }}
@@ -171,6 +176,17 @@ function CustomerOrder() {
                       {val.status.status}
                     </Text>
                   </Flex>
+                  <Text
+                    display={{ base: "none", md: "block" }}
+                    color={"gray.400"}
+                    textAlign={"center"}
+                    fontWeight={"semibold"}
+                    fontSize={{ base: "xs", lg: "sm" }}
+                    letterSpacing={"wider"}
+                    mb="1px"
+                  >
+                    {shorten(val.uuid)}
+                  </Text>
                 </Flex>
                 {/*===================================================================== MIddle section ===========================================================================*/}
                 <Flex
@@ -390,24 +406,25 @@ function CustomerOrder() {
                       {formating(val.finalPrice)}
                     </Text>
                   </Flex>
-                  <Button
-                    onClick={() => {
-                      modalPayment.onOpen();
-                      setOrder(val.uuid);
-                    }}
-                    letterSpacing={"normal"}
-                    size={"sm"}
-                    variant={"solid"}
-                    backgroundColor={"#019d5a"}
-                    color={"black"}
-                    _hover={{
-                      color: "white",
-                      scale: "105",
-                      bgColor: "#34D399",
-                    }}
-                  >
-                    Confirm Payment
-                  </Button>
+                  {val.statusId === 9 ? (
+                    <Button
+                      onClick={() => {
+                        modalPayment.onOpen();
+                        setOrder(val.uuid);
+                      }}
+                      letterSpacing={"normal"}
+                      size={"sm"}
+                      variant={"solid"}
+                      backgroundColor={"#019d5a"}
+                      color={"black"}
+                      _hover={{
+                        scale: "105",
+                        bgColor: "#34D399",
+                      }}
+                    >
+                      Confirm Payment
+                    </Button>
+                  ) : null}
                 </Flex>
               </Flex>
               {/*===================================================================== below MD ===========================================================================*/}
@@ -431,35 +448,29 @@ function CustomerOrder() {
                   >
                     View Details
                   </Text>
-                  <Button
-                    onClick={() => {
-                      modalPayment.onOpen();
-                      setOrder(val.uuid);
-                    }}
-                    letterSpacing={"normal"}
-                    size={"md"}
-                    variant={"solid"}
-                    backgroundColor={"#019d5a"}
-                    color={"black"}
-                    _hover={{
-                      color: "black",
-                      scale: "105",
-                      bgColor: "#34D399",
-                    }}
-                  >
-                    Confirm Payment
-                  </Button>
+                  {val.statusId === 9 ? (
+                    <Button
+                      onClick={() => {
+                        modalPayment.onOpen();
+                        setOrder(val.uuid);
+                      }}
+                      letterSpacing={"normal"}
+                      size={"sm"}
+                      variant={"solid"}
+                      backgroundColor={"#019d5a"}
+                      color={"black"}
+                      _hover={{
+                        color: "white",
+                        scale: "105",
+                        bgColor: "#34D399",
+                      }}
+                    >
+                      Confirm Payment
+                    </Button>
+                  ) : null}
                 </Flex>
               </Box>
             </Box>
-            <Flex justifyContent={"center"} w={"full"}>
-              <Pagination
-                paginate={paginate}
-                size={size}
-                totalData={totalData}
-                page={page}
-              />
-            </Flex>
           </>
         );
       });
@@ -721,13 +732,13 @@ function CustomerOrder() {
             variant={"unstyled"}
           >
             <TabList mr="3" overflowX={"scroll"}>
-              <Tab id="0">All</Tab>
-              <Tab id="9">Awaiting Payment</Tab>
-              <Tab id="10">Waiting for Confirmation</Tab>
-              <Tab id="11">Processing</Tab>
-              <Tab id="12">Sent</Tab>
-              <Tab id="13">Received</Tab>
-              <Tab id="14">Cancelled</Tab>
+              <Tab>All</Tab>
+              <Tab>Awaiting Payment</Tab>
+              <Tab>Waiting for Confirmation</Tab>
+              <Tab>Processing</Tab>
+              <Tab>Sent</Tab>
+              <Tab>Received</Tab>
+              <Tab>Cancelled</Tab>
             </TabList>
             <TabIndicator
               mt="-1.5px"
@@ -753,7 +764,18 @@ function CustomerOrder() {
                   </Select>
                 </Box>
                 {printOrders()}
-                <Flex justifyContent={"center"} w={"full"}></Flex>
+                <Flex
+                  justifyContent={"center"}
+                  w={"full"}
+                  display={orderList.length === 0 ? "none" : "flex"}
+                >
+                  <Pagination
+                    paginate={paginate}
+                    size={size}
+                    totalData={totalData}
+                    page={page}
+                  />
+                </Flex>
               </TabPanel>
               {/* initially not mounted */}
               <TabPanel>
@@ -768,7 +790,18 @@ function CustomerOrder() {
                   </Select>
                 </Box>
                 {printOrders()}
-                <Flex justifyContent={"center"} w={"full"}></Flex>
+                <Flex
+                  justifyContent={"center"}
+                  w={"full"}
+                  display={orderList.length === 0 ? "none" : "flex"}
+                >
+                  <Pagination
+                    paginate={paginate}
+                    size={size}
+                    totalData={totalData}
+                    page={page}
+                  />
+                </Flex>
               </TabPanel>
               <TabPanel>
                 <Box position={"relative"} mb="20" mt="3">
@@ -782,7 +815,18 @@ function CustomerOrder() {
                   </Select>
                 </Box>
                 {printOrders()}
-                <Flex justifyContent={"center"} w={"full"}></Flex>
+                <Flex
+                  justifyContent={"center"}
+                  w={"full"}
+                  display={orderList.length === 0 ? "none" : "flex"}
+                >
+                  <Pagination
+                    paginate={paginate}
+                    size={size}
+                    totalData={totalData}
+                    page={page}
+                  />
+                </Flex>
               </TabPanel>
               <TabPanel>
                 <Box position={"relative"} mb="20" mt="3">
@@ -796,7 +840,18 @@ function CustomerOrder() {
                   </Select>
                 </Box>
                 {printOrders()}
-                <Flex justifyContent={"center"} w={"full"}></Flex>
+                <Flex
+                  justifyContent={"center"}
+                  w={"full"}
+                  display={orderList.length === 0 ? "none" : "flex"}
+                >
+                  <Pagination
+                    paginate={paginate}
+                    size={size}
+                    totalData={totalData}
+                    page={page}
+                  />
+                </Flex>
               </TabPanel>
               <TabPanel>
                 <Box position={"relative"} mb="20" mt="3">
@@ -810,7 +865,18 @@ function CustomerOrder() {
                   </Select>
                 </Box>
                 {printOrders()}
-                <Flex justifyContent={"center"} w={"full"}></Flex>
+                <Flex
+                  justifyContent={"center"}
+                  w={"full"}
+                  display={orderList.length === 0 ? "none" : "flex"}
+                >
+                  <Pagination
+                    paginate={paginate}
+                    size={size}
+                    totalData={totalData}
+                    page={page}
+                  />
+                </Flex>
               </TabPanel>
               <TabPanel>
                 <Box position={"relative"} mb="20" mt="3">
@@ -824,7 +890,18 @@ function CustomerOrder() {
                   </Select>
                 </Box>
                 {printOrders()}
-                <Flex justifyContent={"center"} w={"full"}></Flex>
+                <Flex
+                  justifyContent={"center"}
+                  w={"full"}
+                  display={orderList.length === 0 ? "none" : "flex"}
+                >
+                  <Pagination
+                    paginate={paginate}
+                    size={size}
+                    totalData={totalData}
+                    page={page}
+                  />
+                </Flex>
               </TabPanel>
 
               <TabPanel>
@@ -839,7 +916,18 @@ function CustomerOrder() {
                   </Select>
                 </Box>
                 {printOrders()}
-                <Flex justifyContent={"center"} w={"full"}></Flex>
+                <Flex
+                  justifyContent={"center"}
+                  w={"full"}
+                  display={orderList.length === 0 ? "none" : "flex"}
+                >
+                  <Pagination
+                    paginate={paginate}
+                    size={size}
+                    totalData={totalData}
+                    page={page}
+                  />
+                </Flex>
               </TabPanel>
             </TabPanels>
           </Tabs>
@@ -896,9 +984,17 @@ function CustomerOrder() {
                       <Flex
                         justifyContent={"space-between"}
                         fontSize={{ base: "md" }}
+                        mb={1}
                       >
                         <Text color={"gray.500"}>Purchase Date</Text>
                         <Text>{dateFormat(oneOrderList.createdAt)}</Text>
+                      </Flex>
+                      <Flex
+                        justifyContent={"space-between"}
+                        fontSize={{ base: "md" }}
+                      >
+                        <Text color={"gray.500"}>Order No.</Text>
+                        <Text>{shorten(oneOrderList.uuid)}</Text>
                       </Flex>
                     </Box>
                     <Box px="3">

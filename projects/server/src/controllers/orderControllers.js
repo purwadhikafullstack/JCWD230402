@@ -2,6 +2,8 @@ const sequelize = require("sequelize");
 const model = require("../models");
 const axios = require("axios");
 const { v4: uuidv4 } = require("uuid");
+const transporter = require("../helpers/nodemailer");
+const fs = require("fs");
 
 module.exports = {
   createOrder: async (req, res, next) => {
@@ -157,9 +159,9 @@ module.exports = {
             let a =
               Math.sin(dLat / 2) * Math.sin(dLat / 2) +
               Math.cos((lat1 * Math.PI) / 180) *
-              Math.cos((lat2 * Math.PI) / 180) *
-              Math.sin(dLon / 2) *
-              Math.sin(dLon / 2);
+                Math.cos((lat2 * Math.PI) / 180) *
+                Math.sin(dLon / 2) *
+                Math.sin(dLon / 2);
             let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
             let d = R * c;
 
@@ -1072,6 +1074,13 @@ module.exports = {
           }
         );
 
+        if (
+          fs.existsSync(`./src/public${findOrderId.dataValues.paymentProof}`) &&
+          !findOrderId.dataValues.paymentProof.includes("default")
+        ) {
+          fs.unlinkSync(`./src/public${findOrderId.dataValues.paymentProof}`);
+        }
+
         res.status(200).send({ success: true });
       } else {
         res
@@ -1099,7 +1108,7 @@ module.exports = {
           include: [
             {
               model: model.customer,
-              attributes: ["uuid", "name"]
+              attributes: ["uuid", "name"],
             },
             {
               model: model.orderDetail,
@@ -1112,25 +1121,30 @@ module.exports = {
                     { model: model.memory, attributes: ["memory"] },
                     {
                       model: model.product,
-                      attributes: ["uuid", "name", "productImage", "description"]
-                    }
-                  ]
-                }
-              ]
+                      attributes: [
+                        "uuid",
+                        "name",
+                        "productImage",
+                        "description",
+                      ],
+                    },
+                  ],
+                },
+              ],
             },
             {
               model: model.status,
-              attributes: ["status"]
-            }
+              attributes: ["status"],
+            },
           ],
-          order: [["createdAt", `${req.query.order}`]]
+          order: [["createdAt", `${req.query.order}`]],
         });
 
         return res.status(200).send({
           success: true,
           data: findOrder.rows,
-          datanum: findOrder.count
-        })
+          datanum: findOrder.count,
+        });
       } else {
         let findOrder = await model.order.findAndCountAll({
           offset: parseInt(page * size),
@@ -1138,7 +1152,7 @@ module.exports = {
           include: [
             {
               model: model.customer,
-              attributes: ["uuid", "name"]
+              attributes: ["uuid", "name"],
             },
             {
               model: model.orderDetail,
@@ -1151,29 +1165,34 @@ module.exports = {
                     { model: model.memory, attributes: ["memory"] },
                     {
                       model: model.product,
-                      attributes: ["uuid", "name", "productImage", "description"]
-                    }
-                  ]
-                }
-              ]
+                      attributes: [
+                        "uuid",
+                        "name",
+                        "productImage",
+                        "description",
+                      ],
+                    },
+                  ],
+                },
+              ],
             },
             {
               model: model.status,
-              attributes: ["status"]
-            }
+              attributes: ["status"],
+            },
           ],
-          order: [["createdAt", `${req.query.order}`]]
+          order: [["createdAt", `${req.query.order}`]],
         });
 
         return res.status(200).send({
           success: true,
           data: findOrder.rows,
-          datanum: findOrder.count
-        })
+          datanum: findOrder.count,
+        });
       }
     } catch (error) {
       console.log(error);
-      next(error)
+      next(error);
     }
   },
 
@@ -1193,7 +1212,7 @@ module.exports = {
           include: [
             {
               model: model.customer,
-              attributes: ["uuid", "name"]
+              attributes: ["uuid", "name"],
             },
             {
               model: model.orderDetail,
@@ -1206,25 +1225,30 @@ module.exports = {
                     { model: model.memory, attributes: ["memory"] },
                     {
                       model: model.product,
-                      attributes: ["uuid", "name", "productImage", "description"]
-                    }
-                  ]
-                }
-              ]
+                      attributes: [
+                        "uuid",
+                        "name",
+                        "productImage",
+                        "description",
+                      ],
+                    },
+                  ],
+                },
+              ],
             },
             {
               model: model.status,
-              attributes: ["status"]
-            }
+              attributes: ["status"],
+            },
           ],
-          order: [["createdAt", `${req.query.order}`]]
+          order: [["createdAt", `${req.query.order}`]],
         });
 
         return res.status(200).send({
           success: true,
           data: findOrder.rows,
-          datanum: findOrder.count
-        })
+          datanum: findOrder.count,
+        });
       } else {
         let findOrder = await model.order.findAndCountAll({
           offset: parseInt(page * size),
@@ -1235,7 +1259,7 @@ module.exports = {
           include: [
             {
               model: model.customer,
-              attributes: ["uuid", "name"]
+              attributes: ["uuid", "name"],
             },
             {
               model: model.orderDetail,
@@ -1248,30 +1272,34 @@ module.exports = {
                     { model: model.memory, attributes: ["memory"] },
                     {
                       model: model.product,
-                      attributes: ["uuid", "name", "productImage", "description"]
-                    }
-                  ]
-                }
-              ]
+                      attributes: [
+                        "uuid",
+                        "name",
+                        "productImage",
+                        "description",
+                      ],
+                    },
+                  ],
+                },
+              ],
             },
             {
               model: model.status,
-              attributes: ["status"]
-            }
+              attributes: ["status"],
+            },
           ],
-          order: [["createdAt", `${req.query.order}`]]
+          order: [["createdAt", `${req.query.order}`]],
         });
 
         return res.status(200).send({
           success: true,
           data: findOrder.rows,
-          datanum: findOrder.count
-        })
+          datanum: findOrder.count,
+        });
       }
-
     } catch (error) {
       console.log(error);
-      next(error)
+      next(error);
     }
   },
 
@@ -1280,7 +1308,7 @@ module.exports = {
       console.log(`req.params`, req.params);
       let getOrderDetails = await model.order.findOne({
         where: {
-          uuid: req.params.uuid
+          uuid: req.params.uuid,
         },
         include: [
           {
@@ -1294,27 +1322,289 @@ module.exports = {
                   { model: model.memory, attributes: ["memory"] },
                   {
                     model: model.product,
-                    attributes: ["uuid", "name", "productImage"]
+                    attributes: ["uuid", "name", "productImage"],
                   },
-                ]
-              }
-            ]
+                ],
+              },
+            ],
           },
           {
             model: model.status,
-            attributes: ["status"]
-          }
-        ]
-      })
+            attributes: ["status"],
+          },
+        ],
+      });
 
       return res.status(200).send({
         success: true,
-        data: getOrderDetails
-      })
+        data: getOrderDetails,
+      });
     } catch (error) {
       console.log(error);
-      next(error)
+      next(error);
     }
   },
 
+  paymentConfirmation: async (req, res, next) => {
+    try {
+      const findOrderId = await model.order.findOne({
+        where: {
+          uuid: req.body.uuid,
+        },
+      });
+
+      const orderId = findOrderId.dataValues.id;
+
+      const findCustomer = await model.customer.findOne({
+        where: {
+          id: findOrderId.dataValues.customerId,
+        },
+      });
+      const email = findCustomer.dataValues.email;
+
+      const findAdminId = await model.admin.findOne({
+        where: {
+          uuid: req.decript.uuid,
+        },
+      });
+
+      const adminId = findAdminId.dataValues.id;
+
+      await model.order.update(
+        {
+          statusId: 11,
+          adminId: adminId,
+        },
+        {
+          where: {
+            id: orderId,
+          },
+        }
+      );
+
+      await model.stockMutation.update(
+        {
+          statusId: 11,
+          onLocation: 1,
+        },
+        {
+          where: {
+            orderId: orderId,
+          },
+        }
+      );
+
+      const invoice = `INV/ + ${req.body.uuid.split("-")[0].toUpperCase()}`;
+
+      await transporter.sendMail({
+        from: `GadgetHouse.noreply`,
+        to: `${email}`,
+        subject: "Order Status Update - Payment Confirmed",
+        html: `<img src="" />
+          <hr />
+          <h3>Hello, ${email}</h3>
+          <h3>Your order is now being processed.</h3>
+          <h3>Your invoice number is ${invoice} .</h3>
+          <br>
+          <br>
+          <p>Regards, Admin GadgetHouse</p>`,
+      });
+
+      res.status(200).send({
+        success: true,
+        message: "Order Approved",
+      });
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  },
+  paymentRejection: async (req, res, next) => {
+    try {
+      const findOrderId = await model.order.findOne({
+        where: {
+          uuid: req.body.uuid,
+        },
+      });
+
+      const orderId = findOrderId.dataValues.id;
+
+      const findCustomer = await model.customer.findOne({
+        where: {
+          id: findOrderId.dataValues.customerId,
+        },
+      });
+      const email = findCustomer.dataValues.email;
+
+      const findAdminId = await model.admin.findOne({
+        where: {
+          uuid: req.decript.uuid,
+        },
+      });
+
+      const adminId = findAdminId.dataValues.id;
+
+      await model.order.update(
+        {
+          statusId: 9,
+          adminId: adminId,
+        },
+        {
+          where: {
+            id: orderId,
+          },
+        }
+      );
+
+      await model.stockMutation.update(
+        {
+          statusId: 9,
+        },
+        {
+          where: {
+            orderId: orderId,
+          },
+        }
+      );
+
+      const orderNo = req.body.uuid.toUpperCase().split("-")[
+        req.body.uuid.split("-").length - 1
+      ];
+
+      await transporter.sendMail({
+        from: `GadgetHouse.noreply`,
+        to: `${email}`,
+        subject: "Order Status Update - Payment Rejected",
+        html: `<img src="" />
+          <hr />
+          <h3>Hello, ${email}</h3>
+          <h3>Your order was rejected, Please re-upload your payment proof.</h3>
+          <h3>Order number is ${orderNo}.</h3>
+          <br>
+          <br>
+          <p>Regards, Admin GadgetHouse</p>`,
+      });
+
+      res.status(200).send({
+        success: true,
+        message: "Order Rejected",
+      });
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  },
+  sendProduct: async (req, res, next) => {
+    try {
+      // 1. find orderId
+      const findOrderId = await model.order.findOne({
+        where: {
+          uuid: req.body.uuid,
+        },
+      });
+      const orderId = findOrderId.dataValues.id;
+
+      const findCustomer = await model.customer.findOne({
+        where: {
+          id: findOrderId.dataValues.customerId,
+        },
+      });
+      const email = findCustomer.dataValues.email;
+
+      // 2. change all stock mutation with the same orderID to be onlocation and status to processing
+      await model.stockMutation.update(
+        {
+          onLocation: 1,
+          statusId: 12,
+        },
+        {
+          where: {
+            orderId: orderId,
+          },
+        }
+      );
+
+      // 3. find number of orderdetail to find number of product to send
+      const findOrderDetail = await model.orderDetail.findAll({
+        where: {
+          orderId: orderId,
+        },
+      });
+      console.log("aaaaaaaaa", findOrderDetail[0].dataValues.typeId);
+
+      for (let i = 0; i < findOrderDetail.length; i++) {
+        // 4. find types listed in the orderdetail for needed data
+        const findType = await model.type.findOne({
+          where: {
+            id: findOrderDetail[i].dataValues.typeId,
+          },
+        });
+
+        // 5. create stock mutation from chosen warehouse to customer
+        await model.stockMutation.create({
+          typeId: findOrderDetail[i].dataValues.typeId,
+          initialStock: findType.dataValues.stock,
+          subtraction: findOrderDetail[i].dataValues.totalQty,
+          creatorId: findType.dataValues.warehouseId,
+          orderId: orderId,
+          statusId: 12,
+          onLocation: 1,
+          requestId: 2,
+        });
+
+        // 6. update type database.
+        await model.type.update(
+          {
+            stock:
+              findType.dataValues.stock -
+              findOrderDetail[i].dataValues.totalQty,
+            booked:
+              findType.dataValues.booked -
+              findOrderDetail[i].dataValues.totalQty,
+          },
+          {
+            where: {
+              id: findOrderDetail[i].dataValues.typeId,
+            },
+          }
+        );
+      }
+
+      // 7. update order status
+      await model.order.update(
+        {
+          statusId: 12,
+        },
+        {
+          where: {
+            id: orderId,
+          },
+        }
+      );
+
+      const orderNo = req.body.uuid.toUpperCase().split("-")[
+        req.body.uuid.split("-").length - 1
+      ];
+      // 8. email customer notify them
+      await transporter.sendMail({
+        from: `GadgetHouse.noreply`,
+        to: `${email}`,
+        subject: "Order Status Update - Product is Sent",
+        html: `<img src="" />
+          <hr />
+          <h3>Hello, ${email}</h3>
+          <h3>Your order with order number ${orderNo}  is now on the way to you.</h3>
+          <br>
+          <br>
+          <p>Regards, Admin GadgetHouse</p>`,
+      });
+
+      res
+        .status(200)
+        .send({ message: "product is now on the way to the customer" });
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  },
 };
