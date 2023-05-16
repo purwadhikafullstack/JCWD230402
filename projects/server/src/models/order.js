@@ -20,7 +20,6 @@ module.exports = (sequelize, DataTypes) => {
       paymentProof: DataTypes.STRING,
       statusId: DataTypes.INTEGER,
       adminId: DataTypes.INTEGER,
-      isCancelled: DataTypes.BOOLEAN,
       warehouseId: DataTypes.INTEGER,
     },
     {
@@ -31,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
   order.associate = (models) => {
     order.hasMany(models.orderDetail, { foreignKey: "orderId" });
     order.belongsTo(models.status, { foreignKey: "statusId" });
-    order.belongsTo(models.customer, { foreignKey: "customerId"});
+    order.belongsTo(models.customer, { foreignKey: "customerId" });
   };
   return order;
 };
