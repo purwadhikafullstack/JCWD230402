@@ -133,26 +133,30 @@ module.exports = {
   updateWarehouse: async (req, res, next) => {
     try {
       console.log(`ini dari req params`, req.params.uuid);
+      const {
+        name,
+        email,
+        address,
+        province,
+        city,
+        postalCode,
+        phone,
+        city_id,
+        provinceId,
+      } = req.body;
+
       let cekWarehouse = await model.warehouse.findAll({
-        where: {
-          uuid: req.params.uuid,
-        },
+        where: sequelize.or(
+          { name: name },
+          { email: email },
+          { address: address },
+          { phone: phone }
+        )
       });
       console.log(`ini cekwarehouse`, cekWarehouse);
 
-      if (cekWarehouse.length == 1) {
+      if (cekWarehouse.length == 0) {
         // const uuid = uuidv4();
-        const {
-          name,
-          email,
-          address,
-          province,
-          city,
-          postalCode,
-          phone,
-          city_id,
-          provinceId,
-        } = req.body;
 
         let koordinat = await (
           await axios.get(
@@ -185,7 +189,7 @@ module.exports = {
           }
         );
 
-        console.log(editWarehouse);
+        console.log(`editWarehouse`, editWarehouse);
 
         return res.status(200).send({
           success: true,

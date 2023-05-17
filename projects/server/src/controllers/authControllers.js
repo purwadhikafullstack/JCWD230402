@@ -377,7 +377,7 @@ module.exports = {
         } else {
           res.status(400).send({
             success: false,
-            message: "Login fail email or password wrong",
+            message: "Email or password wrong",
           });
         }
       } else {

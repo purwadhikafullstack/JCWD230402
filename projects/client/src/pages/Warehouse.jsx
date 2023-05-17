@@ -19,6 +19,7 @@ import {
   ModalOverlay,
   Select,
   Spinner,
+  Switch,
   Table,
   TableContainer,
   Tbody,
@@ -29,6 +30,7 @@ import {
   Thead,
   Tr,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import axios from "axios";
@@ -53,6 +55,7 @@ function Warehouse() {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const toast = useToast();
   const params = new URLSearchParams(location.search);
 
   const defautlPage = parseInt(params.get("page")) - 1 || 0;
@@ -162,39 +165,72 @@ function Warehouse() {
 
   const btnSaveWarehouse = async () => {
     try {
-      let res = await axios.post(
-        `${API_URL}/warehouse/`,
-        {
-          name: name,
-          email: email,
-          address: address,
-          province: provinceName,
-          city: cityName,
-          postalCode: postalCode,
-          phone: phone,
-          provinceId: provinceId,
-          city_id: city_id,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
+      if (name == "" || email == "" || phone == "" || address == "") {
+        toast({
+          title: `your input is empty`,
+          status: "error",
+          duration: 2000,
+          isClosable: true
+        })
+      } else {
+        let res = await axios.post(
+          `${API_URL}/warehouse/`,
+          {
+            name: name,
+            email: email,
+            address: address,
+            province: provinceName,
+            city: cityName,
+            postalCode: postalCode,
+            phone: phone,
+            provinceId: provinceId,
+            city_id: city_id,
           },
-        }
-      );
-      // console.log(`ini dari resp addnewuser`, res);
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        // console.log(`ini dari resp addnewuser`, res);
 
-      if (res.data.success) {
-        alert(res.data.message);
-        modalAdd.onClose();
-        setPostalCode(null);
-        getAllWarehouse();
+        if (res.data.success) {
+          toast({
+            title: `${res.data.message}`,
+            status: "success",
+            duration: 2000,
+            isClosable: true
+          })
+          modalAdd.onClose();
+          setPostalCode(null);
+          setName("");
+          setEmail("");
+          setPhone("");
+          setAddress("");
+          getAllWarehouse();
+        }
+
       }
+
     } catch (error) {
       console.log("ini error addnewarehouse:", error);
       if (error.response.data.error) {
-        alert(error.response.data.error[0].msg);
+        // alert(error.response.data.error[0].msg);
+        toast({
+          title: `${error.response.data.error[0].msg}`,
+          description: "please check your email",
+          status: "error",
+          duration: 2000,
+          isClosable: true
+        })
       } else {
-        alert(error.response.data.message);
+        // alert(error.response.data.message);
+        toast({
+          title: `${error.response.data.message}`,
+          status: "error",
+          duration: 2000,
+          isClosable: true
+        })
       }
     }
   };
@@ -202,6 +238,10 @@ function Warehouse() {
   const onBtnCancelModalAdd = () => {
     modalAdd.onClose();
     setPostalCode(null);
+    setName("");
+    setEmail("");
+    setPhone("");
+    setAddress("");
   };
 
   //----------------------------GET ALL WAREHOUSE--------------------------------------------------------
@@ -266,15 +306,13 @@ function Warehouse() {
               >
                 Edit
               </Button>
-              <Button
-                onClick={() => onBtnDelete(val.uuid)}
+              <Switch
                 ml={2}
-                _hover={"none"}
-                bgColor={val.isDisabled == false ? "red.500" : "blue.500"}
-                style={{ color: "#E9F8F9" }}
-              >
-                {val.isDisabled == false ? "Disable" : "Enable"}
-              </Button>
+                colorScheme={"red"}
+                onChange={() => onBtnDelete(val.uuid)}
+                size="lg"
+                isChecked={val.isDisabled}
+              />
             </Td>
           ) : null}
         </Tr>
@@ -312,40 +350,69 @@ function Warehouse() {
 
   const btnSaveEditWarehouse = async () => {
     try {
-      let res = await axios.patch(
-        `${API_URL}/warehouse/${uuid}`,
-        {
-          name: name,
-          email: email,
-          address: address,
-          province: provinceName,
-          city: cityName,
-          postalCode: postalCode,
-          phone: phone,
-          provinceId: provinceId,
-          city_id: city_id,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
+      if (name == "" || email == "" || phone == "" || address == "") {
+        toast({
+          title: `your input is empty`,
+          status: "error",
+          duration: 2000,
+          isClosable: true
+        })
+      } else {
+        let res = await axios.patch(
+          `${API_URL}/warehouse/${uuid}`,
+          {
+            name: name,
+            email: email,
+            address: address,
+            province: provinceName,
+            city: cityName,
+            postalCode: postalCode,
+            phone: phone,
+            provinceId: provinceId,
+            city_id: city_id,
           },
-        }
-      );
-      // console.log(`ini dari resp addnewuser`, res);
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        // console.log(`ini dari resp addnewuser`, res);
 
-      if (res.data.success) {
-        alert(res.data.message);
-        modalEdit.onClose();
-        setPostalCode(null);
-        getAllWarehouse();
-        setuuid("");
+        if (res.data.success) {
+          toast({
+            title: `${res.data.message}`,
+            status: "success",
+            duration: 2000,
+            isClosable: true
+          })
+          modalEdit.onClose();
+          setPostalCode(null);
+          setName("");
+          setEmail("");
+          setPhone("");
+          setAddress("");
+          setuuid("");
+          getAllWarehouse();
+        }
       }
     } catch (error) {
       console.log("ini error addnewarehouse:", error);
       if (error.response.data.error) {
-        alert(error.response.data.error[0].msg);
+        toast({
+          title: `${error.response.data.error[0].msg}`,
+          description: "please check your email",
+          status: "error",
+          duration: 2000,
+          isClosable: true
+        })
       } else {
-        alert(error.response.data.message);
+        toast({
+          title: `${error.response.data.message}`,
+          status: "error",
+          duration: 2000,
+          isClosable: true
+        })
       }
     }
   };
@@ -353,6 +420,11 @@ function Warehouse() {
   const onBtnCancelModalEdit = () => {
     modalEdit.onClose();
     setPostalCode(null);
+    setName("");
+    setEmail("");
+    setPhone("");
+    setAddress("");
+    setuuid("");
   };
 
   //---------------------- DELETE WAREHOUSE --------------------------
@@ -364,7 +436,7 @@ function Warehouse() {
         },
       });
 
-      alert(res.data.message);
+      // alert(res.data.message);
       getAllWarehouse();
     } catch (error) {
       console.log(error);
@@ -485,11 +557,10 @@ function Warehouse() {
             <ModalOverlay />
             <ModalContent>
               <ModalHeader>New Warehouse</ModalHeader>
-              <ModalCloseButton />
               <ModalBody pb={6}>
                 <Flex>
                   <Box>
-                    <FormControl>
+                    <FormControl isRequired>
                       <FormLabel>Warehouse Name</FormLabel>
                       <Input
                         onChange={(e) => {
@@ -500,7 +571,7 @@ function Warehouse() {
                       />
                     </FormControl>
 
-                    <FormControl mt={2}>
+                    <FormControl mt={2} isRequired>
                       <FormLabel>Email</FormLabel>
                       <Input
                         onChange={(e) => {
@@ -510,7 +581,7 @@ function Warehouse() {
                       />
                     </FormControl>
 
-                    <FormControl mt={2}>
+                    <FormControl mt={2} isRequired>
                       <FormLabel>Phone</FormLabel>
                       <Input
                         onChange={(e) => {
@@ -520,7 +591,7 @@ function Warehouse() {
                       />
                     </FormControl>
 
-                    <FormControl mt={2}>
+                    <FormControl mt={2} isRequired>
                       <FormLabel>Province</FormLabel>
                       <Select
                         onChange={(e) => {
@@ -535,7 +606,7 @@ function Warehouse() {
                   </Box>
 
                   <Box pl={4}>
-                    <FormControl>
+                    <FormControl isRequired>
                       <FormLabel>City</FormLabel>
                       <Select
                         onChange={(e) => {
@@ -549,7 +620,7 @@ function Warehouse() {
                       </Select>
                     </FormControl>
 
-                    <FormControl mt={2}>
+                    <FormControl mt={2} isRequired>
                       <FormLabel>Address</FormLabel>
                       <Textarea
                         onChange={(e) => {
@@ -592,15 +663,10 @@ function Warehouse() {
             <ModalOverlay />
             <ModalContent>
               <ModalHeader>Edit Warehouse</ModalHeader>
-              <ModalCloseButton
-                onClick={() => {
-                  setPostalCode(null);
-                }}
-              />
               <ModalBody pb={6}>
                 <Flex>
                   <Box>
-                    <FormControl>
+                    <FormControl isRequired>
                       <FormLabel>Warehouse Name</FormLabel>
                       <Input
                         defaultValue={name}
@@ -612,7 +678,7 @@ function Warehouse() {
                       />
                     </FormControl>
 
-                    <FormControl mt={2}>
+                    <FormControl mt={2} isRequired>
                       <FormLabel>Email</FormLabel>
                       <Input
                         defaultValue={email}
@@ -623,7 +689,7 @@ function Warehouse() {
                       />
                     </FormControl>
 
-                    <FormControl mt={2}>
+                    <FormControl mt={2} isRequired>
                       <FormLabel>Phone</FormLabel>
                       <Input
                         defaultValue={phone}
@@ -634,7 +700,7 @@ function Warehouse() {
                       />
                     </FormControl>
 
-                    <FormControl mt={2}>
+                    <FormControl mt={2} isRequired>
                       <FormLabel>Province</FormLabel>
                       <Select
                         onChange={(e) => {
@@ -648,7 +714,7 @@ function Warehouse() {
                   </Box>
 
                   <Box pl={4}>
-                    <FormControl>
+                    <FormControl isRequired>
                       <FormLabel>City</FormLabel>
                       <Select
                         onChange={(e) => {
@@ -660,7 +726,7 @@ function Warehouse() {
                       </Select>
                     </FormControl>
 
-                    <FormControl mt={2}>
+                    <FormControl mt={2} isRequired>
                       <FormLabel>Address</FormLabel>
                       <Textarea
                         onChange={(e) => {

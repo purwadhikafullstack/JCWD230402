@@ -102,7 +102,7 @@ module.exports = {
         console.log(`deleteCategory`, deleteCategory);
         res.status(200).send({
           success: true,
-          message: "category disabled",
+          message: "Category InActive ",
         });
       } else {
         let deleteCategory = await model.category.update(
@@ -116,7 +116,7 @@ module.exports = {
         console.log(`deleteCategory`, deleteCategory);
         res.status(200).send({
           success: true,
-          message: "category enabled",
+          message: "Category Active",
         });
       }
     } catch (error) {
@@ -131,12 +131,11 @@ module.exports = {
       let cekCategory = await model.category.findAll({
         where: {
           type: req.body.type,
-          id: { [sequelize.Op.ne]: req.params.id },
         },
       });
-      // console.log(`ini cekAdmin`, cekCategory);
+      console.log(`ini cekCategory`, cekCategory);
 
-      if (cekCategory.length == 1) {
+      if (cekCategory.length == 0) {
         let editCategory = await model.category.update(
           {
             type: req.body.type,

@@ -487,7 +487,7 @@ function UserManagement() {
         <Box my={"20px"} textColor="white">
           <Flex justifyContent={"space-between"}>
             <Heading size={"lg"} fontStyle="inherit">
-              User List
+              User Management
             </Heading>
             <SearchBar setprops={setprops} onSearchBtn={onSearchBtn} />
             {
