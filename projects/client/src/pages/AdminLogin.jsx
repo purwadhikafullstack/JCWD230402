@@ -5,9 +5,11 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { adminloginAction } from "../reducers/admin";
 import { API_URL } from '../helper';
+import { useToast } from '@chakra-ui/react';
 
 
 function AdminLogin() {
+    const toast = useToast();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const dispatch = useDispatch();
@@ -25,7 +27,14 @@ function AdminLogin() {
     const onBtnLogin = async () => {
         try {
             if (email === "" || password === "") {
-                alert("Please enter your credentials");
+                // alert("Please enter your credentials");
+                toast({
+                    title: "Please enter your credentials",
+                    status: "error",
+                    duration: 2000,
+                    isClosable: true,
+                });
+
             } else {
                 let res = await axios.post(`${API_URL}/auth/admin/login`, {
                     email: email,
@@ -33,14 +42,27 @@ function AdminLogin() {
                 });
                 console.log("data from admin LOGIN", res.data);
 
-                alert("Login Successfull");
+                // alert("Login Successfull");
+                toast({
+                    title: "Login Successfull",
+                    status: "success",
+                    duration: 2000,
+                    isClosable: true,
+                });
                 localStorage.setItem("gadgetwarehouse_adminlogin", res.data.token);
                 dispatch(adminloginAction(res.data));
                 navigate("/dashboard", { replace: true });
             }
         } catch (error) {
             console.log(error);
-            alert(error.response.data.message);
+            toast({
+                title: `Login Failed`,
+                description: `${error.response.data.message}`,
+                status: "error",
+                duration: 2000,
+                isClosable: true,
+            });
+            // alert(error.response.data.message);
         }
     };
 
@@ -63,7 +85,7 @@ function AdminLogin() {
                 </div>
 
                 <button type='button' className='text-white bg-emerald-400 font-bold border border-[#1BFD9C] rounded-xl w-1/2 mx-auto mt-4 hover:bg-emerald-300 hover:border-white hover:text-black duration-500 hover:scale-110' onClick={onBtnLogin}>Login</button>
-                
+
             </div>
         </section>
     )

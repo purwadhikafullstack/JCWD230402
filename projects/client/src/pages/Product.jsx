@@ -31,7 +31,8 @@ import {
     Th,
     Thead,
     Tr,
-    useDisclosure
+    useDisclosure,
+    useToast
 } from '@chakra-ui/react';
 import { MdCancel, MdOutlineAdd, MdPhone, MdSearch, MdImage, MdDeleteForever } from "react-icons/md";
 import Pagination from '../components/Pagination';
@@ -51,6 +52,7 @@ function Product() {
     const [page, setPage] = React.useState(0);
     const [loading, setLoading] = React.useState(true);
     const navigate = useNavigate();
+    const toast = useToast();
 
     const [category, setCategory] = React.useState([]);
     const [productName, setProductName] = React.useState("");
@@ -127,40 +129,55 @@ function Product() {
 
     const btnSaveAddProduct = async () => {
         try {
-            let formData = new FormData();
-            formData.append(
-                "data",
-                JSON.stringify({
-                    name: productName,
-                    categoryId: categoryId,
-                    description: description,
-                    variations: variations,
+            if (productName == "" || categoryId == 0 || fileProduct == null) {
+                toast({
+                    title: `your input is empty`,
+                    status: "error",
+                    duration: 2000,
+                    isClosable: true
                 })
-            )
+            } else {
+                let formData = new FormData();
+                formData.append(
+                    "data",
+                    JSON.stringify({
+                        name: productName,
+                        categoryId: categoryId,
+                        description: description,
+                        variations: variations,
+                    })
+                )
 
-            if (fileProduct != null) {
-                formData.append("images", fileProduct);
-            }
-
-            console.log(`add variation`, variations);
-            console.log(`formData`, formData);
-            let res = await axios.post(`${API_URL}/product`, formData, {
-                headers: {
-                    "Authorization": `Bearer ${token}`
+                if (fileProduct != null) {
+                    formData.append("images", fileProduct);
                 }
-            })
 
-            console.log(`btnSaveAddProduct`, res);
+                console.log(`add variation`, variations);
+                console.log(`formData`, formData);
+                let res = await axios.post(`${API_URL}/product`, formData, {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
 
-            if (res.data.success) {
-                alert(res.data.message);
-                getProduct();
-                setProductName("");
-                setCategoryId();
-                setDescription("");
-                setVariations([]);
-                setFileProduct(null)
-                modalAdd.onClose();
+                console.log(`btnSaveAddProduct`, res);
+
+                if (res.data.success) {
+                    // alert(res.data.message);
+                    toast({
+                        title: `${res.data.message}`,
+                        status: "success",
+                        duration: 2000,
+                        isClosable: true
+                    })
+                    getProduct();
+                    setProductName("");
+                    setCategoryId();
+                    setDescription("");
+                    setVariations([]);
+                    setFileProduct(null)
+                    modalAdd.onClose();
+                }
             }
 
         } catch (error) {
@@ -213,8 +230,7 @@ function Product() {
                     <Td>{val.name}</Td>
                     <Td>{val.category.type}</Td>
                     <Td>
-                        {`Rp. ${val.types[0].price} - ${val.types[val.types.length - 1].price}`}
-
+                        {val.types.length == 0 ? `Rp.` : `Rp. ${val?.types[0].price} - ${val?.types[val?.types.length - 1].price}`}
                     </Td>
                     <Td textColor={val.isDisabled == true ? "red.500" : "green.500"}>{val.isDisabled == false ? "Available" : "Unavailable"}</Td>
                     {
@@ -240,7 +256,7 @@ function Product() {
                                     ml={2}
                                     colorScheme={"green"}
                                     size='lg'
-                                    defaultChecked={val.isDisabled}
+                                    isChecked={val.isDisabled}
                                     onChange={() => deleteProduct(val.id)}
                                 />
 
@@ -694,7 +710,7 @@ function Product() {
                             <ModalBody pb={6}>
                                 <Flex justifyContent={'space-between'}>
                                     <Box w={"19%"}>
-                                        <FormControl >
+                                        <FormControl isRequired>
                                             <FormLabel>Product Name</FormLabel>
                                             <Input
                                                 type={"text"}
@@ -703,7 +719,7 @@ function Product() {
                                             />
                                         </FormControl>
 
-                                        <FormControl mt={2}  >
+                                        <FormControl mt={2} isRequired>
                                             <Flex alignItems={"center"}>
                                                 <FormLabel>Product Image</FormLabel>
                                                 {
@@ -736,7 +752,7 @@ function Product() {
                                             />
                                         </FormControl>
 
-                                        <FormControl mt={2}>
+                                        <FormControl mt={2} isRequired>
                                             <FormLabel>Category</FormLabel>
                                             <Select
                                                 onChange={(e) => setCategoryId(e.target.value)}
@@ -747,7 +763,7 @@ function Product() {
 
                                         </FormControl>
 
-                                        <FormControl mt={2}>
+                                        <FormControl mt={2} isRequired>
                                             <FormLabel>Description</FormLabel>
                                             <Textarea
                                                 onChange={(e) => setDescription(e.target.value)}

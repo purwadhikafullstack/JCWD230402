@@ -25,7 +25,8 @@ import {
     Th,
     Thead,
     Tr,
-    useDisclosure
+    useDisclosure,
+    useToast
 } from '@chakra-ui/react';
 import React from 'react';
 import { MdOutlineRequestPage, MdProductionQuantityLimits } from 'react-icons/md';
@@ -45,6 +46,7 @@ function StockManagement() {
     const roleId = useSelector((state) => state.adminReducer.roleId);
     const warehouseId = useSelector((state) => state.adminReducer.warehouseId);
     const [loading, setLoading] = React.useState(true);
+    const toast = useToast();
 
     const [productList, setProductList] = React.useState([]);
     const [colorList, setColorList] = React.useState([]);
@@ -57,9 +59,6 @@ function StockManagement() {
     const [fromId, setFromId] = React.useState();
     const [toId, setToId] = React.useState();
     const [stock, setStock] = React.useState();
-
-    console.log("fromId", fromId);
-    console.log("toId", toId);
 
     const [request, setRequest] = React.useState([]);
     const [send, setSend] = React.useState([]);
@@ -263,8 +262,26 @@ function StockManagement() {
 
         } catch (error) {
             console.log(error);
+            toast({
+                title: "cek kembali input yang anda masukin",
+                status: "error",
+                duration: 2000,
+                isClosable: true,
+            });
         }
 
+    };
+
+    const btnCancelRequest = () => {
+        setProductId();
+        setColorId();
+        setMemoryId();
+        setFromId();
+        setToId();
+        setStock();
+        getSend();
+        getRequest();
+        modalRequest.onClose()
     }
 
     //------------------------------- GET REQUEST STOCK ----------------------------------
@@ -665,13 +682,16 @@ function StockManagement() {
                                             </FormControl> : null
                                     }
 
-                                    <FormControl mt={2}>
+                                    <FormControl mt={2} isRequired>
                                         <FormLabel>Stock</FormLabel>
                                         <Input
+                                            type={"number"}
                                             onChange={(e) => {
                                                 setStock(e.target.value);
                                             }}
                                             placeholder="Stock"
+                                            isRequired={true}
+                                            required
                                         />
                                     </FormControl>
                                 </Box>
@@ -681,7 +701,7 @@ function StockManagement() {
                                 <Button onClick={btnSendRequest} colorScheme="blue" mr={3}>
                                     Send
                                 </Button>
-                                <Button >Cancel</Button>
+                                <Button onClick={btnCancelRequest}>Cancel</Button>
                             </ModalFooter>
                         </ModalContent>
                     </Modal>

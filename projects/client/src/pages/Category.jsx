@@ -73,31 +73,40 @@ function Category() {
 
   const btnSaveCategory = async () => {
     try {
-      let res = await axios.post(
-        `${API_URL}/category`,
-        {
-          name: category,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      console.log(`res btnSaveCategory`, res);
-
-      if (res.data.success) {
-        modalAdd.onClose();
-        getCategory();
+      if (category === "") {
         toast({
-          title: "Category Created.",
-          status: "success",
+          title: `your input is empty`,
+          status: "error",
           duration: 2000,
-          isClosable: true,
-        });
-        setId();
-        setCategory("");
+          isClosable: true
+        })
+      } else {
+        let res = await axios.post(
+          `${API_URL}/category`,
+          {
+            name: category,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        console.log(`res btnSaveCategory`, res);
+
+        if (res.data.success) {
+          modalAdd.onClose();
+          getCategory();
+          toast({
+            title: "Category Created.",
+            status: "success",
+            duration: 2000,
+            isClosable: true,
+          });
+          setId();
+          setCategory("");
+        }
       }
     } catch (error) {
       toast({
@@ -147,14 +156,14 @@ function Category() {
   };
 
   const printCategory = () => {
-    // console.log(`categorylist`, categoryList);
+    console.log(`categorylist`, categoryList);
     return categoryList.map((val, idx) => {
       return (
         <Tr textColor={"white"}>
           <Td>{idx + 1}</Td>
           <Td>{val.type}</Td>
           <Td textColor={val.isDisabled === true ? "red.500" : "green.500"}>
-            {val.isDisabled === false ? "Available" : "Unavailable"}
+            {val.isDisabled === false ? "Active" : "InActive"}
           </Td>
           {roleId === 1 ? (
             <Td>
@@ -170,10 +179,11 @@ function Category() {
 
               <Switch
                 ml={2}
-                colorScheme={"green"}
+                colorScheme={"red"}
                 size="lg"
-                defaultChecked={val.isDisabled}
+                // defaultChecked={val.isDisabled}
                 onChange={() => deleteCategory(val.id)}
+                isChecked={val.isDisabled}
               />
             </Td>
           ) : null}
@@ -208,12 +218,12 @@ function Category() {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(`res deleteAdmin`, res);
+      console.log(`res deleteCategory`, res);
 
       if (res.data.success) {
         getCategory();
         toast({
-          title: "Category Deleted.",
+          title: `${res.data.message}`,
           status: "success",
           duration: 2000,
           isClosable: true,
@@ -235,31 +245,41 @@ function Category() {
 
   const btnSaveEditCategory = async () => {
     try {
-      let res = await axios.patch(
-        `${API_URL}/category/${id}`,
-        {
-          type: category,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      console.log(`res btnSaveEditCategory`, res);
-      if (res.data.success) {
-        modalEdit.onClose();
-        getCategory();
-        setId();
-        setCategory("");
+      if (category === "") {
         toast({
-          title: `${res.data.message}`,
-          status: "success",
+          title: `your input is empty`,
+          status: "error",
           duration: 2000,
-          isClosable: true,
-        });
+          isClosable: true
+        })
+      } else {
+        let res = await axios.patch(
+          `${API_URL}/category/${id}`,
+          {
+            type: category,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        console.log(`res btnSaveEditCategory`, res);
+        if (res.data.success) {
+          modalEdit.onClose();
+          getCategory();
+          setId();
+          setCategory("");
+          toast({
+            title: `${res.data.message}`,
+            status: "success",
+            duration: 2000,
+            isClosable: true,
+          });
+        }
       }
+
     } catch (error) {
       toast({
         title: `${error.response.data.message}`,
@@ -371,11 +391,15 @@ function Category() {
             <ModalOverlay />
             <ModalContent>
               <ModalHeader>New Category</ModalHeader>
-              <ModalCloseButton />
+              {/* <ModalCloseButton /> */}
               <ModalBody pb={6}>
-                <FormControl>
+                <FormControl isRequired>
                   <FormLabel>Category Name</FormLabel>
-                  <Input onChange={(e) => setCategory(e.target.value)} />
+                  <Input
+                    type={"text"}
+                    onChange={(e) => setCategory(e.target.value)}
+                    placeholder={"Category"}
+                  />
                 </FormControl>
               </ModalBody>
 
@@ -398,9 +422,8 @@ function Category() {
             <ModalOverlay />
             <ModalContent>
               <ModalHeader>Edit Category</ModalHeader>
-              <ModalCloseButton />
               <ModalBody pb={6}>
-                <FormControl>
+                <FormControl isRequired>
                   <FormLabel>Category Name</FormLabel>
                   <Input
                     onChange={(e) => setCategory(e.target.value)}
