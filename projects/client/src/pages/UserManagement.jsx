@@ -126,7 +126,7 @@ function UserManagement() {
           </Td>
           <Td>{val.roleId === 1 ? "Super Admin" : "Admin"}</Td>
           <Td textColor={val.isDeleted === true ? "red.500" : "green.500"}>
-            {val.isDeleted === false ? "Available" : "Unavailable"}
+            {val.isDeleted === false ? "Active" : "InActive"}
           </Td>
           {roleId === 1 ? (
             // disini nanti tambahin, jika roleId nya sama maka button delete nya hilang
@@ -193,41 +193,50 @@ function UserManagement() {
 
   const btnSaveAddAdmin = async () => {
     try {
-      let res = await axios.post(
-        `${API_URL}/auth/admin/register`,
-        {
-          name: username,
-          gender: gender,
-          phone: phone,
-          email: email,
-          password: password,
-          roleId: role,
-          warehouseId: warehouse,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      console.log(`btnSaveAdmin`, res);
-      if (res.data.success) {
-        modalAdd.onClose();
-        getAllAdmin();
-        setUsername("");
-        setEmail("");
-        setPassword("");
-        setPhone("");
-        setGender("");
-        setWarehouse();
-        setRole();
+      if (username == " " || email == " " || phone == " " || password == " ") {
         toast({
-          title: `${res.data.message}`,
-          status: "success",
+          title: `your input is empty`,
+          status: "error",
           duration: 2000,
-          isClosable: true,
-        });
+          isClosable: true
+        })
+      } else {
+        let res = await axios.post(
+          `${API_URL}/auth/admin/register`,
+          {
+            name: username,
+            gender: gender,
+            phone: phone,
+            email: email,
+            password: password,
+            roleId: role,
+            warehouseId: warehouse,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        console.log(`btnSaveAdmin`, res);
+        if (res.data.success) {
+          modalAdd.onClose();
+          getAllAdmin();
+          setUsername("");
+          setEmail("");
+          setPassword("");
+          setPhone("");
+          setGender("");
+          setWarehouse();
+          setRole();
+          toast({
+            title: `${res.data.message}`,
+            status: "success",
+            duration: 2000,
+            isClosable: true,
+          });
+        }
       }
     } catch (error) {
       toast({
@@ -516,11 +525,10 @@ function UserManagement() {
             <ModalOverlay />
             <ModalContent>
               <ModalHeader>New User</ModalHeader>
-              <ModalCloseButton />
               <ModalBody pb={6}>
                 <Flex>
                   <Box>
-                    <FormControl isInvalid={isErrorUsername}>
+                    <FormControl isInvalid={isErrorUsername} isRequired>
                       <FormLabel>User Name</FormLabel>
                       <Input
                         type={"text"}
@@ -534,7 +542,7 @@ function UserManagement() {
                       )}
                     </FormControl>
 
-                    <FormControl mt={2} isInvalid={isErrorEmail}>
+                    <FormControl mt={2} isInvalid={isErrorEmail} isRequired>
                       <FormLabel>Email</FormLabel>
                       <Input
                         type={"email"}
@@ -548,7 +556,7 @@ function UserManagement() {
                       )}
                     </FormControl>
 
-                    <FormControl mt={2} isInvalid={isErrorPassword}>
+                    <FormControl mt={2} isInvalid={isErrorPassword} isRequired>
                       <FormLabel>Password</FormLabel>
                       <Flex>
                         <Input
@@ -573,7 +581,7 @@ function UserManagement() {
                       )}
                     </FormControl>
 
-                    <FormControl isInvalid={isErrorPhone}>
+                    <FormControl isInvalid={isErrorPhone} isRequired>
                       <FormLabel>Phone</FormLabel>
                       <Input
                         onChange={(e) => setPhone(e.target.value)}
@@ -599,7 +607,7 @@ function UserManagement() {
                       </Select>
                     </FormControl>
 
-                    <FormControl mt={2}>
+                    <FormControl mt={2} isRequired>
                       <FormLabel>Role</FormLabel>
                       <Select
                         width={"64"}
@@ -612,7 +620,7 @@ function UserManagement() {
                     </FormControl>
 
                     {role === "2" ? (
-                      <FormControl mt={2}>
+                      <FormControl mt={2} isRequired>
                         <FormLabel>Warehouse</FormLabel>
                         <Select
                           placeholder={"-- Select --"}
@@ -646,7 +654,6 @@ function UserManagement() {
             <ModalOverlay />
             <ModalContent>
               <ModalHeader>Edit User</ModalHeader>
-              <ModalCloseButton />
               <ModalBody pb={6}>
                 <Flex>
                   <Box>

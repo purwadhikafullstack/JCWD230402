@@ -254,7 +254,7 @@ function Product() {
 
                                 <Switch
                                     ml={2}
-                                    colorScheme={"green"}
+                                    colorScheme={"red"}
                                     size='lg'
                                     isChecked={val.isDisabled}
                                     onChange={() => deleteProduct(val.id)}
