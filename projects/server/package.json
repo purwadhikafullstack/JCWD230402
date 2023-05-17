@@ -22,6 +22,7 @@
     "jsonwebtoken": "latest",
     "multer": "latest",
     "mysql2": "latest",
+    "node-schedule": "^2.1.1",
     "nodemailer": "latest",
     "redis": "latest",
     "sequelize": "latest",
