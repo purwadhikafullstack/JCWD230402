@@ -49,6 +49,9 @@ app.use("/stockmutation", stockMutation);
 const order = require("./Routers/orderRouter");
 app.use("/order", order);
 
+const report = require("./Routers/reportRouter");
+app.use("/report", report);
+
 const { statusUpdater } = require("./helpers/schedule");
 
 app.get("/api", (req, res) => {

@@ -24,6 +24,7 @@ import {
   Checkout,
   CustomerOrder,
   Order,
+  StockReport,
 } from "./pages";
 
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
@@ -105,7 +106,7 @@ function App() {
           roleId ? (
             <div className="bg-bgglass flex w-full">
               <Sidebar />
-              <main className=" md:px-4 lg:px-8 xl:px-16 md:w-11/12 lg:w-10/12 xl:w-screen ">
+              <main className=" md:px-4 lg:px-8 xl:px-16 md:w-11/12 lg:w-[82vw] xl:w-screen ">
                 <Routes>
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/admin" element={<AdminLogin />} />
@@ -114,8 +115,12 @@ function App() {
                   <Route path="/category" element={<Category />} />
                   <Route path="*" element={<PageNotFound />} />
                   <Route path="/product" element={<Product />} />
-                  <Route path="/stockmanagement" element={<StockManagement />} />
+                  <Route
+                    path="/stockmanagement"
+                    element={<StockManagement />}
+                  />
                   <Route path="/order" element={<Order />} />
+                  <Route path="/stockreport" element={<StockReport />} />
                 </Routes>
               </main>
             </div>

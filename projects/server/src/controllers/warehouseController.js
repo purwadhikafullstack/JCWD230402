@@ -1,6 +1,6 @@
 const model = require("../models");
 const { v4: uuidv4 } = require("uuid");
-const sequelize = require("sequelize")
+const sequelize = require("sequelize");
 const axios = require("axios");
 
 module.exports = {
@@ -77,16 +77,16 @@ module.exports = {
 
   getWarehouse: async (req, res, next) => {
     try {
-      // buat page warehouse 
-      let { page, size, name, sortby, order } = req.query
+      // buat page warehouse
+      let { page, size, name, sortby, order } = req.query;
 
       let data = await model.warehouse.findAndCountAll({
         offset: parseInt(page * size),
         limit: parseInt(size),
         where: {
-          name: { [sequelize.Op.like]: `%${name}%` }
+          name: { [sequelize.Op.like]: `%${name}%` },
         },
-        order: [[sortby, order]]
+        order: [[sortby, order]],
       });
       console.log(`data`, data);
 
@@ -106,28 +106,23 @@ module.exports = {
             id: req.query.warehouseId,
           },
         });
-        console.log(`data pake query`, data);
+        // console.log(`data pake query`, data);
 
         return res.status(200).send(data);
       } else {
-        let data = await model.warehouse.findAll(
-          {
-            where: {
-              isDisabled: 0
-            }
-          }
-        );
-        console.log(`data semua warehouse`, data);
+        let data = await model.warehouse.findAll({
+          where: {
+            isDisabled: 0,
+          },
+        });
+        // console.log(`data semua warehouse`, data);
 
         return res.status(200).send(data);
       }
-
     } catch (error) {
       console.log(error);
       next(error);
     }
-
-
   },
 
   updateWarehouse: async (req, res, next) => {

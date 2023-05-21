@@ -18,3 +18,4 @@ export { default as CartPage } from "./CartPage";
 export { default as Checkout } from "./Checkout";
 export { default as CustomerOrder } from "./CustomerOrder";
 export { default as Order } from "./Order";
+export { default as StockReport } from "./StockReport";

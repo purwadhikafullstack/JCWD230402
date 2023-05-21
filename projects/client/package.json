@@ -22,6 +22,7 @@
     "framer-motion": "latest",
     "react": "^18.2.0",
     "react-chartjs-2": "latest",
+    "react-datepicker": "^4.11.0",
     "react-dom": "^18.2.0",
     "react-icons": "latest",
     "react-paginate": "^8.1.5",

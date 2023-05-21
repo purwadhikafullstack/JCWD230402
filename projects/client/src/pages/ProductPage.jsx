@@ -184,7 +184,6 @@ function ProductPage() {
 
   const printMemory = () => {
     return memoryVarList.map((val) => {
-      console.log("print memory", val);
       return (
         <Button
           mb={{ base: 3, lg: 5 }}
@@ -360,7 +359,6 @@ function ProductPage() {
     }
   };
 
-  //================================================================== on Cart button click
   const getCart = async () => {
     try {
       const token = localStorage.getItem("Gadgetwarehouse_userlogin");
@@ -369,6 +367,7 @@ function ProductPage() {
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log("getcart", res.data.datanum);
 
       dispatch(cartAction(res.data.datanum));
     } catch (error) {
@@ -376,6 +375,7 @@ function ProductPage() {
     }
   };
 
+  //================================================================== on Cart button click
   const onCartClick = async () => {
     try {
       if (!statusId || statusId === 1) {

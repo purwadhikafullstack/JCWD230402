@@ -9,7 +9,7 @@ const cartSlice = createSlice({
 
   reducers: {
     cartAction: (state, action) => {
-      state.length = action.payload.length;
+      state.length = action.payload;
     },
     cartEmpty: (state, action) => {
       state.length = 0;
