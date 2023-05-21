@@ -186,7 +186,7 @@ function Order() {
       return (
         <Flex
           color={"white"}
-          maxW={"100vw"}
+          maxW={"full"}
           mx={"auto"}
           flexDir={"column"}
           alignItems={"center"}
@@ -672,7 +672,7 @@ function Order() {
       </Flex>
 
       <Tabs
-        w={{ md: "2xl", lg: "4xl", xl: "7xl" }}
+        w={{ md: "2xl", lg: "3xl", xl: "5xl" }}
         mx="auto"
         mt={"20px"}
         isLazy
@@ -697,12 +697,16 @@ function Order() {
                 onChange={(e) => {
                   setOrderBy(e.target.value);
                 }}
-                w={{ base: "36%", md: "16%", lg: "13%" }}
+                w={{ base: "36%", md: "16%", lg: "15%" }}
                 float={"right"}
                 color={"#e8e8e8"}
               >
-                <option value="DESC">Newest</option>
-                <option value="ASC">Oldest</option>
+                <option style={{ color: "black" }} value="DESC">
+                  Newest
+                </option>
+                <option style={{ color: "black" }} value="ASC">
+                  Oldest
+                </option>
               </Select>
             </Flex>
             <Box>{printOrder()}</Box>

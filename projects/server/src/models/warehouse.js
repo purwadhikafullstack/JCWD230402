@@ -37,6 +37,6 @@ module.exports = (sequelize, DataTypes) => {
     warehouse.hasMany(models.type, { foreignKey: "warehouseId" });
     warehouse.hasMany(models.stockMutation, { foreignKey: "supplierId" });
   };
-  
+
   return warehouse;
 };

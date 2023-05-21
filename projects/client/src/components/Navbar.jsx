@@ -1,16 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FaShoppingBasket, FaUserCircle } from "react-icons/fa";
 import { motion } from "framer-motion";
-import { NavLink, Link } from "react-router-dom";
+
 import { API_URL } from "../helper";
 import Logo from "./Logo";
 import "./Navbar.css";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logoutAction } from "../reducers/auth";
 import { cartEmpty } from "../reducers/cart";
-import axios from "axios";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -25,11 +24,7 @@ function Navbar() {
     setShowMenu(false);
   };
 
-  const cartlength = useSelector((state) => {
-    // console.log("state =", state);
-
-    return state.cartReducer.length;
-  });
+  const cartlength = useSelector((state) => state.cartReducer.length);
 
   const email = useSelector((state) => state.authReducer.email);
   const name = useSelector((state) => state.authReducer.name);
@@ -48,12 +43,12 @@ function Navbar() {
       {/*Desktop & Tablet*/}
       <div className="flex w-full h-full px-4 items-center justify-between">
         <div className="flex">
-          <NavLink to="/" className="flex items-center gap-10">
+          <Link to="/" className="flex items-center gap-10">
             <Logo />
             <p className="text-xl font-bold text-white">
               Gadget<span className="text-[#1BFD9C]">House</span>
             </p>
-          </NavLink>
+          </Link>
         </div>
 
         <div className="flex items-center gap-x-4 md:gap-x-8">
@@ -64,13 +59,13 @@ function Navbar() {
             className="hidden md:flex items-center md:gap-4 lg:gap-6"
           >
             <li className="text-xl text-[#1BFD9C] hover:text-[#82ffc9] hover:text-lg duration-500 transition-all ease-in-out cursor-pointer">
-              <NavLink to="/">Home</NavLink>
+              <Link to="/">Home</Link>
             </li>
             <li className="text-xl text-[#1BFD9C] hover:text-[#82ffc9] hover:text-lg duration-500 transition-all ease-in-out cursor-pointer">
-              <NavLink to="/product/all-products">Product</NavLink>
+              <Link to="/product/all-products">Product</Link>
             </li>
             <li className="text-xl text-[#1BFD9C] hover:text-[#82ffc9] hover:text-lg duration-500 transition-all ease-in-out cursor-pointer">
-              <NavLink>About Us</NavLink>
+              <Link>About Us</Link>
             </li>
             <li className="text-xl text-[#1BFD9C] hover:text-[#82ffc9] hover:text-lg duration-500 transition-all ease-in-out cursor-pointer">
               Service
@@ -81,9 +76,9 @@ function Navbar() {
             <div className="flex gap-4">
               <div className="relative flex items-center justify-center mr-2 ">
                 <button type="button">
-                  <NavLink to="/CartPage">
+                  <Link to="/CartPage">
                     <FaShoppingBasket className="text-[#1BFD9C] hover:text-[#82ffc9] hover:text-xl duration-500 text-2xl  cursor-pointer" />
-                  </NavLink>
+                  </Link>
                 </button>
                 {cartlength === 0 ? null : (
                   <div className=" absolute -top-3 -right-4  w-5 h-5 rounded-full bg-red-400 flex items-center justify-center animate-bounce">
@@ -117,47 +112,50 @@ function Navbar() {
                       className="text-2xl text-white cursor-pointer "
                       onClick={hideMenu}
                     >
-                      <img src={`${API_URL}${profileImage}`} />
+                      <img
+                        alt="profile picture"
+                        src={`${API_URL}${profileImage}`}
+                      />
                     </div>
                     <h1 className="text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium">
                       {name}
                     </h1>
                   </li>
                   <li>
-                    <NavLink
+                    <Link
                       to="/customerProfile"
                       className="text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium"
                       onClick={hideMenu}
                     >
                       Profile
-                    </NavLink>
+                    </Link>
                   </li>
                   <li>
-                    <NavLink
+                    <Link
                       to="/CartPage"
                       className="text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium"
                       onClick={hideMenu}
                     >
                       Cart
-                    </NavLink>
+                    </Link>
                   </li>
                   <li>
-                    <NavLink
+                    <Link
                       to="/MyOrder"
                       className="text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium"
                       onClick={hideMenu}
                     >
                       Orders
-                    </NavLink>
+                    </Link>
                   </li>
                   <li>
-                    <NavLink
+                    <Link
                       className="text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium"
                       onClick={hideMenu}
                       to="/request"
                     >
                       Reset Password
-                    </NavLink>
+                    </Link>
                   </li>
                 </ul>
                 <div className="flex flex-col gap-2">
@@ -175,10 +173,10 @@ function Navbar() {
           ) : (
             <div className=" flex gap-2 md:gap-8">
               <button className="text-white text-xs md:text-base bg-emerald-400 px-2 md:px-5 py-1 rounded-3xl font-semibold hover:text-black hover:bg-emerald-300 hover:scale-110 duration-500">
-                <NavLink to="/login">Login</NavLink>
+                <Link to="/login">Login</Link>
               </button>
               <button className="text-white text-xs md:text-base bg-emerald-400 px-2 md:px-3 py-1 rounded-3xl font-semibold hover:text-black hover:bg-emerald-300 hover:scale-110 duration-500">
-                <NavLink to="/register">Register</NavLink>
+                <Link to="/register">Register</Link>
               </button>
             </div>
           )}
