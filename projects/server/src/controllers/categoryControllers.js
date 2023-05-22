@@ -3,6 +3,7 @@ const model = require("../models");
 
 module.exports = {
   addCategory: async (req, res, next) => {
+    const ormTransaction = await model.sequelize.transaction();
     try {
       let cek = await model.category.findAll({
         where: {
@@ -16,21 +17,26 @@ module.exports = {
 
         let addCategory = await model.category.create({
           type: req.body.name,
+        }, {
+          transaction: ormTransaction,
         });
         console.log(`addCategory`, addCategory);
 
-        res.status(200).send({
+        await ormTransaction.commit();
+        return res.status(200).send({
           success: true,
           message: "Category Successfully Added",
           data: addCategory,
         });
       } else {
-        res.status(400).send({
+        await ormTransaction.commit();
+        return res.status(400).send({
           success: false,
           message: "Category Name Already exists",
         });
       }
     } catch (error) {
+      await ormTransaction.rollback();
       console.log(error);
       next(error);
     }
@@ -80,6 +86,7 @@ module.exports = {
   },
 
   deleteCategory: async (req, res, next) => {
+    const ormTransaction = await model.sequelize.transaction();
     try {
       console.log(`req params`, req.params);
       let findCategory = await model.category.findAll({
@@ -88,7 +95,7 @@ module.exports = {
         },
       });
 
-      console.log(findCategory);
+      console.log("findCategory", findCategory);
 
       if (findCategory[0].dataValues.isDisabled == false) {
         let deleteCategory = await model.category.update(
@@ -97,10 +104,13 @@ module.exports = {
             where: {
               id: req.params.id,
             },
-          }
-        );
+          }, {
+          transaction: ormTransaction,
+        });
         console.log(`deleteCategory`, deleteCategory);
-        res.status(200).send({
+
+        await ormTransaction.commit();
+        return res.status(200).send({
           success: true,
           message: "Category InActive ",
         });
@@ -111,21 +121,26 @@ module.exports = {
             where: {
               id: req.params.id,
             },
-          }
-        );
+          }, {
+          transaction: ormTransaction,
+        });
         console.log(`deleteCategory`, deleteCategory);
-        res.status(200).send({
+
+        await ormTransaction.commit();
+        return res.status(200).send({
           success: true,
           message: "Category Active",
         });
       }
     } catch (error) {
+      await ormTransaction.rollback();
       console.log(error);
       next(error);
     }
   },
 
   editCategory: async (req, res, next) => {
+    const ormTransaction = await model.sequelize.transaction();
     try {
       console.log(`ini dari req params`, req.params.id);
       let cekCategory = await model.category.findAll({
@@ -144,23 +159,26 @@ module.exports = {
             where: {
               id: req.params.id,
             },
-          }
-        );
-
+          }, {
+          transaction: ormTransaction,
+        });
         // console.log(editCategory);
 
+        await ormTransaction.commit();
         return res.status(200).send({
           success: true,
           message: "Category Successfully Updated",
           data: editCategory,
         });
       } else {
+        await ormTransaction.commit();
         return res.status(400).send({
           success: false,
           message: "Category Name Already Exists",
         });
       }
     } catch (error) {
+      await ormTransaction.rollback();
       console.log(error);
       next(error);
     }

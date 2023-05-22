@@ -11,7 +11,7 @@ module.exports = {
                 }
             })
 
-            res.status(200).send({
+            return res.status(200).send({
                 success: true,
                 data: getProduct
             })
@@ -39,7 +39,7 @@ module.exports = {
 
             // console.log(`res`, getWarehouse);
 
-            res.status(200).send({
+            return res.status(200).send({
                 status: true,
                 data: getWarehouse
             })
@@ -51,8 +51,9 @@ module.exports = {
     },
 
     requestStock: async (req, res, next) => {
-        console.log(`req.body`, req.body);
+        const ormTransaction = await model.sequelize.transaction();
         try {
+            console.log(`req.body`, req.body);
             let { productId, colorId, memoryId, warehouseRequest, warehouseSend, stock } = req.body
 
             let cekType = await model.type.findOne({
@@ -78,8 +79,11 @@ module.exports = {
                     targetId: warehouseRequest,
                     creatorId: warehouseRequest, // WAREHOUSE ID YANG MEMINTA
                     initialStock: cekType.dataValues.stock
+                }, {
+                    transaction: ormTransaction,
                 })
 
+                await ormTransaction.commit();
                 return res.status(200).send({
                     success: true,
                     message: "request berhasil di buat, menunggu konfirmasi",
@@ -123,10 +127,13 @@ module.exports = {
                     targetId: warehouseRequest,
                     creatorId: warehouseRequest,
                     initialStock: addVariant.dataValues.stock
+                }, {
+                    transaction: ormTransaction,
                 })
 
                 console.log(`stockMutation`, stockMutation);
 
+                await ormTransaction.commit();
                 return res.status(200).send({
                     success: true,
                     message: `variasi berhasil ditambah, request berhasil di buat, menunggu konfirmasi`,
@@ -136,6 +143,7 @@ module.exports = {
 
 
         } catch (error) {
+            await ormTransaction.rollback();
             console.log(error);
             next(error)
         }
@@ -290,7 +298,6 @@ module.exports = {
                 })
             }
 
-
         } catch (error) {
             console.log(error);
             next(error)
@@ -298,6 +305,7 @@ module.exports = {
     },
 
     acceptRequest: async (req, res, next) => {
+        const ormTransaction = await model.sequelize.transaction();
         try {
             console.log(`req.body`, req.body);
 
@@ -313,7 +321,6 @@ module.exports = {
 
             console.log(`findType`, findType);
 
-
             // case ketika sudah ketemu type nya, cek stock nya mencukupi atau tidak
             if (findType.dataValues.stock - req.body.request <= 0) {
                 return res.status(500).send({
@@ -328,6 +335,8 @@ module.exports = {
                     where: {
                         id: req.params.id
                     }
+                }, {
+                    transaction: ormTransaction,
                 })
                 console.log(`accept`, accept);
 
@@ -338,6 +347,8 @@ module.exports = {
                     where: {
                         id: findType.dataValues.id
                     },
+                }, {
+                    transaction: ormTransaction,
                 })
 
                 console.log(`updateStock`, updateStock);
@@ -354,6 +365,8 @@ module.exports = {
                     targetId: req.body.warehouseRequest,
                     creatorId: req.body.warehouseId,
                     initialStock: findType.dataValues.stock
+                }, {
+                    transaction: ormTransaction,
                 })
 
                 console.log(`changeStock`, changeStock);
@@ -376,25 +389,27 @@ module.exports = {
                     where: {
                         id: getTypeWarehouseRequest.dataValues.id
                     }
+                }, {
+                    transaction: ormTransaction,
                 })
 
                 console.log(`updateStockRequest`, updateStockRequest);
 
+                await ormTransaction.commit();
                 return res.status(200).send({
                     success: true,
                     message: "permintaan stok diterima"
                 })
             }
-
-
-
         } catch (error) {
+            await ormTransaction.rollback();
             console.log(error);
             next(error)
         }
     },
 
     rejectRequest: async (req, res, next) => {
+        const ormTransaction = await model.sequelize.transaction();
         try {
             console.log(`req.params`, req.params);
 
@@ -404,16 +419,20 @@ module.exports = {
                 where: {
                     id: req.params.id
                 }
+            }, {
+                transaction: ormTransaction,
             })
 
             console.log(`rejectRequest`, rejectRequest);
 
+            await ormTransaction.commit();
             return res.status(200).send({
                 success: true,
                 message: "permintaan stock di tolak"
             })
 
         } catch (error) {
+            await ormTransaction.rollback();
             console.log(error);
             next(error)
         }

@@ -125,7 +125,7 @@ function CartPage() {
   const minusItem = async (id) => {
     try {
       await axios.patch(
-        `${API_URL}/product/minuscart`,
+        `${API_URL}/product/minus-cart`,
         {
           id: id,
         },
@@ -144,7 +144,7 @@ function CartPage() {
   const addItem = async (id) => {
     try {
       await axios.patch(
-        `${API_URL}/product/pluscart`,
+        `${API_URL}/product/plus-cart`,
         {
           id: id,
         },

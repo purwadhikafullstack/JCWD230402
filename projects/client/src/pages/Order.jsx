@@ -95,7 +95,7 @@ function Order() {
         if (warehouseListId == 0) {
           if (status === 0) {
             let res = await axios.get(
-              `${API_URL}/order/allorder?order=${orderBy}&page=${page}&size=${size}`,
+              `${API_URL}/order/all-order?order=${orderBy}&page=${page}&size=${size}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`,
@@ -107,7 +107,7 @@ function Order() {
             setTotalData(res.data.datanum);
           } else {
             let res = await axios.get(
-              `${API_URL}/order/allorder?status=${status}&order=${orderBy}&page=${page}&size=${size}`,
+              `${API_URL}/order/all-order?status=${status}&order=${orderBy}&page=${page}&size=${size}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`,
@@ -362,7 +362,7 @@ function Order() {
   const getOrderDetails = async (uuid) => {
     try {
       modalDetails.onOpen();
-      let res = await axios.get(`${API_URL}/order/orderdetails/${uuid}`, {
+      let res = await axios.get(`${API_URL}/order/order-details/${uuid}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -527,7 +527,7 @@ function Order() {
 
   const getWarehouse = async () => {
     try {
-      let res = await axios.get(`${API_URL}/warehouse/allwarehouse`, {
+      let res = await axios.get(`${API_URL}/warehouse/all-warehouse`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -548,7 +548,7 @@ function Order() {
   const onApprovePayment = async (uuid) => {
     try {
       const res = await axios.patch(
-        `${API_URL}/order/paymentconfirmation/`,
+        `${API_URL}/order/payment-confirmation/`,
         {
           uuid: uuid,
         },
@@ -580,7 +580,7 @@ function Order() {
   const onRejectPayment = async (uuid) => {
     try {
       const res = await axios.patch(
-        `${API_URL}/order/paymentrejection/`,
+        `${API_URL}/order/payment-rejection/`,
         {
           uuid: uuid,
         },
@@ -612,7 +612,7 @@ function Order() {
   async function onSendProduct(uuid) {
     try {
       const res = await axios.post(
-        `${API_URL}/order/sendproduct/`,
+        `${API_URL}/order/send-product/`,
         {
           uuid: uuid,
         },

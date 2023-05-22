@@ -370,7 +370,7 @@ function Product() {
     const getAllWarehouse = async () => {
         try {
             if (roleId == 1) {
-                let res = await axios.get(`${API_URL}/warehouse/allwarehouse`, {
+                let res = await axios.get(`${API_URL}/warehouse/all-warehouse`, {
                     headers: {
                         "Authorization": `Bearer ${token}`
                     }
@@ -378,7 +378,7 @@ function Product() {
                 // console.log(`getAllWarehouse`, res);
                 setWarehouseList(res.data)
             } else {
-                let res = await axios.get(`${API_URL}/warehouse/allwarehouse?warehouseId=${warehouseId}`, {
+                let res = await axios.get(`${API_URL}/warehouse/all-warehouse?warehouseId=${warehouseId}`, {
                     headers: {
                         "Authorization": `Bearer ${token}`
                     }

@@ -6,7 +6,7 @@ const { checkWarehouse } = require("../helpers/validator")
 
 route.post("/", readToken, checkWarehouse, warehouseController.addNewWarehouse);
 route.get("/", readToken, warehouseController.getWarehouse);
-route.get("/allwarehouse", readToken, warehouseController.getAllWarehouse);
+route.get("/all-warehouse", readToken, warehouseController.getAllWarehouse);
 route.patch("/:uuid", readToken, checkWarehouse, warehouseController.updateWarehouse);
 route.delete("/:uuid", readToken, warehouseController.deleteWarehouse);
 

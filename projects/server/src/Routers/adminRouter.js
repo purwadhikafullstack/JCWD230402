@@ -4,7 +4,7 @@ const { readToken } = require('../helpers/jwt');
 const route = express.Router();
 const { checkUsers } = require("../helpers/validator")
 
-route.get("/alladmin", readToken, adminController.allAdmin);
+route.get("/", readToken, adminController.allAdmin);
 route.delete("/:uuid", readToken, adminController.deleteAdmin);
 route.patch("/:uuid", readToken, adminController.editAdmin);
 

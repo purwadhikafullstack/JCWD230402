@@ -92,7 +92,7 @@ function UserManagement() {
   const getAllAdmin = async () => {
     try {
       let res = await axios.get(
-        `${API_URL}/admin/alladmin/?page=${page}&size=${size}&sortby=${sortby}&order=${order}&name=${filter}`,
+        `${API_URL}/admin/?page=${page}&size=${size}&sortby=${sortby}&order=${order}&name=${filter}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -241,6 +241,7 @@ function UserManagement() {
     } catch (error) {
       toast({
         title: `${error.response.data.message}`,
+        description: `change your email`,
         status: "error",
         duration: 2000,
         isClosable: true,
@@ -274,7 +275,7 @@ function UserManagement() {
 
   const getAllWarehouse = async () => {
     try {
-      let res = await axios.get(`${API_URL}/warehouse/allwarehouse`, {
+      let res = await axios.get(`${API_URL}/warehouse/all-warehouse`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -305,12 +306,12 @@ function UserManagement() {
       // console.log(`res deleteAdmin`, res);
 
       if (res.data.success) {
-        toast({
-          title: `${res.data.message}`,
-          status: "success",
-          duration: 2000,
-          isClosable: true,
-        });
+        // toast({
+        //   title: `${res.data.message}`,
+        //   status: "success",
+        //   duration: 2000,
+        //   isClosable: true,
+        // });
         getAllAdmin();
       }
     } catch (error) {
@@ -343,42 +344,52 @@ function UserManagement() {
     setRole(roleId);
   };
 
-  const btnSaveEditAdmin = async () => {
+  const btnSaveEditAdmin = async () => { 
     try {
-      let res = await axios.patch(
-        `${API_URL}/admin/${uuid}`,
-        {
-          name: username,
-          email: email,
-          phone: phone,
-          gender: gender,
-          password: password,
-          warehouseId: warehouse,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      console.log(`res btnSaveEditAdmin`, res);
-      if (res.data.success) {
+      if (username == "" || email == "" || phone == "" || password == "") {
         toast({
-          title: `${res.data.message}`,
-          status: "success",
+          title: `your input is empty`,
+          status: "error",
           duration: 2000,
-          isClosable: true,
-        });
-        modalEdit.onClose();
-        getAllAdmin();
-        setUsername("");
-        setEmail("");
-        setPassword("");
-        setPhone("");
-        setGender("");
-        setWarehouse();
-        setRole();
+          isClosable: true
+        })
+      } else {
+        let res = await axios.patch(
+          `${API_URL}/admin/${uuid}`,
+          {
+            name: username,
+            email: email,
+            phone: phone,
+            gender: gender,
+            password: password,
+            warehouseId: warehouse,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        console.log(`res btnSaveEditAdmin`, res);
+        if (res.data.success) {
+          toast({
+            title: `${res.data.message}`,
+            status: "success",
+            duration: 2000,
+            isClosable: true,
+          });
+          modalEdit.onClose();
+          getAllAdmin();
+          setUsername("");
+          setEmail("");
+          setPassword("");
+          setPhone("");
+          setGender("");
+          setWarehouse();
+          setRole();
+        }
+
       }
     } catch (error) {
       if (error.response.data.description) {

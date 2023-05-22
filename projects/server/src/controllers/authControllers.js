@@ -10,6 +10,7 @@ let salt = bcrypt.genSaltSync(10);
 module.exports = {
   // Register
   register: async (req, res, next) => {
+    const ormTransaction = await model.sequelize.transaction();
     try {
       let checkUser = await model.customer.findAll({
         where: {
@@ -26,6 +27,8 @@ module.exports = {
           email,
           uuid,
           statusId: 1,
+        }, {
+          transaction: ormTransaction,
         });
 
         let token = createToken(
@@ -59,6 +62,7 @@ module.exports = {
             <p>Regards, Admin GadgetHouse</p>`,
         });
 
+        await ormTransaction.commit();
         return res.status(200).send({
           success: true,
           message:
@@ -67,12 +71,14 @@ module.exports = {
           token: token,
         });
       } else {
+        await ormTransaction.commit();
         return res.status(400).send({
           success: false,
           message: "User already exist",
         });
       }
     } catch (error) {
+      await ormTransaction.rollback();
       console.log(error);
       next(error);
     }
@@ -94,7 +100,6 @@ module.exports = {
 
           let verification = await model.customer.update(
             { password: req.body.password, statusId: 2 },
-
             { where: { uuid: req.decript.uuid } }
           );
           return res.status(200).send({
@@ -135,13 +140,13 @@ module.exports = {
         );
 
         if (check) {
-          let { uuid, name, email, phone, gender, profileImage, statusId } =
+          let { id, uuid, name, email, phone, gender, profileImage, statusId } =
             get[0].dataValues;
           let token = createToken({ uuid, statusId }, "168h");
           return res.status(200).send({
             success: true,
             message: "login success",
-
+            id: id,
             name: name,
             email: email,
             phone: phone,
@@ -151,13 +156,13 @@ module.exports = {
             token: token,
           });
         } else {
-          res.status(400).send({
+          return res.status(400).send({
             success: false,
             message: "Login fail email or password wrong",
           });
         }
       } else {
-        res.status(404).send({
+        return res.status(404).send({
           success: false,
           message: "Account not found",
         });
@@ -179,13 +184,14 @@ module.exports = {
 
       console.log("Data from get[0].dataValues", get[0].dataValues);
 
-      let { uuid, name, email, phone, gender, profileImage, statusId } =
+      let { id, uuid, name, email, phone, gender, profileImage, statusId } =
         get[0].dataValues;
       let token = createToken({ uuid }, "24h");
 
       return res.status(200).send({
         success: true,
         message: "login success",
+        id: id,
         name: name,
         email: email,
         phone: phone,
@@ -236,7 +242,7 @@ module.exports = {
                 <br>
                 <p>Regards, Admin GadgetHouse</p>`,
       });
-      res.status(200).send({
+      return res.status(200).send({
         success: true,
         message: "Email for confirmation reset password has been delivered",
         token: token,
@@ -266,7 +272,7 @@ module.exports = {
           message: "Reset password success",
         });
       } else {
-        res.status(400).send({
+        return res.status(400).send({
           success: false,
           message: "error: password and confirmation password not match",
         });
@@ -278,6 +284,7 @@ module.exports = {
   },
 
   adminregister: async (req, res, next) => {
+    const ormTransaction = await model.sequelize.transaction();
     try {
       let checkUser = await model.admin.findAll({
         where: {
@@ -316,20 +323,25 @@ module.exports = {
           roleId,
           warehouseId,
           profileImage,
+        }, {
+          transaction: ormTransaction,
         });
 
+        await ormTransaction.commit();
         return res.status(200).send({
           success: true,
           message: "Account Registration Success",
           data: register,
         });
       } else {
+        await ormTransaction.commit();
         return res.status(400).send({
           success: false,
           message: "User Already Exists",
         });
       }
     } catch (error) {
+      await ormTransaction.rollback();
       console.log(error);
       next(error);
     }
@@ -338,7 +350,6 @@ module.exports = {
   adminlogin: async (req, res, next) => {
     try {
       // console.log("data from req", req.body);
-
       let get = await model.admin.findAll({
         where: { email: req.body.email },
       });
@@ -375,13 +386,13 @@ module.exports = {
             token: token,
           });
         } else {
-          res.status(400).send({
+          return res.status(400).send({
             success: false,
             message: "Email or password wrong",
           });
         }
       } else {
-        res.status(404).send({
+        return res.status(404).send({
           success: false,
           message: "Account not found",
         });
@@ -453,7 +464,7 @@ module.exports = {
           message: "Edit profile success ",
         });
       } else {
-        res.status(400).send({
+        return res.status(400).send({
           success: false,
           message: "Cannot change data",
         });

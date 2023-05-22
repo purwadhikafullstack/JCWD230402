@@ -5,6 +5,7 @@ const axios = require("axios");
 
 module.exports = {
   addNewWarehouse: async (req, res, next) => {
+    const ormTransaction = await model.sequelize.transaction();
     try {
       console.log(`ini dari req body`, req.body);
       let cekWarehouse = await model.warehouse.findAll({
@@ -33,7 +34,7 @@ module.exports = {
 
         let koordinat = await (
           await axios.get(
-            `https://api.opencagedata.com/geocode/v1/json?q=${city}&key=e2823746c2e14794a1a9f2b316dbaeb2`
+            `https://api.opencagedata.com/geocode/v1/json?q=${city}&key=${process.env.OPENCAGE_KEY}`
           )
         ).data;
         console.log(`ini koordinat`, koordinat.results[0].geometry.lat);
@@ -54,22 +55,27 @@ module.exports = {
           city_id,
           province_id: provinceId,
           location: location,
+        }, {
+          transaction: ormTransaction,
         });
 
         // console.log(addNewWarehouse);
 
+        await ormTransaction.commit();
         return res.status(200).send({
           success: true,
           message: "warehouse added",
           data: addNewWarehouse,
         });
       } else {
+        await ormTransaction.commit();
         return res.status(400).send({
           success: false,
           message: "name, email, phone, or address exist",
         });
       }
     } catch (error) {
+      await ormTransaction.rollback();
       console.log(`error`, error);
       next(error);
     }
@@ -126,6 +132,7 @@ module.exports = {
   },
 
   updateWarehouse: async (req, res, next) => {
+    const ormTransaction = await model.sequelize.transaction();
     try {
       console.log(`ini dari req params`, req.params.uuid);
       const {
@@ -155,7 +162,7 @@ module.exports = {
 
         let koordinat = await (
           await axios.get(
-            `https://api.opencagedata.com/geocode/v1/json?q=${city}&key=e2823746c2e14794a1a9f2b316dbaeb2`
+            `https://api.opencagedata.com/geocode/v1/json?q=${city}&key=${process.env.OPENCAGE_KEY}`
           )
         ).data;
         console.log(`ini koordinat`, koordinat.results[0].geometry.lat);
@@ -181,29 +188,34 @@ module.exports = {
             where: {
               uuid: req.params.uuid,
             },
-          }
-        );
+          }, {
+          transaction: ormTransaction,
+        });
 
         console.log(`editWarehouse`, editWarehouse);
 
+        await ormTransaction.commit();
         return res.status(200).send({
           success: true,
           message: "warehouse update",
           data: editWarehouse,
         });
       } else {
+        await ormTransaction.commit();
         return res.status(400).send({
           success: false,
           message: "name, email, phone, or address exist",
         });
       }
     } catch (error) {
+      await ormTransaction.rollback();
       console.log(error);
       next(error);
     }
   },
 
   deleteWarehouse: async (req, res, next) => {
+    const ormTransaction = await model.sequelize.transaction();
     try {
       let findWarehouse = await model.warehouse.findAll({
         where: {
@@ -220,10 +232,13 @@ module.exports = {
             where: {
               uuid: req.params.uuid,
             },
-          }
-        );
+          }, {
+          transaction: ormTransaction,
+        });
         console.log(`deleteWarehouse`, deleteWarehouse);
-        res.status(200).send({
+
+        await ormTransaction.commit();
+        return res.status(200).send({
           success: true,
           message: "warehouse is not operating",
         });
@@ -234,15 +249,19 @@ module.exports = {
             where: {
               uuid: req.params.uuid,
             },
-          }
-        );
+          }, {
+          transaction: ormTransaction,
+        });
         console.log(`deleteWarehouse`, deleteWarehouse);
-        res.status(200).send({
+
+        await ormTransaction.commit();
+        return res.status(200).send({
           success: true,
           message: "warehouse is now operating",
         });
       }
     } catch (error) {
+      await ormTransaction.rollback();
       console.log(`ini error`, error);
       next(error);
     }
