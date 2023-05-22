@@ -566,7 +566,8 @@ function Product() {
             memoryId: null,
             warehouseId: null,
             price: 0,
-            stock: 0
+            stock: 0,
+            discount: 0
         }
         setVariationsEdit([...variationsEdit, newVariaton])
     }

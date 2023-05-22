@@ -5,8 +5,10 @@ import { Await, NavLink, useParams } from 'react-router-dom'
 import { API_URL } from '../helper'
 import axios from 'axios'
 import { HiEye, HiEyeOff } from 'react-icons/hi'
+import { useToast } from '@chakra-ui/react';
 
 function ResetPassword() {
+  const toast = useToast();
   const param = useParams()
   const [password, setPassword] = useState("")
   const [confirmationpassword, setConfirmationPassword] = useState("")
@@ -36,7 +38,13 @@ function ResetPassword() {
         navigate("/");
       }
       else {
-        alert("password not match")
+        // alert("password not match")
+        toast({
+          title: `password not match`,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
       }
     } catch (error) {
       console.log(error)
