@@ -55,8 +55,6 @@ function StockReport() {
 
   // console.log("warehouse", warehouse);
 
-  console.log("stockList", stockList);
-
   const sevenDaysAgo = new Date(today);
   sevenDaysAgo.setDate(today.getDate() - 7);
 
@@ -90,7 +88,7 @@ function StockReport() {
   const getAllWarehouse = async () => {
     try {
       if (roleId === 1) {
-        let res = await axios.get(`${API_URL}/warehouse/allwarehouse`, {
+        let res = await axios.get(`${API_URL}/warehouse/all-warehouse`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -114,7 +112,7 @@ function StockReport() {
 
   const getAllProduct = async () => {
     try {
-      let res = await axios.get(`${API_URL}/report/productlist`, {
+      let res = await axios.get(`${API_URL}/report/product-list`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -171,7 +169,7 @@ function StockReport() {
       }
 
       const res = await axios.get(
-        `${API_URL}/report/allstockmutation?warehouse=${warehouse}&product=${product}&orderby=${orderby}&startdate=${startDate}&enddate=${endDate}&page=${page}&size=${size}`,
+        `${API_URL}/report/all-stockmutation?warehouse=${warehouse}&product=${product}&orderby=${orderby}&startdate=${startDate}&enddate=${endDate}&page=${page}&size=${size}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -195,14 +193,18 @@ function StockReport() {
       return (
         <Tr>
           <Td textAlign={"center"}>{idx + 1}</Td>
-          <Td textAlign={"center"}>{shorten(val?.order.uuid) || "-"}</Td>
+          {
+            !val.order ?
+              <Td textAlign={"center"}>-</Td> :
+              <Td textAlign={"center"}>{shorten(val?.order.uuid)}</Td>
+          }
           <Td textAlign={"center"}>{val?.type.product.name}</Td>
           <Td textAlign={"center"}>{val?.initialStock}</Td>
           <Td textAlign={"center"}>+ {val?.addition}</Td>
           <Td textAlign={"center"}>- {val?.subtraction}</Td>
           <Td textAlign={"center"}>{val.warehouse?.name || "-"}</Td>
           <Td textAlign={"center"}>{dateFormat(val?.createdAt)}</Td>
-        </Tr>
+        </Tr >
       );
     });
   };
@@ -531,8 +533,8 @@ function StockReport() {
                   </Th>
                 </Tr>
               </Thead>
-              <Tbody overflowY={"scroll"}>
-                {stockList.length == 0 ? <Box>asdsadas</Box> : printTable()}
+              <Tbody overflowY={stockList.length == 0 ? ("hidden") : "scroll"}>
+                {stockList.length == 0 ? <Box>No Data</Box> : printTable()}
               </Tbody>
             </Table>
           </TableContainer>

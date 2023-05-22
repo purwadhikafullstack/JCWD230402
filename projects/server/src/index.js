@@ -23,10 +23,10 @@ const adminRouter = require("./Routers/adminRouter");
 const categoryRouter = require("./Routers/categoryRouter");
 const productRouter = require("./Routers/productRouter");
 const profileRouter = require("./Routers/profileRouter");
-const detailRouter = require("./Routers/detailRouter");
 const checkout = require("./Routers/checkoutRouter");
 const stockMutation = require("./Routers/stockMutationRouter");
 const order = require("./Routers/orderRouter");
+const report = require("./Routers/reportRouter");
 
 app.use("/api/auth", authRouter);
 app.use("/api/rajaongkir", rajaongkirRouter);
@@ -35,13 +35,11 @@ app.use("/api/admin", adminRouter);
 app.use("/api/category", categoryRouter);
 app.use("/api/product", productRouter);
 app.use("/api/profile", profileRouter);
-app.use("/api/detail", detailRouter);
 app.use("/api/checkout", checkout);
 app.use("/api/mutation", stockMutation);
 app.use("/api/order", order);
+app.use("/api/report", report);
 
-const report = require("./Routers/reportRouter");
-app.use("/report", report);
 
 const { statusUpdater } = require("./helpers/schedule");
 

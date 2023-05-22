@@ -211,7 +211,7 @@ function CustomerOrder() {
                       w={"full"}
                       rounded={"xl"}
                       alt="product picture"
-                      src={`${API_URL}${val.orderDetails[0].type.product.productImage}`}
+                      src={`${API_URL}${val.orderdetails[0].type.product.productImage}`}
                     />
                   </Flex>
                   <Flex
@@ -228,7 +228,7 @@ function CustomerOrder() {
                       letterSpacing={"wider"}
                       fontWeight={"hairline"}
                     >
-                      {val.orderDetails[0].type.product.name}
+                      {val.orderdetails[0].type.product.name}
                     </Text>
                     <Text
                       as="p"
@@ -247,9 +247,9 @@ function CustomerOrder() {
                           marginRight: "0.5rem",
                         }}
                       >
-                        {val.orderDetails[0].type.color.color}
+                        {val.orderdetails[0].type.color.color}
                       </span>
-                      {val.orderDetails[0].type.memory.memory} GB
+                      {val.orderdetails[0].type.memory.memory} GB
                     </Text>
                     <Text
                       w={"full"}
@@ -259,7 +259,7 @@ function CustomerOrder() {
                       letterSpacing={"wider"}
                       fontWeight={"hairline"}
                     >
-                      {val.orderDetails[0].totalQty} Pcs
+                      {val.orderdetails[0].totalQty} Pcs
                     </Text>
                     <Text
                       as="p"
@@ -268,17 +268,17 @@ function CustomerOrder() {
                       fontSize={{ base: "sm", md: "lg", lg: "xl" }}
                       letterSpacing={"wider"}
                     >
-                      {formating(val.orderDetails[0].priceOnDate)}
+                      {formating(val.orderdetails[0].priceOnDate)}
                     </Text>
 
-                    {val.orderDetails.length > 1 ? (
+                    {val.orderdetails.length > 1 ? (
                       <Text
                         display={{ base: "none", md: "block" }}
                         textAlign={"left"}
                         color={"gray.400"}
                         fontSize={{ md: "md" }}
                       >
-                        +{val.orderDetails.length - 1} other products
+                        +{val.orderdetails.length - 1} other products
                       </Text>
                     ) : null}
                   </Flex>
@@ -310,7 +310,7 @@ function CustomerOrder() {
                     </Text>
                   </Flex>
                 </Flex>
-                {val.orderDetails.length > 1 ? (
+                {val.orderdetails.length > 1 ? (
                   <Flex
                     justifyContent={"space-between"}
                     display={{ base: "flex", md: "none" }}
@@ -321,7 +321,7 @@ function CustomerOrder() {
                       textAlign={"left"}
                       fontSize={{ base: "sm", md: "md" }}
                     >
-                      +{val.orderDetails.length - 1} other products
+                      +{val.orderdetails.length - 1} other products
                     </Text>
                     <Text
                       display={{ md: "none" }}
@@ -498,7 +498,7 @@ function CustomerOrder() {
   };
 
   const printModalBody = () => {
-    return oneOrderList.orderDetails.map((val, idx) => {
+    return oneOrderList.orderdetails.map((val, idx) => {
       return (
         <>
           <Box
@@ -1030,7 +1030,7 @@ function CustomerOrder() {
                         mb="1"
                       >
                         <Text color={"gray.500"}>
-                          Subtotal ({oneOrderList.orderDetails.length} Items)
+                          Subtotal ({oneOrderList.orderdetails.length} Items)
                         </Text>
                         <Text
                           color={"gray.400"}

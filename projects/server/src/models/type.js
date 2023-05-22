@@ -36,8 +36,8 @@ module.exports = (sequelize, DataTypes) => {
     type.belongsTo(models.memory, { foreignKey: "memoryId" });
     type.belongsTo(models.status, { foreignKey: "statusId" });
     type.belongsTo(models.warehouse, { foreignKey: "warehouseId" });
-    type.hasMany(models.stockMutation, { foreignKey: "typeId" });
-    type.hasMany(models.orderDetail, { foreignKey: "typeId" });
+    type.hasMany(models.stockmutation, { foreignKey: "typeId" });
+    type.hasMany(models.orderdetail, { foreignKey: "typeId" });
   };
 
   return type;

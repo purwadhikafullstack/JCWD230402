@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class stockMutation extends Model {
+  class stockmutation extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
 
-  stockMutation.init(
+  stockmutation.init(
     {
       typeId: DataTypes.INTEGER,
       addition: DataTypes.INTEGER,
@@ -28,16 +28,16 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "stockMutation",
+      modelName: "stockmutation",
     }
   );
 
-  stockMutation.associate = (models) => {
-    stockMutation.belongsTo(models.type, { foreignKey: "typeId" });
-    stockMutation.belongsTo(models.status, { foreignKey: "statusId" });
-    stockMutation.belongsTo(models.warehouse, { foreignKey: "supplierId" });
-    stockMutation.belongsTo(models.order, { foreignKey: "orderId" });
+  stockmutation.associate = (models) => {
+    stockmutation.belongsTo(models.type, { foreignKey: "typeId" });
+    stockmutation.belongsTo(models.status, { foreignKey: "statusId" });
+    stockmutation.belongsTo(models.warehouse, { foreignKey: "supplierId" });
+    stockmutation.belongsTo(models.order, { foreignKey: "orderId" });
   };
 
-  return stockMutation;
+  return stockmutation;
 };
