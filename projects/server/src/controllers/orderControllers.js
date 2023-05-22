@@ -259,7 +259,7 @@ module.exports = {
                   findInfo[0].dataValues.stock - findInfo[0].dataValues.booked
                 ) {
                   //  bikin stock mutation utk dri warehouse terdekat meminta warehouse yg punya item tsb
-                  await model.stockMutation.create({
+                  await model.stockmutation.create({
                     typeId: findInfo[0].dataValues.id,
                     initialStock: updatedDelivererType.dataValues.stock,
                     addition:
@@ -275,7 +275,7 @@ module.exports = {
                   });
 
                   // bikin stock mutation dri warehouse yg bawa item ke warehouse yg pling dkat
-                  await model.stockMutation.create({
+                  await model.stockmutation.create({
                     typeId: findInfo[0].dataValues.id,
                     initialStock: findInfo[0].dataValues.stock,
                     subtraction:
@@ -321,7 +321,7 @@ module.exports = {
                   );
                 } else if (updatedCart[i].dataValues.totalQty > 0) {
                   //  bikin stock mutation dri warehouse terdekat meminta warehouse yg punya item tsb
-                  await model.stockMutation.create({
+                  await model.stockmutation.create({
                     typeId: findInfo[0].dataValues.id,
                     initialStock: updatedDelivererType.dataValues.stock,
                     addition: updatedCart[i].dataValues.totalQty,
@@ -335,7 +335,7 @@ module.exports = {
                   });
 
                   // bikin stock mutation dri warehouse yg bawa item ke warehouse yg pling dkat
-                  await model.stockMutation.create({
+                  await model.stockmutation.create({
                     typeId: findInfo[0].dataValues.id,
                     initialStock: findInfo[0].dataValues.stock,
                     subtraction: updatedCart[i].dataValues.totalQty,
@@ -380,7 +380,7 @@ module.exports = {
                   );
 
                   // bikin order detail
-                  await model.orderDetail.create({
+                  await model.orderdetail.create({
                     priceOnDate: findbooked[0].dataValues.discountedPrice,
                     totalQty: cart[i].dataValues.totalQty,
                     totalPrice:
@@ -424,7 +424,7 @@ module.exports = {
               );
 
               // Step 2. bikin order detail untuk tiap product yg di order customer.
-              await model.orderDetail.create({
+              await model.orderdetail.create({
                 priceOnDate: findbooked[0].dataValues.discountedPrice,
                 totalQty: cart[i].dataValues.totalQty,
                 totalPrice:
@@ -480,7 +480,7 @@ module.exports = {
                   findInfo[0].dataValues.stock - findInfo[0].dataValues.booked
                 ) {
                   //  bikin stock mutation dri warehouse terdekat meminta warehouse yg punya item tsb
-                  await model.stockMutation.create({
+                  await model.stockmutation.create({
                     typeId: findInfo[0].dataValues.id,
                     addition:
                       findInfo[0].dataValues.stock -
@@ -494,7 +494,7 @@ module.exports = {
                     creatorId: chosenWarehouseId,
                   });
                   // bikin stock mutation dri warehouse yg bawa item ke warehouse yg pling dkat
-                  await model.stockMutation.create({
+                  await model.stockmutation.create({
                     typeId: findInfo[0].dataValues.id,
                     initialStock: findInfo[0].dataValues.stock,
                     subtraction:
@@ -567,7 +567,7 @@ module.exports = {
                     // klo ada
 
                     //  bikin stock mutation dri warehouse terdekat meminta warehouse yg punya item tsb
-                    await model.stockMutation.create({
+                    await model.stockmutation.create({
                       typeId: findInfo[0].dataValues.id,
                       initialStock: checkType.dataValues.stock,
                       addition: updatedCart[i].dataValues.totalQty,
@@ -581,7 +581,7 @@ module.exports = {
                     });
 
                     // bikin stock mutation dri warehouse yg bawa item ke warehouse yg pling dkat
-                    await model.stockMutation.create({
+                    await model.stockmutation.create({
                       typeId: findInfo[0].dataValues.id,
                       initialStock: findInfo[0].dataValues.stock,
                       subtraction: updatedCart[i].dataValues.totalQty,
@@ -612,7 +612,7 @@ module.exports = {
                     );
 
                     // bikin order detail
-                    await model.orderDetail.create({
+                    await model.orderdetail.create({
                       priceOnDate: findbooked[0].dataValues.discountedPrice,
                       totalQty: cart[i].dataValues.totalQty,
                       totalPrice:
@@ -626,7 +626,7 @@ module.exports = {
                     // klo tidak ada
 
                     //  bikin stock mutation dri warehouse terdekat meminta warehouse yg punya item tsb
-                    await model.stockMutation.create({
+                    await model.stockmutation.create({
                       typeId: findInfo[0].dataValues.id,
 
                       addition: updatedCart[i].dataValues.totalQty,
@@ -640,7 +640,7 @@ module.exports = {
                     });
 
                     // bikin stock mutation dri warehouse yg bawa item ke warehouse yg pling dkat
-                    await model.stockMutation.create({
+                    await model.stockmutation.create({
                       typeId: findInfo[0].dataValues.id,
                       initialStock: findInfo[0].dataValues.stock,
                       subtraction: updatedCart[i].dataValues.totalQty,
@@ -668,7 +668,7 @@ module.exports = {
                     });
 
                     // bikin order detail
-                    await model.orderDetail.create({
+                    await model.orderdetail.create({
                       priceOnDate: findbooked[0].dataValues.discountedPrice,
                       totalQty: cart[i].dataValues.totalQty,
                       totalPrice:
@@ -711,7 +711,7 @@ module.exports = {
                 //klo ada
 
                 // 1. bikin stock mutation dri warehouse terdekat meminta warehouse yg punya item tsb
-                await model.stockMutation.create({
+                await model.stockmutation.create({
                   typeId: findbooked[0].dataValues.id,
                   initialStock: checkType.dataValues.stock,
                   addition: cart[i].dataValues.totalQty,
@@ -725,7 +725,7 @@ module.exports = {
                 });
 
                 // 2. bikin stock mutation dri warehouse yg bawa item ke warehouse yg pling dkat
-                await model.stockMutation.create({
+                await model.stockmutation.create({
                   typeId: findbooked[0].dataValues.id,
                   initialStock: findbooked[0].dataValues.stock,
                   subtraction: cart[i].dataValues.totalQty,
@@ -753,7 +753,7 @@ module.exports = {
                   }
                 );
                 // 5. bikin order detail
-                await model.orderDetail.create({
+                await model.orderdetail.create({
                   priceOnDate: findbooked[0].dataValues.discountedPrice,
                   totalQty: cart[i].dataValues.totalQty,
                   totalPrice:
@@ -767,7 +767,7 @@ module.exports = {
                 // klo tidak ada
 
                 // 1. bikin stock mutation dri warehouse terdekat meminta warehouse yg punya item tsb
-                await model.stockMutation.create({
+                await model.stockmutation.create({
                   typeId: findbooked[0].dataValues.id,
                   addition: cart[i].dataValues.totalQty,
                   supplierId: allDistance[i][0].id,
@@ -780,7 +780,7 @@ module.exports = {
                 });
 
                 // 2. bikin stock mutation dri warehouse yg bawa item ke warehouse yg pling dkat
-                await model.stockMutation.create({
+                await model.stockmutation.create({
                   typeId: findbooked[0].dataValues.id,
                   initialStock: findbooked[0].dataValues.stock,
                   subtraction: cart[i].dataValues.totalQty,
@@ -807,7 +807,7 @@ module.exports = {
                   statusId: 3,
                 });
                 // 5. bikin order detail
-                await model.orderDetail.create({
+                await model.orderdetail.create({
                   priceOnDate: findbooked[0].dataValues.discountedPrice,
                   totalQty: cart[i].dataValues.totalQty,
                   totalPrice:
@@ -875,7 +875,7 @@ module.exports = {
           },
           include: [
             {
-              model: model.orderDetail,
+              model: model.orderdetail,
               attributes: { exclude: ["id"] },
               include: [
                 {
@@ -924,7 +924,7 @@ module.exports = {
           attributes: { exclude: ["id", "adminId", "customerId"] },
           include: [
             {
-              model: model.orderDetail,
+              model: model.orderdetail,
               attributes: { exclude: ["id"] },
               include: [
                 {
@@ -989,7 +989,7 @@ module.exports = {
         },
         include: [
           {
-            model: model.orderDetail,
+            model: model.orderdetail,
             attributes: { exclude: ["id"] },
             include: [
               {
@@ -1063,7 +1063,7 @@ module.exports = {
           }
         );
 
-        await model.stockMutation.update(
+        await model.stockmutation.update(
           {
             statusId: 10,
           },
@@ -1111,7 +1111,7 @@ module.exports = {
               attributes: ["uuid", "name"],
             },
             {
-              model: model.orderDetail,
+              model: model.orderdetail,
               attributes: { exclude: ["id"] },
               include: [
                 {
@@ -1155,7 +1155,7 @@ module.exports = {
               attributes: ["uuid", "name"],
             },
             {
-              model: model.orderDetail,
+              model: model.orderdetail,
               attributes: { exclude: ["id"] },
               include: [
                 {
@@ -1215,7 +1215,7 @@ module.exports = {
               attributes: ["uuid", "name"],
             },
             {
-              model: model.orderDetail,
+              model: model.orderdetail,
               attributes: { exclude: ["id"] },
               include: [
                 {
@@ -1262,7 +1262,7 @@ module.exports = {
               attributes: ["uuid", "name"],
             },
             {
-              model: model.orderDetail,
+              model: model.orderdetail,
               attributes: { exclude: ["id"] },
               include: [
                 {
@@ -1312,7 +1312,7 @@ module.exports = {
         },
         include: [
           {
-            model: model.orderDetail,
+            model: model.orderdetail,
             include: [
               {
                 model: model.type,
@@ -1382,7 +1382,7 @@ module.exports = {
         }
       );
 
-      await model.stockMutation.update(
+      await model.stockmutation.update(
         {
           statusId: 11,
           onLocation: 1,
@@ -1456,7 +1456,7 @@ module.exports = {
         }
       );
 
-      await model.stockMutation.update(
+      await model.stockmutation.update(
         {
           statusId: 9,
         },
@@ -1512,7 +1512,7 @@ module.exports = {
       const email = findCustomer.dataValues.email;
 
       // 2. change all stock mutation with the same orderID to be onlocation and status to processing
-      await model.stockMutation.update(
+      await model.stockmutation.update(
         {
           onLocation: 1,
           statusId: 12,
@@ -1525,7 +1525,7 @@ module.exports = {
       );
 
       // 3. find number of orderdetail to find number of product to send
-      const findOrderDetail = await model.orderDetail.findAll({
+      const findOrderDetail = await model.orderdetail.findAll({
         where: {
           orderId: orderId,
         },
@@ -1541,7 +1541,7 @@ module.exports = {
         });
 
         // 5. create stock mutation from chosen warehouse to customer
-        await model.stockMutation.create({
+        await model.stockmutation.create({
           typeId: findOrderDetail[i].dataValues.typeId,
           initialStock: findType.dataValues.stock,
           subtraction: findOrderDetail[i].dataValues.totalQty,

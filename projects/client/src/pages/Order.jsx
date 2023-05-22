@@ -50,7 +50,7 @@ function Order() {
 
   const [status, setStatus] = React.useState(0);
   const [orderList, setOrderList] = React.useState([]);
-  const [orderDetails, setOrderDetails] = React.useState(null);
+  const [orderdetails, setOrderDetails] = React.useState(null);
   const [warehouseList, setWarehouseList] = React.useState([]);
   const [warehouseListId, setWarehouseListId] = React.useState(0);
 
@@ -181,6 +181,8 @@ function Order() {
     getOrder();
   }, [status, orderBy]);
 
+
+  console.log(`orderList`, orderList);
   const printOrder = () => {
     if (orderList.length === 0) {
       return (
@@ -245,25 +247,25 @@ function Order() {
                   }}
                   rounded={"xl"}
                   alt="product picture"
-                  src={`${API_URL}${val.orderDetails[0].type.product.productImage}`}
+                  src={`${API_URL}${val.orderdetails[0].type.product.productImage}`}
                 />
 
                 <Box>
-                  <Text>{val.orderDetails[0].type.product.name}</Text>
+                  <Text>{val.orderdetails[0].type.product.name}</Text>
                   <Text>
-                    {val.orderDetails[0].type.color.color} |{" "}
-                    {val.orderDetails[0].type.memory.memory}
+                    {val.orderdetails[0].type.color.color} |{" "}
+                    {val.orderdetails[0].type.memory.memory}
                   </Text>
-                  <Text>{val.orderDetails[0].totalQty} Pcs</Text>
+                  <Text>{val.orderdetails[0].totalQty} Pcs</Text>
 
-                  {val.orderDetails.length > 1 ? (
+                  {val.orderdetails.length > 1 ? (
                     <Text
                       display={{ base: "none", md: "block" }}
                       textAlign={"left"}
                       color={"gray.400"}
                       fontSize={{ md: "md" }}
                     >
-                      +{val.orderDetails.length - 1} other products
+                      +{val.orderdetails.length - 1} other products
                     </Text>
                   ) : null}
                 </Box>
@@ -376,7 +378,7 @@ function Order() {
   };
 
   const printProductDetails = () => {
-    return orderDetails?.orderDetails.map((val, idx) => {
+    return orderdetails?.orderdetails.map((val, idx) => {
       return (
         <>
           <Box
@@ -842,7 +844,7 @@ function Order() {
                   fontSize={{ base: "md" }}
                   mb="1"
                 >
-                  <Text fontWeight={"bold"}>{orderDetails?.status.status}</Text>
+                  <Text fontWeight={"bold"}>{orderdetails?.status.status}</Text>
                 </Flex>
                 <Flex
                   justifyContent={"space-between"}
@@ -850,7 +852,7 @@ function Order() {
                 >
                   <Text color={"gray.500"}>Purchase Date</Text>
                   <Text>
-                    {orderDetails ? dateFormat(orderDetails?.createdAt) : ""}
+                    {orderdetails ? dateFormat(orderdetails?.createdAt) : ""}
                   </Text>
                 </Flex>
               </Box>
@@ -887,7 +889,7 @@ function Order() {
                   mb="1"
                 >
                   <Text color={"gray.500"}>
-                    Subtotal ({orderDetails?.orderDetails.length} Items)
+                    Subtotal ({orderdetails?.orderdetails.length} Items)
                   </Text>
                   <Text
                     color={"gray.400"}
@@ -895,7 +897,7 @@ function Order() {
                     fontWeight={"semibold"}
                   >
                     {formating(
-                      orderDetails?.finalPrice / 1.1 - orderDetails?.deliveryFee
+                      orderdetails?.finalPrice / 1.1 - orderdetails?.deliveryFee
                     )}
                   </Text>
                 </Flex>
@@ -911,7 +913,7 @@ function Order() {
                     fontSize={{ base: "sm" }}
                     fontWeight={"semibold"}
                   >
-                    {formating(orderDetails?.deliveryFee)}
+                    {formating(orderdetails?.deliveryFee)}
                   </Text>
                 </Flex>
                 <Flex
@@ -926,7 +928,7 @@ function Order() {
                     fontSize={{ base: "sm" }}
                     fontWeight={"semibold"}
                   >
-                    {formating((orderDetails?.finalPrice / 1.1) * 0.1)}
+                    {formating((orderdetails?.finalPrice / 1.1) * 0.1)}
                   </Text>
                 </Flex>
                 <Flex
@@ -938,7 +940,7 @@ function Order() {
                 >
                   <Text>Final Price</Text>
                   <Text fontSize={{ base: "sm" }}>
-                    {formating(orderDetails?.finalPrice)}
+                    {formating(orderdetails?.finalPrice)}
                   </Text>
                 </Flex>
               </Box>
@@ -950,8 +952,8 @@ function Order() {
                   <Image
                     alt="product picture"
                     src={
-                      orderDetails?.paymentProof
-                        ? `${API_URL}${orderDetails?.paymentProof}`
+                      orderdetails?.paymentProof
+                        ? `${API_URL}${orderdetails?.paymentProof}`
                         : emptyImg
                     }
                     style={{

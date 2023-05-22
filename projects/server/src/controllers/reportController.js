@@ -10,7 +10,7 @@ module.exports = {
       let endDate = new Date(req.query.enddate);
       endDate.setDate(endDate.getDate() + 1);
 
-      const getSummary = await model.stockMutation.findAll({
+      const getSummary = await model.stockmutation.findAll({
         where: {
           creatorId: req.query.warehouse,
           createdAt: {
@@ -114,7 +114,7 @@ module.exports = {
         };
       }
 
-      const getChanges = await model.stockMutation.findAndCountAll({
+      const getChanges = await model.stockmutation.findAndCountAll({
         offset: parseInt(page * size),
         limit: parseInt(size),
         where: whereOptions,

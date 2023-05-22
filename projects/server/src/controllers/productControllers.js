@@ -391,7 +391,7 @@ module.exports = {
 
       console.log(`findStock`, findStock);
       if (req.body.stock - findStock.dataValues.stock < 0) {
-        let stockMutation = await model.stockMutation.create({
+        let stockMutation = await model.stockmutation.create({
           typeId: req.params.id,
           subtraction: Math.abs(req.body.stock - findStock.dataValues.stock),
           statusId: 7,
@@ -403,7 +403,7 @@ module.exports = {
 
         console.log(`stockMutation`, stockMutation);
       } else {
-        let stockMutation = await model.stockMutation.create({
+        let stockMutation = await model.stockmutation.create({
           typeId: req.params.id,
           addition: Math.abs(req.body.stock - findStock.dataValues.stock),
           statusId: 7,

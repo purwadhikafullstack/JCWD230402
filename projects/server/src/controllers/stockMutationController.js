@@ -68,7 +68,7 @@ module.exports = {
             console.log(`cektype`, cekType);
 
             if (cekType) {
-                let requestStock = await model.stockMutation.create({
+                let requestStock = await model.stockmutation.create({
                     typeId: cekType.dataValues.id,
                     addition: stock,
                     subStraction: 0,
@@ -116,7 +116,7 @@ module.exports = {
                 })
                 console.log(`addVariant`, addVariant);
 
-                let stockMutation = await model.stockMutation.create({
+                let stockMutation = await model.stockmutation.create({
                     typeId: addVariant.dataValues.id,
                     addition: stock,
                     subStraction: 0,
@@ -153,7 +153,7 @@ module.exports = {
         try {
             if (req.query.warehouseId) {
                 console.log(`ini req.query`, req.query);
-                let getRequest = await model.stockMutation.findAll({
+                let getRequest = await model.stockmutation.findAll({
                     where: {
                         requestId: 1,
                         supplierId: req.query.warehouseId,
@@ -183,7 +183,7 @@ module.exports = {
                 })
 
             } else {
-                let getRequest = await model.stockMutation.findAll({
+                let getRequest = await model.stockmutation.findAll({
                     where: {
                         requestId: 1,
                         statusId: 6
@@ -228,7 +228,7 @@ module.exports = {
         try {
             if (req.query.warehouseId) {
                 console.log(`ini req.query`, req.query);
-                let getSend = await model.stockMutation.findAll({
+                let getSend = await model.stockmutation.findAll({
                     where: {
                         requestId: 1,
                         creatorId: req.query.warehouseId,
@@ -263,7 +263,7 @@ module.exports = {
                 })
             } else {
                 console.log(`ini req.query`, req.query);
-                let getSend = await model.stockMutation.findAll({
+                let getSend = await model.stockmutation.findAll({
                     where: {
                         requestId: 1,
                         statusId: {
@@ -329,7 +329,7 @@ module.exports = {
                 })
             } else {
                 //jika cukup, maka stockmutation yang request menjadi complete
-                let accept = await model.stockMutation.update({
+                let accept = await model.stockmutation.update({
                     statusId: 7
                 }, {
                     where: {
@@ -354,7 +354,7 @@ module.exports = {
                 console.log(`updateStock`, updateStock);
 
                 // bikin stock mutation untuk warehouse yang diminta
-                let changeStock = await model.stockMutation.create({
+                let changeStock = await model.stockmutation.create({
                     typeId: findType.dataValues.id,
                     addition: 0,
                     subtraction: req.body.request,
@@ -413,7 +413,7 @@ module.exports = {
         try {
             console.log(`req.params`, req.params);
 
-            let rejectRequest = await model.stockMutation.update({
+            let rejectRequest = await model.stockmutation.update({
                 statusId: 8
             }, {
                 where: {
