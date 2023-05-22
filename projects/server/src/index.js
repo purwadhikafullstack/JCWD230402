@@ -1,5 +1,5 @@
 const { join } = require("path");
-require('dotenv').config({path:join(__dirname,'../.env')});
+require("dotenv").config({ path: join(__dirname, "../.env") });
 const express = require("express");
 const cors = require("cors");
 const PORT = process.env.PORT || 8000;
@@ -40,18 +40,17 @@ app.use("/api/mutation", stockMutation);
 app.use("/api/order", order);
 app.use("/api/report", report);
 
-
 const { statusUpdater } = require("./helpers/schedule");
 
-app.get("/api", (req, res) => {
-  res.send(`Hello, this is my API`);
-});
+// app.get("/api", (req, res) => {
+//   res.send(`Hello, this is my API`);
+// });
 
-app.get("/api/greetings", (req, res, next) => {
-  res.status(200).json({
-    message: "Hello, Student !",
-  });
-});
+// app.get("/api/greetings", (req, res, next) => {
+//   res.status(200).json({
+//     message: "Hello, Student !",
+//   });
+// });
 
 // ===========================
 

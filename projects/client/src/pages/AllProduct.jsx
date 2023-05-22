@@ -54,8 +54,6 @@ function AllProduct() {
         {}
       );
 
-      console.log(`response getallprodcut =`, res);
-
       setProductList(res.data.data);
       setTotalData(res.data.datanum);
     } catch (error) {
@@ -115,17 +113,11 @@ function AllProduct() {
   }
 
   useEffect(() => {
-    console.log("current filtering", filter);
-    console.log("filtering length", filter.length);
-  }, [filter]);
-
-  useEffect(() => {
     getAllProducts();
   }, []);
 
   useEffect(() => {
     getAllProducts();
-    console.log("page number: ", page);
   }, [sortby, order, page]);
 
   const onSearchBtn = () => {

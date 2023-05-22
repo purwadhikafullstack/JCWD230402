@@ -180,7 +180,7 @@ function Checkout() {
           },
         }
       );
-      console.log(`ini dari resp btnSaveNewAddress`, res);
+      // console.log(`ini dari resp btnSaveNewAddress`, res);
 
       if (res.data.success) {
         alert(res.data.message);
@@ -213,7 +213,7 @@ function Checkout() {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(`getallAddress`, res.data.data);
+      // console.log(`getallAddress`, res.data.data);
       setAddressList(res.data.data);
     } catch (error) {
       console.log(error);

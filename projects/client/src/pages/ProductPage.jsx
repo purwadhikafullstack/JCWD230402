@@ -68,7 +68,6 @@ function ProductPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState("password");
-  // const [detailsList, setDetailsList] = useState([]);
 
   const getProduct = async () => {
     try {
@@ -77,7 +76,6 @@ function ProductPage() {
       );
 
       setProductData(res.data.data);
-      // console.log(productData);
       setLoading(false);
       if (!res.data.data) {
         navigate("*");
@@ -367,7 +365,6 @@ function ProductPage() {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("getcart", res.data.datanum);
 
       dispatch(cartAction(res.data.datanum));
     } catch (error) {
@@ -853,8 +850,6 @@ function ProductPage() {
               </AccordionPanel>
             </AccordionItem>
           </Accordion>
-
-          {/* {printDetails()} */}
         </>
       )}
     </>

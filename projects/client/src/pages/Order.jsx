@@ -32,7 +32,7 @@ import {
 import emptyImg from "../img/empty.png";
 import React from "react";
 import axios from "axios";
-import { API_URL } from "../helper";
+import { API_URL, API_IMG_URL } from "../helper";
 import { useSelector } from "react-redux";
 import Pagination from "../components/Pagination";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -181,7 +181,6 @@ function Order() {
     getOrder();
   }, [status, orderBy]);
 
-
   console.log(`orderList`, orderList);
   const printOrder = () => {
     if (orderList.length === 0) {
@@ -247,7 +246,7 @@ function Order() {
                   }}
                   rounded={"xl"}
                   alt="product picture"
-                  src={`${API_URL}${val.orderdetails[0].type.product.productImage}`}
+                  src={`${API_IMG_URL}${val.orderdetails[0].type.product.productImage}`}
                 />
 
                 <Box>
@@ -412,7 +411,7 @@ function Order() {
                     w={"full"}
                     rounded={"xl"}
                     alt="product picture"
-                    src={`${API_URL}${val.type.product.productImage}`}
+                    src={`${API_IMG_URL}${val.type.product.productImage}`}
                   />
                 </Flex>
                 <Flex
@@ -810,7 +809,10 @@ function Order() {
             <Box>{printOrder()}</Box>
           </TabPanel>
         </TabPanels>
-        <Flex justifyContent={"center"}>
+        <Flex
+          justifyContent={"center"}
+          display={orderList.length === 0 ? "none" : "flex"}
+        >
           <Pagination
             paginate={paginate}
             size={size}
@@ -953,7 +955,7 @@ function Order() {
                     alt="product picture"
                     src={
                       orderdetails?.paymentProof
-                        ? `${API_URL}${orderdetails?.paymentProof}`
+                        ? `${API_IMG_URL}${orderdetails?.paymentProof}`
                         : emptyImg
                     }
                     style={{
