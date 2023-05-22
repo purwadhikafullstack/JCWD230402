@@ -230,6 +230,7 @@ function UserManagement() {
           setGender("");
           setWarehouse();
           setRole();
+          setVisible("password");
           toast({
             title: `${res.data.message}`,
             status: "success",
@@ -327,7 +328,6 @@ function UserManagement() {
     name,
     email,
     phone,
-    password,
     uuid,
     gender,
     warehouseId,
@@ -337,16 +337,15 @@ function UserManagement() {
     setUsername(name);
     setEmail(email);
     setPhone(phone);
-    setPassword(password);
     setUuid(uuid);
     setGender(gender);
     setWarehouse(warehouseId);
     setRole(roleId);
   };
 
-  const btnSaveEditAdmin = async () => { 
+  const btnSaveEditAdmin = async () => {
     try {
-      if (username == "" || email == "" || phone == "" || password == "") {
+      if (username == "" || email == "" || phone == "" ) {
         toast({
           title: `your input is empty`,
           status: "error",
@@ -361,7 +360,6 @@ function UserManagement() {
             email: email,
             phone: phone,
             gender: gender,
-            password: password,
             warehouseId: warehouse,
           },
           {
@@ -383,7 +381,6 @@ function UserManagement() {
           getAllAdmin();
           setUsername("");
           setEmail("");
-          setPassword("");
           setPhone("");
           setGender("");
           setWarehouse();
@@ -417,12 +414,10 @@ function UserManagement() {
     getAllAdmin();
     setUsername("");
     setEmail("");
-    setPassword("");
     setPhone("");
     setGender("");
     setWarehouse();
     setRole();
-    setVisible("password");
   };
 
   const sorting = (sortbywhat) => {
@@ -668,7 +663,7 @@ function UserManagement() {
               <ModalBody pb={6}>
                 <Flex>
                   <Box>
-                    <FormControl>
+                    <FormControl isRequired>
                       <FormLabel>User Name</FormLabel>
                       <Input
                         onChange={(e) => setUsername(e.target.value)}
@@ -677,7 +672,7 @@ function UserManagement() {
                       />
                     </FormControl>
 
-                    <FormControl mt={2}>
+                    <FormControl mt={2} isRequired>
                       <FormLabel>Email</FormLabel>
                       <Input
                         onChange={(e) => setEmail(e.target.value)}
@@ -686,27 +681,7 @@ function UserManagement() {
                       />
                     </FormControl>
 
-                    <FormControl mt={2}>
-                      <FormLabel>Password</FormLabel>
-                      <Flex>
-                        <Input
-                          onChange={(e) => setPassword(e.target.value)}
-                          type={visible}
-                          placeholder={"Password"}
-                          defaultValue={password}
-                        ></Input>
-                        <Button
-                          bgColor={"white"}
-                          _hover={"none"}
-                          fontSize={"xl"}
-                          onClick={klik}
-                        >
-                          {visible === "password" ? <HiEyeOff /> : <HiEye />}
-                        </Button>
-                      </Flex>
-                    </FormControl>
-
-                    <FormControl>
+                    <FormControl  mt={2} isRequired>
                       <FormLabel>Phone</FormLabel>
                       <Input
                         onChange={(e) => setPhone(e.target.value)}
@@ -729,7 +704,7 @@ function UserManagement() {
                       </Select>
                     </FormControl>
 
-                    <FormControl mt={2}>
+                    <FormControl mt={2} isRequired>
                       <FormLabel>Role</FormLabel>
                       <Select
                         width={"64"}
@@ -742,7 +717,7 @@ function UserManagement() {
                       </Select>
                     </FormControl>
 
-                    <FormControl mt={2}>
+                    <FormControl mt={2} isRequired>
                       <FormLabel>Warehouse</FormLabel>
                       <Select
                         placeholder={"-- Select --"}
