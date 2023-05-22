@@ -1,7 +1,7 @@
-require("dotenv/config");
+const { join } = require("path");
+require('dotenv').config({path:join(__dirname,'../.env')});
 const express = require("express");
 const cors = require("cors");
-const { join } = require("path");
 const PORT = process.env.PORT || 8000;
 const app = express();
 const bearerToken = require("express-bearer-token");
@@ -17,37 +17,28 @@ app.use("/", express.static(__dirname + "/public"));
 // ===========================
 // NOTE : Add your routes here
 const authRouter = require("./Routers/authRouter");
-app.use("/auth", authRouter);
-
 const rajaongkirRouter = require("./Routers/rajaongkirRouter");
-app.use("/rajaongkir", rajaongkirRouter);
-
 const warehouseRouter = require("./Routers/warehouseRouter");
-app.use("/warehouse", warehouseRouter);
-
 const adminRouter = require("./Routers/adminRouter");
-app.use("/admin", adminRouter);
-
 const categoryRouter = require("./Routers/categoryRouter");
-app.use("/category", categoryRouter);
-
 const productRouter = require("./Routers/productRouter");
-app.use("/product", productRouter);
-
 const profileRouter = require("./Routers/profileRouter");
-app.use("/profile", profileRouter);
-
 const detailRouter = require("./Routers/detailRouter");
-app.use("/detail", detailRouter);
-
 const checkout = require("./Routers/checkoutRouter");
-app.use("/checkout", checkout);
-
 const stockMutation = require("./Routers/stockMutationRouter");
-app.use("/stockmutation", stockMutation);
-
 const order = require("./Routers/orderRouter");
-app.use("/order", order);
+
+app.use("/api/auth", authRouter);
+app.use("/api/rajaongkir", rajaongkirRouter);
+app.use("/api/warehouse", warehouseRouter);
+app.use("/api/admin", adminRouter);
+app.use("/api/category", categoryRouter);
+app.use("/api/product", productRouter);
+app.use("/api/profile", profileRouter);
+app.use("/api/detail", detailRouter);
+app.use("/api/checkout", checkout);
+app.use("/api/mutation", stockMutation);
+app.use("/api/order", order);
 
 const { statusUpdater } = require("./helpers/schedule");
 

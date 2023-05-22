@@ -8,4 +8,5 @@ export const checkEmail = (email) => {
 };
 
 // export const API_URL = "http://localhost:2000";
-export const API_URL = "http://localhost:8000";
+export const API_URL = "http://localhost:2342/api";
+export const API_IMG_URL = "http://localhost:2342";

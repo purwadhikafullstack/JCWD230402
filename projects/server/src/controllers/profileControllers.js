@@ -14,7 +14,7 @@ module.exports = {
       let getUser = await model.customer.findAll({});
       console.log(`getUser`, getUser);
 
-      res.status(200).send({
+      return res.status(200).send({
         success: true,
         data: getUser,
       });
@@ -40,7 +40,7 @@ module.exports = {
           message: "Edit profile success ",
         });
       } else {
-        res.status(400).send({
+        return res.status(400).send({
           success: false,
           message: "Cannot change data",
         });
@@ -90,7 +90,7 @@ module.exports = {
 
         let coordinate = await (
           await axios.get(
-            `https://api.opencagedata.com/geocode/v1/json?q=${city}&key=e2823746c2e14794a1a9f2b316dbaeb2`
+            `https://api.opencagedata.com/geocode/v1/json?q=${city}&key=${process.env.OPENCAGE_KEY}`
           )
         ).data;
         // console.log('this coordinate:', coordinate.results[0].geometry.lat)
@@ -131,7 +131,11 @@ module.exports = {
 
   getAddress: async (req, res, next) => {
     try {
-      let data = await model.address.findAll();
+      let data = await model.address.findAll({
+        where: {
+          customerId: req.params.id
+        }
+      });
       console.log(`data`, data);
 
       return res.status(200).send(data);
@@ -157,7 +161,7 @@ module.exports = {
           req.body;
 
         let coordinate = await axios.get(
-          `https://api.opencagedata.com/geocode/v1/json?q=${city}&key=e2823746c2e14794a1a9f2b316dbaeb2`
+          `https://api.opencagedata.com/geocode/v1/json?q=${city}&key=${process.env.OPENCAGE_KEY}`
         );
 
         console.log(`ini coordinate`, coordinate.results);
@@ -222,7 +226,7 @@ module.exports = {
           }
         );
         console.log(`deleteAddress`, deleteAddress);
-        res.status(200).send({
+        return res.status(200).send({
           success: true,
         });
       } else {
@@ -235,7 +239,7 @@ module.exports = {
           }
         );
         console.log(`deleteAddress`, deleteAddress);
-        res.status(200).send({
+        return res.status(200).send({
           success: true,
         });
       }
@@ -276,7 +280,7 @@ module.exports = {
           where: { uuid: req.decript.uuid },
         }
       );
-      res.status(200).send({
+      return res.status(200).send({
         success: true,
         message: "Profile photo changed ✅",
         profileImage: `/profileImage/${req.files[0]?.filename}`,
@@ -342,11 +346,11 @@ module.exports = {
         isPrimary: 1
       }, {
         where: {
-          id: parseInt(req.body.id) 
+          id: parseInt(req.body.id)
         }
       })
 
-      res.status(200).send({
+      return res.status(200).send({
         status: true,
         message: `primariy address has changed`
       })

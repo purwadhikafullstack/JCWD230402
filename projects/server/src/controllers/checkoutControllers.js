@@ -38,9 +38,9 @@ module.exports = {
         let a =
           Math.sin(dLat / 2) * Math.sin(dLat / 2) +
           Math.cos((lat1 * Math.PI) / 180) *
-            Math.cos((lat2 * Math.PI) / 180) *
-            Math.sin(dLon / 2) *
-            Math.sin(dLon / 2);
+          Math.cos((lat2 * Math.PI) / 180) *
+          Math.sin(dLon / 2) *
+          Math.sin(dLon / 2);
         let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         let d = R * c;
 
@@ -71,14 +71,14 @@ module.exports = {
         },
         {
           headers: {
-            key: `d7b2b7169e378cf16e957b2d0e9d8371`,
+            key: process.env.RAJAONGKIR_KEY,
           },
         }
       );
 
       console.log(`ongkir`, ongkir);
 
-      res.status(200).send({
+      return res.status(200).send({
         data: ongkir.data.rajaongkir.results,
         warehouse: fixDistance.uuid,
       });

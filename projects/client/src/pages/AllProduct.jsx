@@ -15,7 +15,7 @@ import {
 import Pagination from "../components/Pagination";
 import { useLocation, useNavigate } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
-import { API_URL } from "../helper";
+import { API_IMG_URL, API_URL } from "../helper";
 import axios from "axios";
 
 import { BsSortDownAlt } from "react-icons/bs";
@@ -50,7 +50,7 @@ function AllProduct() {
   const getAllProducts = async () => {
     try {
       let res = await axios.get(
-        `${API_URL}/product/customerproduct/?page=${page}&size=${size}&sortby=${sortby}&order=${order}&name=${filter}`,
+        `${API_URL}/product/customer-product/?page=${page}&size=${size}&sortby=${sortby}&order=${order}&name=${filter}`,
         {}
       );
 
@@ -69,7 +69,7 @@ function AllProduct() {
         <ProductCard
           name={val.name}
           uuid={val.uuid}
-          productimage={`${API_URL}${val.productImage}`}
+          productimage={`${API_IMG_URL}${val.productImage}`}
           category={val.category.type}
         />
       );

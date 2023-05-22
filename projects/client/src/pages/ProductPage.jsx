@@ -73,7 +73,7 @@ function ProductPage() {
   const getProduct = async () => {
     try {
       let res = await axios.get(
-        `${API_URL}/product/oneproduct/?name=${nameFromURL}`
+        `${API_URL}/product/one-product/?name=${nameFromURL}`
       );
 
       setProductData(res.data.data);
@@ -109,7 +109,7 @@ function ProductPage() {
   const getColors = async () => {
     try {
       let res = await axios.get(
-        `${API_URL}/product/colorproduct/?name=${nameFromURL}`
+        `${API_URL}/product/color-product/?name=${nameFromURL}`
       );
       setColorVarList(res.data.data);
     } catch (error) {
@@ -173,7 +173,7 @@ function ProductPage() {
   const getMemory = async () => {
     try {
       let res = await axios.get(
-        `${API_URL}/product/memoryproduct/?name=${nameFromURL}&colorId=${colorPick}`
+        `${API_URL}/product/memory-product/?name=${nameFromURL}&colorId=${colorPick}`
       );
 
       setMemoryVarList(res.data.data);
@@ -251,7 +251,7 @@ function ProductPage() {
   const getPrice = async () => {
     try {
       let res = await axios.get(
-        `${API_URL}/product/priceproduct/?name=${nameFromURL}&colorId=${colorPick}&memoryId=${memoryPick}`
+        `${API_URL}/product/price-product/?name=${nameFromURL}&colorId=${colorPick}&memoryId=${memoryPick}`
       );
       setPriceList(res.data);
     } catch (error) {

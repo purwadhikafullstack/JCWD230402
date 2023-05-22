@@ -8,8 +8,11 @@ import { loginAction } from "../reducers/auth";
 import { API_URL } from '../helper';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useToast } from '@chakra-ui/react';
 
 function Register() {
+
+    const toast = useToast();
     // const dispatch = useDispatch();
     // const navigate = useNavigate();
     const [email, setEmail] = useState("");
@@ -17,17 +20,29 @@ function Register() {
 
     const onBtnRegis = async () => {
         try {
-            let res = await axios.post(`${API_URL}/auth/customer/register`, { 
+            let res = await axios.post(`${API_URL}/auth/customer/register`, {
                 email: email,
             }
             );
-            console.log("ini dari btn regis",res);
+            console.log("ini dari btn regis", res);
             if (res.data.success) {
-                alert(res.data.message);
+                // alert(res.data.message);
+                toast({
+                    title: `${res.data.message}`,
+                    status: "success",
+                    duration: 2000,
+                    isClosable: true,
+                });
             }
         } catch (error) {
-            console.log("error",error);
-            alert(error.response.data.error[0].msg);
+            console.log("error", error);
+            // alert(error.response.data.error[0].msg);
+            toast({
+                title: `${error.response.data.error[0].msg}`,
+                status: "success",
+                duration: 2000,
+                isClosable: true,
+            });
         }
 
     }
@@ -49,9 +64,9 @@ function Register() {
                     <button className='bg-slate-200 border-2 border-[#1BFD9C] w-10 h-10 py-1 rounded-[100%] cursor-pointer hover:scale-110 duration-500'><BsFacebook className='m-auto' /></button>
                 </div>
             </div>
-            
+
         </section>
-    
+
     )
 }
 

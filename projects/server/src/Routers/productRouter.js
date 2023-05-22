@@ -27,17 +27,17 @@ route.post("/color", readToken, productController.addColor);
 route.get("/memory", readToken, productController.getMemory);
 route.post("/memory", readToken, productController.addMemory);
 
-route.get("/customerproduct", productController.allProduct);
-route.get("/oneproduct/", productController.oneProduct);
-route.get("/colorproduct", productController.checkColor);
-route.get("/memoryproduct", productController.checkMemory);
-route.get("/priceproduct", productController.checkPrice);
+route.get("/customer-product", productController.allProduct);
+route.get("/one-product/", productController.oneProduct);
+route.get("/color-product", productController.checkColor);
+route.get("/memory-product", productController.checkMemory);
+route.get("/price-product", productController.checkPrice);
 
 route.post("/cart", readToken, productController.addToCart);
 route.get("/cart", readToken, productController.getCart);
 route.patch("/cart/:id", readToken, productController.deleteOneFromCart);
 route.delete("/cart/", readToken, productController.deleteAll);
-route.patch("/minuscart", readToken, productController.minusItem);
-route.patch("/pluscart", readToken, productController.addItem);
+route.patch("/minus-cart", readToken, productController.minusItem);
+route.patch("/plus-cart", readToken, productController.addItem);
 
 module.exports = route;

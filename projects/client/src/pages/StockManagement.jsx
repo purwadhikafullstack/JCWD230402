@@ -65,7 +65,7 @@ function StockManagement() {
 
     const getAllProduct = async () => {
         try {
-            let res = await axios.get(`${API_URL}/stockmutation/allproduct`, {
+            let res = await axios.get(`${API_URL}/mutation/all-product`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -136,7 +136,7 @@ function StockManagement() {
 
     const getWarehouse = async () => {
         try {
-            let res = await axios.post(`${API_URL}/stockmutation/warehouse`, {
+            let res = await axios.post(`${API_URL}/mutation/warehouse`, {
                 productId: productId,
                 colorId: colorId,
                 memoryId: memoryId
@@ -156,7 +156,7 @@ function StockManagement() {
 
     const getAllWarehouse = async () => {
         try {
-            let res = await axios.get(`${API_URL}/warehouse/allwarehouse`, {
+            let res = await axios.get(`${API_URL}/warehouse/all-warehouse`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -204,7 +204,7 @@ function StockManagement() {
     const btnSendRequest = async () => {
         try {
             if (roleId == 1) {
-                let res = await axios.post(`${API_URL}/stockmutation/request`, {
+                let res = await axios.post(`${API_URL}/mutation/request`, {
                     productId: productId,
                     colorId: colorId,
                     memoryId: memoryId,
@@ -232,7 +232,7 @@ function StockManagement() {
                     modalRequest.onClose()
                 }
             } else {
-                let res = await axios.post(`${API_URL}/stockmutation/request`, {
+                let res = await axios.post(`${API_URL}/mutation/request`, {
                     productId: productId,
                     colorId: colorId,
                     memoryId: memoryId,
@@ -289,7 +289,7 @@ function StockManagement() {
     const getRequest = async () => {
         try {
             if (warehouseId) {
-                let res = await axios.get(`${API_URL}/stockmutation/getrequest?warehouseId=${warehouseId}`, {
+                let res = await axios.get(`${API_URL}/mutation/get-request?warehouseId=${warehouseId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -299,12 +299,12 @@ function StockManagement() {
                 setRequest(res.data.data)
                 setLoading(false);
             } else {
-                let res = await axios.get(`${API_URL}/stockmutation/getrequest?warehouseId`, {
+                let res = await axios.get(`${API_URL}/mutation/get-request?warehouseId`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
                 })
-                // console.log(`getRequest :`, res.data.data);
+                console.log(`getRequest :`, res);
 
                 setRequest(res.data.data)
                 setLoading(false);
@@ -372,7 +372,7 @@ function StockManagement() {
     const getSend = async () => {
         try {
             if (warehouseId) {
-                let res = await axios.get(`${API_URL}/stockmutation/getsend?warehouseId=${warehouseId}`, {
+                let res = await axios.get(`${API_URL}/mutation/get-send?warehouseId=${warehouseId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -382,7 +382,7 @@ function StockManagement() {
                 setSend(res.data.data)
 
             } else {
-                let res = await axios.get(`${API_URL}/stockmutation/getsend?warehouseId`, {
+                let res = await axios.get(`${API_URL}/mutation/get-send?warehouseId`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -427,7 +427,7 @@ function StockManagement() {
     const btnAccept = async (id, productId, colorId, memoryId, addition, warehouseRequest, warehouseSend) => {
         try {
             if (roleId == 1) {
-                let res = await axios.patch(`${API_URL}/stockmutation/acceptrequest/${id}`, {
+                let res = await axios.patch(`${API_URL}/mutation/accept-request/${id}`, {
                     productId,
                     colorId,
                     memoryId,
@@ -447,7 +447,7 @@ function StockManagement() {
                     getRequest()
                 }
             } else {
-                let res = await axios.patch(`${API_URL}/stockmutation/acceptrequest/${id}`, {
+                let res = await axios.patch(`${API_URL}/mutation/accept-request/${id}`, {
                     productId,
                     colorId,
                     memoryId,
@@ -481,7 +481,7 @@ function StockManagement() {
 
     const btnReject = async (id) => {
         try {
-            let res = await axios.delete(`${API_URL}/stockmutation/rejectrequest/${id}`, {
+            let res = await axios.delete(`${API_URL}/mutation/reject-request/${id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

@@ -7,7 +7,7 @@ const uploader = require("../helpers/uploader");
 
 route.patch("/edit", readToken, editProfile, profileController.editProfileUser);
 route.get("/", readToken, profileController.getUser);
-route.get("/address", readToken, profileController.getAddress);
+route.get("/address/:id", readToken, profileController.getAddress);
 route.post("/address", readToken, profileController.addNewAddress);
 route.patch("/address", readToken, profileController.updateAddress);
 route.delete("/address", readToken, profileController.deleteAddress);
@@ -17,7 +17,7 @@ route.patch(
   uploader("/profileImage", "PRF").array("profileImage", 1),
   profileController.updateprofileimage
 );
-route.get("/useraddress", readToken, profileController.getUserAddress);
-route.patch("/primaryaddress", readToken, profileController.setPrimary);
+route.get("/user-address", readToken, profileController.getUserAddress);
+route.patch("/primary-address", readToken, profileController.setPrimary);
 
 module.exports = route;

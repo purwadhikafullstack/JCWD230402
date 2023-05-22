@@ -95,7 +95,7 @@ function CustomerOrder() {
     try {
       if (status === 0) {
         const res = await axios.get(
-          `${API_URL}/order/customerorder?order=${orderBy}&page=${page}&size=${size}`,
+          `${API_URL}/order/customer-order?order=${orderBy}&page=${page}&size=${size}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -108,7 +108,7 @@ function CustomerOrder() {
         setTotalData(res.data.datanum);
       } else {
         const res = await axios.get(
-          `${API_URL}/order/customerorder?status=${status}&order=${orderBy}&page=${page}&size=${size}`,
+          `${API_URL}/order/customer-order?status=${status}&order=${orderBy}&page=${page}&size=${size}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -480,7 +480,7 @@ function CustomerOrder() {
   const getOneOrder = async (params) => {
     try {
       modalDetails.onOpen();
-      const res = await axios.get(`${API_URL}/order/oneorder?uuid=${params}`, {
+      const res = await axios.get(`${API_URL}/order/one-order?uuid=${params}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

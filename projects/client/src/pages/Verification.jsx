@@ -5,8 +5,10 @@ import axios from 'axios'
 import { HiEye, HiEyeOff } from 'react-icons/hi'
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useToast } from '@chakra-ui/react'
 
 function Verification() {
+  const toast = useToast()
   const param = useParams()
   const [password, setPassword] = useState("")
   const [confirmationpassword, setConfirmationPassword] = useState("")
@@ -37,11 +39,32 @@ function Verification() {
         navigate("/login");
       }
       else {
-        alert("password not match")
+        // alert("password not match")
+        toast({
+          title: `password not match`,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
       }
     } catch (error) {
       console.log(error)
-      alert(error.response.data.error[0].msg)
+      // alert(error.response.data.error[0].msg)
+      if (error.response.data.error[0].msg == "Invalid value") {
+        toast({
+          title: `Your password is empty`,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
+      } else {
+        toast({
+          title: `${error.response.data.error[0].msg}`,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
+      }
     }
   }
 
@@ -69,7 +92,7 @@ function Verification() {
         </div>
 
         <button type='button' className='text-[#1BFD9C] bg-transparent font-bold border border-[#1BFD9C] rounded-xl w-1/2 mx-auto mt-4 hover:bg-[#1BFD9C] hover:border-white hover:text-black duration-500 hover:scale-110' onClick={verify}>Sign Up</button>
-        
+
       </div>
     </section>
   )

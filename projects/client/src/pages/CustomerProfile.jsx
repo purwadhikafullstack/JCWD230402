@@ -6,16 +6,19 @@ import { MdPhoneIphone } from 'react-icons/md'
 import { BsCamera } from 'react-icons/bs'
 import axios from 'axios';
 import { API_URL } from '../helper';
-import { Radio } from '@chakra-ui/react';
+import { Radio, useToast } from '@chakra-ui/react';
+
 
 function CustomerProfile(props) {
 
+  const toast = useToast();
   const statusId = useSelector((state) => state.authReducer.statusId);
   const nameUser = useSelector((state) => state.authReducer.name);
   const genderUser = useSelector((state) => state.authReducer.gender);
   const phoneUser = useSelector((state) => state.authReducer.phone);
   const addressUser = useSelector((state) => state.authReducer.address);
   const password = useSelector((state) => state.authReducer.password);
+  const id = useSelector((state) => state.authReducer.id);
 
   // ----------------------profileInfo---------------------------//
   const [name, setName] = useState("");
@@ -71,24 +74,37 @@ function CustomerProfile(props) {
       );
       console.log("button saveProfile", response)
       if (response.data.success) {
-        alert(response.data.message);
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000); // this will refresh the page after 1 second
-        setName('')
-        setPhone('')
+        // alert(response.data.message);
+        toast({
+          title: `${response.data.message}`,
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+        });
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 1000); // this will refresh the page after 1 second
+        setName('');
+        setPhone('');
         setGender('');
+        setShowMenu(false);
       };
     } catch (error) {
       console.log("ini error dari onBtnEditProfile : ", error);
-      alert(error.response.data.error[0].msg);
+      // alert(error.response.data.error[0].msg);
+      toast({
+        title: `${error.response.data.error[0].msg}`,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
   }
 
   const btnCancelEdit = () => {
-    setTimeout(() => {
-      window.location.reload();
-    }, 10);
+    // setTimeout(() => {
+    //   window.location.reload();
+    // }, 10);
     setName("")
     setPhone("")
     setGender("")
@@ -141,6 +157,7 @@ function CustomerProfile(props) {
   }
 
   const printProvince = () => {
+    console.log(`province`, province);
     return province.map((val, idx) => {
       return (
         <option
@@ -161,7 +178,6 @@ function CustomerProfile(props) {
 
   const printCity = () => {
     return city.map((val, idx) => {
-
       return (
         <option onClick={() => clickCity(val.city_name, val.postal_Code)}
           value={val.city_id}
@@ -225,7 +241,13 @@ function CustomerProfile(props) {
       console.log(`ini dari resp addnewuser`, res);
 
       if (res.data.success) {
-        alert(res.data.message);
+        // alert(res.data.message);
+        toast({
+          title: `${res.data.message}`,
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+        });
         setPostalCode()
         getAllLocation()
       }
@@ -233,9 +255,21 @@ function CustomerProfile(props) {
     } catch (error) {
       console.log("ini error add Location:", error);
       if (error.response.data.error) {
-        alert(error.response.data.error[0].msg)
+        // alert(error.response.data.error[0].msg)
+        toast({
+          title: `${error.response.data.error[0].msg}`,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
       } else {
-        alert(error.response.data.message)
+        // alert(error.response.data.message)
+        toast({
+          title: `${error.response.data.message}`,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
       }
     }
   }
@@ -247,11 +281,12 @@ function CustomerProfile(props) {
 
   const getAllLocation = async () => {
     try {
-      let res = await axios.get(`${API_URL}/profile/address`, {
+      let res = await axios.get(`${API_URL}/profile/address/${id}`, {
         headers: {
           "Authorization": `Bearer ${token}`
         }
       })
+      console.log(`getAllLocation`, res);
       setAddressList(res.data)
 
     } catch (error) {
@@ -338,8 +373,13 @@ function CustomerProfile(props) {
       })
 
       if (res.data.success) {
-
-        alert(res.data.message);
+        // alert(res.data.message);
+        toast({
+          title: `${res.data.message}`,
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+        });
         setPostalCode()
         getAllLocation()
         setuuid("")
@@ -348,9 +388,21 @@ function CustomerProfile(props) {
     } catch (error) {
       console.log("ini error:", error);
       if (error.response.data.error) {
-        alert(error.response.data.error[0].msg)
+        // alert(error.response.data.error[0].msg)
+        toast({
+          title: `${error.response.data.error[0].msg}`,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
       } else {
-        alert(error.response.data.message)
+        // alert(error.response.data.message)
+        toast({
+          title: `${error.response.data.message}`,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
       }
     }
   }
@@ -364,7 +416,14 @@ function CustomerProfile(props) {
         }
       })
 
-      alert(res.data.message)
+      // alert(res.data.message);
+      toast({
+        title: `${res.data.message}`,
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
+      
       getAllLocation()
     } catch (error) {
       console.log(error);
@@ -420,11 +479,23 @@ function CustomerProfile(props) {
       );
       console.log("response onbtneditprofileimage :", response);
       console.log("response onbtneditprofileimage message be :", response.data.message);
-      alert(response.data.message);
+      // alert(response.data.message);
+      toast({
+        title: `${response.data.message}`,
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
       props.keeplogin(); //refresh immediately once profpic updated
     } catch (error) {
       console.log("ini error dari onBtnEditProfileImage : ", error);
-      alert(error.message);
+      // alert(error.message);
+      toast({
+        title: `${error.message}`,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
   }
 

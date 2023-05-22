@@ -7,7 +7,7 @@ module.exports = {
         `https://api.rajaongkir.com/starter/province`,
         {
           headers: {
-            key: `d7b2b7169e378cf16e957b2d0e9d8371`,
+            key: process.env.RAJAONGKIR_KEY
           },
         }
       );
@@ -27,7 +27,7 @@ module.exports = {
         `https://api.rajaongkir.com/starter/city?province=${province_id}`,
         {
           headers: {
-            key: `d7b2b7169e378cf16e957b2d0e9d8371`,
+            key: process.env.RAJAONGKIR_KEY
           },
         }
       );

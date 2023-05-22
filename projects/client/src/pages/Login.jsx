@@ -8,8 +8,10 @@ import axios from "axios";
 import { loginAction } from "../reducers/auth";
 import { API_URL } from '../helper';
 import { NavLink } from 'react-router-dom';
+import { useToast } from '@chakra-ui/react';
 
 function Login() {
+    const toast = useToast();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const dispatch = useDispatch();
@@ -27,7 +29,14 @@ function Login() {
     const onBtnLogin = async () => {
         try {
             if (email === "" || password === "") {
-                alert("Please enter your credentials");
+                // alert("Please enter your credentials");
+                toast({
+                    title: `Please enter your credentials`,
+                    status: "error",
+                    duration: 2000,
+                    isClosable: true,
+                });
+                
             } else {
                 let res = await axios.post(`${API_URL}/auth/customer`, {
                     email: email,
@@ -35,14 +44,29 @@ function Login() {
                 });
                 console.log("data from LOGIN", res.data);
 
-                alert("Login Successfull");
-                localStorage.setItem("Gadgetwarehouse_userlogin", res.data.token);
-                dispatch(loginAction(res.data));
-                navigate("/", { replace: true });
+                if (res.data.success) {
+                    // alert("Login Successfull");
+                    toast({
+                        title: `${res.data.message}`,
+                        status: "success",
+                        duration: 2000,
+                        isClosable: true,
+                    });
+                    localStorage.setItem("Gadgetwarehouse_userlogin", res.data.token);
+                    dispatch(loginAction(res.data));
+                    navigate("/", { replace: true });
+                }
             }
         } catch (error) {
             console.log(error);
-            alert(error.response.data.message);
+            // alert(error.response.data.message);
+            toast({
+                title: `Login Failed`,
+                description: `Email or Password wrong`,
+                status: "error",
+                duration: 2000,
+                isClosable: true,
+            });
         }
     };
 

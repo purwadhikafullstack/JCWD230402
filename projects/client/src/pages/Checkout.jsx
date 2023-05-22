@@ -208,7 +208,7 @@ function Checkout() {
 
   const getallAddress = async () => {
     try {
-      let res = await axios.get(`${API_URL}/profile/useraddress`, {
+      let res = await axios.get(`${API_URL}/profile/user-address`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -236,7 +236,7 @@ function Checkout() {
 
   const getPrimaryAddress = async () => {
     try {
-      let res = await axios.get(`${API_URL}/profile/useraddress`, {
+      let res = await axios.get(`${API_URL}/profile/user-address`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -251,7 +251,7 @@ function Checkout() {
 
   const getUserAddress = async () => {
     try {
-      let res = await axios.get(`${API_URL}/profile/useraddress`, {
+      let res = await axios.get(`${API_URL}/profile/user-address`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -266,7 +266,7 @@ function Checkout() {
   const btnConfirmAddress = async () => {
     try {
       let res = await axios.patch(
-        `${API_URL}/profile/primaryaddress`,
+        `${API_URL}/profile/primary-address`,
         {
           id: value,
         },
