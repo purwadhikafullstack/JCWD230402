@@ -10,7 +10,7 @@ app.use(bearerToken());
 app.use(express.json());
 // app.use(express.static("src/public"));
 
-app.use("/", express.static(__dirname + "/public"));
+app.use("/static", express.static(__dirname + "/public"));
 
 //#region API ROUTES
 
