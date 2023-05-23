@@ -1,25 +1,47 @@
-require("dotenv/config");
+const { join } = require("path");
+require('dotenv').config({path:join(__dirname,'../.env')});
 const express = require("express");
 const cors = require("cors");
-const { join } = require("path");
-
 const PORT = process.env.PORT || 8000;
 const app = express();
-app.use(
-  cors({
-    origin: [
-      process.env.WHITELISTED_DOMAIN &&
-        process.env.WHITELISTED_DOMAIN.split(","),
-    ],
-  })
-);
-
+const bearerToken = require("express-bearer-token");
+app.use(cors());
+app.use(bearerToken());
 app.use(express.json());
+app.use(express.static("src/public"));
+
+app.use("/", express.static(__dirname + "/public"));
 
 //#region API ROUTES
 
 // ===========================
 // NOTE : Add your routes here
+const authRouter = require("./Routers/authRouter");
+const rajaongkirRouter = require("./Routers/rajaongkirRouter");
+const warehouseRouter = require("./Routers/warehouseRouter");
+const adminRouter = require("./Routers/adminRouter");
+const categoryRouter = require("./Routers/categoryRouter");
+const productRouter = require("./Routers/productRouter");
+const profileRouter = require("./Routers/profileRouter");
+const checkout = require("./Routers/checkoutRouter");
+const stockMutation = require("./Routers/stockMutationRouter");
+const order = require("./Routers/orderRouter");
+const report = require("./Routers/reportRouter");
+
+app.use("/api/auth", authRouter);
+app.use("/api/rajaongkir", rajaongkirRouter);
+app.use("/api/warehouse", warehouseRouter);
+app.use("/api/admin", adminRouter);
+app.use("/api/category", categoryRouter);
+app.use("/api/product", productRouter);
+app.use("/api/profile", profileRouter);
+app.use("/api/checkout", checkout);
+app.use("/api/mutation", stockMutation);
+app.use("/api/order", order);
+app.use("/api/report", report);
+
+
+const { statusUpdater } = require("./helpers/schedule");
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);
@@ -42,10 +64,12 @@ app.use((req, res, next) => {
   }
 });
 
+statusUpdater();
+
 // error
 app.use((err, req, res, next) => {
   if (req.path.includes("/api/")) {
-    console.error("Error : ", err.stack);
+    console.error("Error : ", err);
     res.status(500).send("Error !");
   } else {
     next();
