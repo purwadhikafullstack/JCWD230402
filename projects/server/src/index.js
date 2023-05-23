@@ -10,7 +10,16 @@ app.use(bearerToken());
 app.use(express.json());
 // app.use(express.static("src/public"));
 
-app.use("/static", express.static(__dirname + "/public"));
+app.get("/api", (req, res) => {
+  res.send(`Hello, this is my API`);
+});
+
+app.get("/api/greetings", (req, res, next) => {
+  res.status(200).json({
+    message: "Hello, Student !",
+  });
+});
+app.use("/api/static", express.static(__dirname + "/public"));
 
 //#region API ROUTES
 
@@ -42,16 +51,6 @@ app.use("/api/report", report);
 
 
 const { statusUpdater } = require("./helpers/schedule");
-
-app.get("/api", (req, res) => {
-  res.send(`Hello, this is my API`);
-});
-
-app.get("/api/greetings", (req, res, next) => {
-  res.status(200).json({
-    message: "Hello, Student !",
-  });
-});
 
 // ===========================
 
