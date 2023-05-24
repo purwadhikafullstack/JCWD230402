@@ -75,7 +75,6 @@ function AllProduct() {
   };
 
   const paginate = (pageNumber) => {
-    // console.log(`pagenumber`, pageNumber.selected);
     setPage(pageNumber.selected);
 
     params.set("page", pageNumber.selected + 1);

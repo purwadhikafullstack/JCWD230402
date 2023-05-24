@@ -264,7 +264,6 @@ function ProductPage() {
             as={"span"}
             textAlign={{ base: "center", lg: "left" }}
             color={priceList?.stock > 10 ? "#1BFD9C" : "red.500"}
-            // display={{ base: "none", lg: "block" }}
             mb={{ base: "4" }}
             border={"1px"}
             rounded={"lg"}
@@ -526,6 +525,7 @@ function ProductPage() {
             <Box
               maxW={{ base: "full", lg: "45%", xl: "45%" }}
               minH={{ lg: "284px" }}
+              maxH={"730px"}
             >
               <SwiperCarousel
                 productPictures={productData[0]?.product.pictures}

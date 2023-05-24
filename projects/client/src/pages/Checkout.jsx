@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { API_URL } from "../helper";
+import { API_URL, API_IMG_URL } from "../helper";
 import axios from "axios";
 import { cartAction } from "../reducers/cart";
 import { useDispatch } from "react-redux";
@@ -105,7 +105,7 @@ function Checkout() {
   const getProvince = async () => {
     try {
       let res = await axios.get(`${API_URL}/rajaongkir/province`);
-      // console.log(`getProvince`, res.data.rajaongkir.results);
+
       setProvince(res.data.rajaongkir.results);
     } catch (error) {
       console.log("error getProvince", error);
@@ -113,7 +113,6 @@ function Checkout() {
   };
 
   const printProvince = () => {
-    // console.log(`province`, province);
     return province.map((val, idx) => {
       return (
         <option
@@ -133,7 +132,6 @@ function Checkout() {
   const getCity = async () => {
     try {
       let res = await axios.get(`${API_URL}/rajaongkir/city/${provinceId}`);
-      // console.log(`ini res getCity`, res.data.rajaongkir.results);
 
       setCity(res.data.rajaongkir.results);
     } catch (error) {
@@ -146,7 +144,6 @@ function Checkout() {
       return (
         <option
           onClick={() => onClickPrintCity(val.city_name, val.postal_code)}
-          // value={city_id == "" ? `${val.city_id}` : `${val.city_id = city_id}`}
           value={`${val.city_id}`}
         >
           {val.city_name}
@@ -180,7 +177,6 @@ function Checkout() {
           },
         }
       );
-      // console.log(`ini dari resp btnSaveNewAddress`, res);
 
       if (res.data.success) {
         alert(res.data.message);
@@ -213,7 +209,7 @@ function Checkout() {
           Authorization: `Bearer ${token}`,
         },
       });
-      // console.log(`getallAddress`, res.data.data);
+
       setAddressList(res.data.data);
     } catch (error) {
       console.log(error);
@@ -241,7 +237,7 @@ function Checkout() {
           Authorization: `Bearer ${token}`,
         },
       });
-      // console.log(`getPrimaryAddress`, res.data.primaryAddress[0]);
+
       setPrimaryAddress(res.data.primaryAddress[0]);
       setValue(res.data.primaryAddress[0].id.toString());
     } catch (error) {
@@ -256,7 +252,7 @@ function Checkout() {
           Authorization: `Bearer ${token}`,
         },
       });
-      // console.log(`getUserAddress`, res.data.user);
+
       setUser(res.data.user);
     } catch (error) {
       console.log(error);
@@ -276,10 +272,8 @@ function Checkout() {
           },
         }
       );
-      // console.log("btnConfirmAddress", res);
 
       if (res.data.status) {
-        // alert(res.data.message);
         modalChangeAddress.onClose();
         getPrimaryAddress();
       }
@@ -303,7 +297,6 @@ function Checkout() {
         }
       );
 
-      // console.log(`distance`, distance);
       setOngkirList(distance.data.data[0].costs);
       setSelectedWarehouse(distance.data.warehouse);
     } catch (error) {
@@ -312,7 +305,6 @@ function Checkout() {
   };
 
   const printOngkir = () => {
-    // console.log(`ongkirList`, ongkirList);
     return ongkirList.map((val, idx) => {
       let temp = idx.toString();
       return (
@@ -348,11 +340,8 @@ function Checkout() {
     });
   };
 
-  //-----------------------------------------------------------------------------------------------
-
   const printSummary = () => {
     return cartList.map((val, idx) => {
-      // console.log(`pricelist`, priceList);
       return (
         <>
           {/* card body */}
@@ -375,7 +364,7 @@ function Checkout() {
                     w={"full"}
                     rounded={"xl"}
                     alt="product picture"
-                    src={`${API_URL}${val.product.productImage}`}
+                    src={`${API_IMG_URL}${val.product.productImage}`}
                   />
                 </Flex>
               </Flex>
@@ -689,7 +678,6 @@ function Checkout() {
           <Box
             color={"white"}
             w={{ base: "full", md: "30%", lg: "25%" }}
-            // flexWrap={"wrap"}
             boxShadow={"dark-lg"}
             h={`fit-content`}
           >
@@ -871,7 +859,6 @@ function Checkout() {
                 <Select
                   onChange={(e) => {
                     setProvinceId(e.target.value);
-                    // setProvinceName(e.target.value.split(",")[1]);
                   }}
                   placeholder={"-- Select --"}
                 >

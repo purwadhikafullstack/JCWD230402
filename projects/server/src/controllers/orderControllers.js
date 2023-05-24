@@ -1039,6 +1039,7 @@ module.exports = {
         },
       });
       const customerId = findCustomerId.dataValues.id;
+
       if (req.query.status) {
         const getorder = await model.order.findAndCountAll({
           offset: parseInt(page * size),
@@ -1214,17 +1215,14 @@ module.exports = {
     const ormTransaction = await model.sequelize.transaction();
     try {
       if (req.files) {
-        console.log("aaaaaaaaaaaaaaaaaaaaa", req.body.data);
-
         let { order } = JSON.parse(req.body.data);
-        console.log("order = ", order);
 
         const findOrderId = await model.order.findOne({
           where: {
             uuid: order,
           },
         });
-        console.log("bbbbbbbbbbbbbbbb", findOrderId);
+
         const orderId = findOrderId.dataValues.id;
 
         await model.order.update(
@@ -1262,6 +1260,7 @@ module.exports = {
         ) {
           fs.unlinkSync(`./src/public${findOrderId.dataValues.paymentProof}`);
         }
+
         await ormTransaction.commit();
         res.status(200).send({ success: true });
       } else {
@@ -1489,7 +1488,6 @@ module.exports = {
 
   customerOrderDetails: async (req, res, next) => {
     try {
-      console.log(`req.params`, req.params);
       let getOrderDetails = await model.order.findOne({
         where: {
           uuid: req.params.uuid,
@@ -1531,6 +1529,7 @@ module.exports = {
 
   paymentConfirmation: async (req, res, next) => {
     const ormTransaction = await model.sequelize.transaction();
+
     try {
       const findOrderId = await model.order.findOne({
         where: {
@@ -1801,6 +1800,7 @@ module.exports = {
       const orderNo = req.body.uuid.toUpperCase().split("-")[
         req.body.uuid.split("-").length - 1
       ];
+
       // 8. email customer notify them
       await transporter.sendMail({
         from: `GadgetHouse.noreply`,
