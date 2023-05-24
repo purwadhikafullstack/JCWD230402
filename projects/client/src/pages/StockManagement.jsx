@@ -16,6 +16,7 @@ import {
     Select,
     Spinner,
     Tab,
+    TabIndicator,
     Table,
     TableContainer,
     TabList,
@@ -220,7 +221,13 @@ function StockManagement() {
                 console.log(`btnSendRequest`, res);
 
                 if (res.data.success) {
-                    alert(res.data.message);
+                    // alert(res.data.message);
+                    toast({
+                        title: `${res.data.message}`,
+                        status: "success",
+                        duration: 2000,
+                        isClosable: true,
+                    });
                     setProductId();
                     setColorId();
                     setMemoryId();
@@ -248,7 +255,13 @@ function StockManagement() {
                 console.log(`btnSendRequest`, res);
 
                 if (res.data.success) {
-                    alert(res.data.message);
+                    // alert(res.data.message);
+                    toast({
+                        title: `${res.data.message}`,
+                        status: "success",
+                        duration: 2000,
+                        isClosable: true,
+                    });
                     setProductId();
                     setColorId();
                     setMemoryId();
@@ -443,7 +456,13 @@ function StockManagement() {
                 console.log(`btnAccept`, res);
 
                 if (res.data.success == true) {
-                    alert(res.data.message);
+                    // alert(res.data.message);
+                    toast({
+                        title: `${res.data.message}`,
+                        status: "success",
+                        duration: 2000,
+                        isClosable: true,
+                    });
                     getRequest()
                 }
             } else {
@@ -463,17 +482,26 @@ function StockManagement() {
                 console.log(`btnAccept`, res);
 
                 if (res.data.success == true) {
-                    alert(res.data.message);
+                    // alert(res.data.message);
+                    toast({
+                        title: `${res.data.message}`,
+                        status: "success",
+                        duration: 2000,
+                        isClosable: true,
+                    });
                     getRequest()
                 }
             }
-
-
-
         } catch (error) {
             console.log(error);
             if (error.response.data.success == false) {
-                alert(error.response.data.message);
+                // alert(error.response.data.message);
+                toast({
+                    title: `${error.response.data.message}`,
+                    status: "error",
+                    duration: 2000,
+                    isClosable: true,
+                });
                 getRequest()
             }
         }
@@ -489,7 +517,13 @@ function StockManagement() {
 
             console.log(`btnReject`, res);
             if (res.data.success) {
-                alert(res.data.message);
+                // alert(res.data.message);
+                toast({
+                    title: `${res.data.message}`,
+                    status: "success",
+                    duration: 2000,
+                    isClosable: true,
+                });
                 getRequest();
             }
 
@@ -536,11 +570,17 @@ function StockManagement() {
                         </Flex>
                     </Flex>
 
-                    <Tabs mt={"20px"} isFitted variant='enclosed'>
+                    <Tabs mt={"20px"} isFitted variant='unstyled'>
                         <TabList mb='1em'>
                             <Tab>Incoming Request</Tab>
                             <Tab>Waiting For Confirmation</Tab>
                         </TabList>
+                        <TabIndicator
+                            mt="-1.5px"
+                            height="2px"
+                            bg="#1BFD9C"
+                            borderRadius="1px"
+                        />
                         <TabPanels>
                             <TabPanel>
                                 <TableContainer>

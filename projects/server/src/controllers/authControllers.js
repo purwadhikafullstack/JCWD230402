@@ -254,6 +254,7 @@ module.exports = {
   },
 
   resetpassword: async (req, res, next) => {
+    const ormTransaction = await model.sequelize.transaction();
     try {
       if (req.body.Password === req.body.confirmationPassword) {
         console.log("dcript token", req.decript);
@@ -265,19 +266,24 @@ module.exports = {
             where: {
               id: req.decript.id,
             },
-          }
-        );
+          }, {
+          transaction: ormTransaction,
+        });
+        
+        await ormTransaction.commit();
         return res.status(200).send({
           success: true,
           message: "Reset password success",
         });
       } else {
+        await ormTransaction.commit();
         return res.status(400).send({
           success: false,
           message: "error: password and confirmation password not match",
         });
       }
     } catch (error) {
+      await ormTransaction.rollback();
       console.log(error);
       next(error);
     }

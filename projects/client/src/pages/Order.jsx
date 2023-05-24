@@ -28,6 +28,7 @@ import {
   Select,
   ButtonGroup,
   useToast,
+  TabIndicator,
 } from "@chakra-ui/react";
 import emptyImg from "../img/empty.png";
 import React from "react";
@@ -212,7 +213,7 @@ function Order() {
             <CardHeader borderTopRadius={"lg"}>
               <Flex justifyContent={"space-between"} alignContent={"center"}>
                 <Text>
-                  {val.customer.name} |{}
+                  {val.customer.name} |{ }
                   <Text as="span" color={"#1EDB8A"}>
                     {` No. ${shorten(val.uuid)}`}
                   </Text>
@@ -226,8 +227,8 @@ function Order() {
                       val.status.status === 13
                         ? "#34D399"
                         : val.status.status === 14
-                        ? "red.500"
-                        : "yellow.500"
+                          ? "red.500"
+                          : "yellow.500"
                     }
                   >
                     {val.status.status}
@@ -678,7 +679,7 @@ function Order() {
         mt={"20px"}
         isLazy
         isFitted
-        variant="enclosed"
+        variant="unstyled"
         onChange={handleTabsChange}
         size={{ md: "sm", lg: "md" }}
       >
@@ -691,6 +692,12 @@ function Order() {
           <Tab>Received</Tab>
           <Tab>Cancelled</Tab>
         </TabList>
+        <TabIndicator
+          mt="-1.5px"
+          height="2px"
+          bg="#1BFD9C"
+          borderRadius="1px"
+        />
         <TabPanels>
           <TabPanel overflowY={"scroll"} height={"69vh"}>
             <Flex mb={"8px"} justifyContent="right">
@@ -810,6 +817,8 @@ function Order() {
           </TabPanel>
         </TabPanels>
         <Flex
+          h={"30px"}  
+          mt="30px"
           justifyContent={"center"}
           display={orderList.length === 0 ? "none" : "flex"}
         >

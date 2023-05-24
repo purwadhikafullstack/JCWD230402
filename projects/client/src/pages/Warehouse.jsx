@@ -307,7 +307,7 @@ function Warehouse() {
                 Edit
               </Button>
               <Switch
-                ml={2}
+                ml={5}
                 colorScheme={"red"}
                 onChange={() => onBtnDelete(val.uuid)}
                 size="lg"
@@ -818,11 +818,14 @@ function Warehouse() {
               <Tbody>{printWarehouse()}</Tbody>
             </Table>
           </TableContainer>
-          {
-            <div className="justify-end flex ">
-              <Pagination paginate={paginate} size={size} totalData={totalData} />
-            </div>
-          }
+          <Flex h={"30px"} mt="30px" justifyContent={"right"}>
+            <Pagination
+              paginate={paginate}
+              size={size}
+              totalData={totalData}
+              page={page}
+            />
+          </Flex>
         </Box>
       )}
     </>

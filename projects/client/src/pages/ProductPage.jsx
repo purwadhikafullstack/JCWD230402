@@ -428,7 +428,13 @@ function ProductPage() {
   const onBtnLogin = async () => {
     try {
       if (email === "" || password === "") {
-        alert("Please enter your credentials");
+        // alert("Please enter your credentials");
+        toast({
+          title: "Please enter your credentials",
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
       } else {
         let res = await axios.post(`${API_URL}/auth/customer`, {
           email: email,

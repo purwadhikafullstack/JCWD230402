@@ -1,9 +1,10 @@
 const multer = require("multer");
+const { join } = require("path");
 const fs = require("fs");
 
 const uploader = (directory, filePreFix) => {
   // 1. default directory storage
-  let defaultDir = "./src/public";
+  let defaultDir = join(__dirname, "../public");
 
   // 2. storage location config
   const storage = multer.diskStorage({

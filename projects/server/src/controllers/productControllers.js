@@ -42,14 +42,12 @@ module.exports = {
           {
             uuid,
             name,
-            productImage: `/imgProduct/${req.files[0]?.filename}`,
+            productImage: `/ImgProduct/${req.files[0]?.filename}`,
             description,
             categoryId,
-          },
-          {
-            // transaction: ormTransaction,
-          }
-        );
+          }, {
+          // transaction: ormTransaction,
+        });
 
         variations.forEach(async (variant) => {
           console.log(`variant`, variant);
@@ -60,8 +58,9 @@ module.exports = {
               colorId: variant.colorId.value,
               memoryId: variant.memoryId.value,
               stock: variant.stock,
-              price: variant.price,
-              discountedPrice: variant.price,
+              price: parseInt(variant.price),
+              discount: parseInt(variant.discount) / 100,
+              discountedPrice: parseInt(variant.price) - (parseInt(variant.price * parseInt(variant.discount) / 100)),
               warehouseId: variant.warehouseId,
               statusId: 4,
               booked: 0,
@@ -111,8 +110,9 @@ module.exports = {
                 colorId: variations[i].colorId.value,
                 memoryId: variations[i].memoryId.value,
                 stock: variations[i].stock,
-                price: variations[i].price,
-                discountedPrice: variations[i].price,
+                price: parseInt(variations[i].price),
+                discount: parseInt(variations[i].discount) / 100,
+                discountedPrice: parseInt(variations[i].price) - (parseInt(variations[i].price * parseInt(variations[i].discount) / 100)),
                 warehouseId: variations[i].warehouseId,
                 statusId: 4,
                 booked: 0,
@@ -145,6 +145,7 @@ module.exports = {
         } else {
           console.log(`hasil include 2:`, newArr.includes("false"));
 
+          // await ormTransaction.commit();
           return res.status(400).send({
             success: false,
             message:
@@ -178,15 +179,27 @@ module.exports = {
           { model: model.category, attributes: ["type"] },
           { model: model.type, attributes: ["price", "warehouseId"] },
         ],
-
         order: [[model.type, "price", "ASC"]],
+
       });
 
-      console.log(`getProduct`, get);
+      let count = await model.product.findAndCountAll({
+        offset: parseInt(page * size),
+        limit: parseInt(size),
+        where: {
+          name: {
+            [sequelize.Op.like]: `%${req.query.name}%`,
+          },
+        },
+        // order: [["name", "ASC"]],
+      });
+
+      // console.log(`getProduct`, get);
+      // console.log(`getcount`, count);
 
       return res.status(200).send({
         data: get.rows,
-        datanum: get.rows.length,
+        datanum: count.count,
       });
     } catch (error) {
       console.log(error);
@@ -197,7 +210,7 @@ module.exports = {
   editProduct: async (req, res, next) => {
     try {
       console.log(`reqbody `, JSON.parse(req.body.data));
-      console.log(`req.files `, req.files);
+      // console.log(`req.files `, req.files);
 
       let { name, categoryId, description, variationsEdit } = JSON.parse(
         req.body.data
@@ -208,7 +221,7 @@ module.exports = {
           id: req.query.id,
         },
       });
-      console.log(`cekProduct`, cekProduct);
+      // console.log(`cekProduct`, cekProduct);
       // console.log(`colorId`, variationsEdit[3].colorId);
       if (cekProduct.length == 1) {
         let editProduct = await model.product.update(
@@ -246,7 +259,7 @@ module.exports = {
               ],
             },
           });
-          console.log(`cektype`, cektype);
+          // console.log(`cektype`, cektype);
 
           if (cektype.length == 0) {
             // kalo variasi belum ada di database type
@@ -258,8 +271,9 @@ module.exports = {
                 colorId: variationsEdit[i].colorId.value,
                 memoryId: variationsEdit[i].memoryId.value,
                 stock: variationsEdit[i].stock,
-                price: variationsEdit[i].price,
-                discountedPrice: variationsEdit[i].price,
+                price: parseInt(variationsEdit[i].price),
+                discount: parseInt(variationsEdit[i].discount) / 100,
+                discountedPrice: parseInt(variationsEdit[i].price) - (parseInt(variationsEdit[i].price * parseInt(variationsEdit[i].discount) / 100)),
                 warehouseId: variationsEdit[i].warehouseId,
                 statusId: 4,
               },
@@ -277,7 +291,7 @@ module.exports = {
         }
 
         if (newArr.includes("false")) {
-          console.log(`hasil include 1:`, newArr.includes("false"));
+          // console.log(`hasil include 1:`, newArr.includes("false"));
 
           // await ormTransaction.commit();
           return res.status(200).send({
@@ -285,7 +299,7 @@ module.exports = {
             message: "variasi berhasil ditambah, duplikasi tidak dibikin",
           });
         } else {
-          console.log(`hasil include 2:`, newArr.includes("false"));
+          // console.log(`hasil include 2:`, newArr.includes("false"));
 
           return res.status(400).send({
             success: false,
@@ -397,7 +411,6 @@ module.exports = {
           statusId: 7,
           onLocation: 1,
           requestId: 3,
-
           creatorId: req.body.creatorId,
         });
 

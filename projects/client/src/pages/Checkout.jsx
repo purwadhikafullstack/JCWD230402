@@ -179,7 +179,13 @@ function Checkout() {
       );
 
       if (res.data.success) {
-        alert(res.data.message);
+        // alert(res.data.message);
+        toast({
+          title: `${res.data.message}`,
+          status: "success",
+          duration: 2000,
+          isClosable: true
+        })
         modalAddAddress.onClose();
         getPrimaryAddress();
         getallAddress();
@@ -188,9 +194,21 @@ function Checkout() {
     } catch (error) {
       console.log("ini error add Location:", error);
       if (error.response.data.error) {
-        alert(error.response.data.error[0].msg);
+        // alert(error.response.data.error[0].msg);
+        toast({
+          title: `${error.response.data.error[0].msg}`,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
       } else {
-        alert(error.response.data.message);
+        // alert(error.response.data.message);
+        toast({
+          title: `${error.response.data.message}`,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
       }
     }
   };
@@ -274,6 +292,13 @@ function Checkout() {
       );
 
       if (res.data.status) {
+        toast({
+          title: `${res.data.message}`,
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+        });
+
         modalChangeAddress.onClose();
         getPrimaryAddress();
       }
@@ -531,7 +556,7 @@ function Checkout() {
             ongkirList[ongkirValue].cost[0].value +
             (parseInt(sessionStorage.getItem("total all item")) +
               ongkirList[ongkirValue].cost[0].value) *
-              0.1,
+            0.1,
           warehousechoice: selectedWarehouse,
         },
         {
@@ -735,12 +760,12 @@ function Checkout() {
                         {ongkirValue == ""
                           ? "-"
                           : formating(
-                              (parseInt(
-                                sessionStorage.getItem("total all item")
-                              ) +
-                                ongkirList[ongkirValue].cost[0].value) *
-                                0.1
-                            )}
+                            (parseInt(
+                              sessionStorage.getItem("total all item")
+                            ) +
+                              ongkirList[ongkirValue].cost[0].value) *
+                            0.1
+                          )}
                       </Text>
                     </Flex>
                   </Box>
@@ -765,16 +790,16 @@ function Checkout() {
                         {ongkirValue == ""
                           ? "-"
                           : formating(
-                              parseInt(
-                                sessionStorage.getItem("total all item")
-                              ) +
-                                ongkirList[ongkirValue].cost[0].value +
-                                (parseInt(
-                                  sessionStorage.getItem("total all item")
-                                ) +
-                                  ongkirList[ongkirValue].cost[0].value) *
-                                  0.1
-                            )}
+                            parseInt(
+                              sessionStorage.getItem("total all item")
+                            ) +
+                            ongkirList[ongkirValue].cost[0].value +
+                            (parseInt(
+                              sessionStorage.getItem("total all item")
+                            ) +
+                              ongkirList[ongkirValue].cost[0].value) *
+                            0.1
+                          )}
                       </Text>
                     )}
                   </Flex>

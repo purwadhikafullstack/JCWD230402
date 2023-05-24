@@ -36,12 +36,12 @@ import {
 } from '@chakra-ui/react';
 import { MdCancel, MdOutlineAdd, MdPhone, MdSearch, MdImage, MdDeleteForever } from "react-icons/md";
 import Pagination from '../components/Pagination';
-import { API_URL } from '../helper';
+import { API_IMG_URL, API_URL } from '../helper';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import CreatableSelect from 'react-select/creatable';
 import uploadImg from "../img/1156518-200.png"
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function Product() {
 
@@ -53,6 +53,8 @@ function Product() {
     const [loading, setLoading] = React.useState(true);
     const navigate = useNavigate();
     const toast = useToast();
+    const location = useLocation();
+    const params = new URLSearchParams(location.search);
 
     const [category, setCategory] = React.useState([]);
     const [productName, setProductName] = React.useState("");
@@ -70,7 +72,7 @@ function Product() {
     const [optionsMemory, setOptionsMemory] = React.useState([]);
     // const [valueMemory, setValueMemory] = React.useState(null);
 
-    let size = 8
+    let size = 6
     let sortby = "name"
     let order = "ASC"
     let name = ""
@@ -88,6 +90,16 @@ function Product() {
     const warehouseId = useSelector((state) => state.adminReducer.warehouseId)
 
     let token = localStorage.getItem("gadgetwarehouse_adminlogin");
+
+    function formating(params) {
+        let total = new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            minimumFractionDigits: 0,
+        }).format(params);
+
+        return total;
+    }
 
     React.useEffect(() => {
         getCategory();
@@ -182,7 +194,13 @@ function Product() {
 
         } catch (error) {
             console.log(error);
-            alert(error.response.data.message)
+            // alert(error.response.data.message)
+            toast({
+                title: `${error.response.data.message}`,
+                status: "error",
+                duration: 2000,
+                isClosable: true
+            })
         }
     }
 
@@ -219,18 +237,20 @@ function Product() {
     }
 
     const printProduct = () => {
-        console.log(`productList`, productList);
+        // console.log(`productList`, productList);
         return productList.map((val, idx) => {
             return (
                 <Tr textColor={"white"}>
                     <Td>{idx + 1}</Td>
                     <Td>
-                        {<Image width={"75px"} src={`${API_URL}${val.productImage}`} />}
+                        {<Image h={"auto"} width={"75px"} src={`${API_IMG_URL}${val.productImage}`} />}
                     </Td>
                     <Td>{val.name}</Td>
                     <Td>{val.category.type}</Td>
                     <Td>
-                        {val.types.length == 0 ? `Rp.` : `Rp. ${val?.types[0].price} - ${val?.types[val?.types.length - 1].price}`}
+                        {
+                            val.types.length == 0 ? `-` : formating(val?.types[0].price) + " - " + formating(val?.types[val?.types.length - 1].price)
+                        }
                     </Td>
                     <Td textColor={val.isDisabled == true ? "red.500" : "green.500"}>{val.isDisabled == false ? "Available" : "Unavailable"}</Td>
                     {
@@ -253,7 +273,7 @@ function Product() {
                                 </Button>
 
                                 <Switch
-                                    ml={2}
+                                    ml={5}
                                     colorScheme={"red"}
                                     size='lg'
                                     isChecked={val.isDisabled}
@@ -308,10 +328,18 @@ function Product() {
     // ------------------------------ PAGINATION -----------------------------------------
 
     const paginate = (pageNumber) => {
-        console.log(`pagenumber`, pageNumber.selected);
-        setPage(pageNumber.selected)
-    }
-
+        // console.log(`pagenumber`, pageNumber.selected);
+        setPage(pageNumber.selected);
+        params.set("page", pageNumber.selected + 1);
+        if (pageNumber.selected !== 0) {
+            navigate({ search: params.toString() }); // buat update url
+            // sama kaya navigate(`?${params.toString()}`);
+        } else {
+            params.delete("page");
+            navigate({ search: params.toString() }); // buat update url
+        }
+        // console.log("location on pagination click", location);
+    };
     // ----------------------------- VARIATION -------------------------------------------
 
     const addVariation = () => {
@@ -321,7 +349,8 @@ function Product() {
             memoryId: null,
             warehouseId: null,
             price: 0,
-            stock: 0
+            stock: 0,
+            discount: 0
         }
         setVariations([...variations, newVariaton])
     }
@@ -350,6 +379,12 @@ function Product() {
     const handleVariationChangePrice = (idx, price) => {
         let temp = [...variations]
         temp[idx].price = price
+        setVariations(temp);
+    };
+
+    const handleVariationChangeDiscount = (idx, discount) => {
+        let temp = [...variations]
+        temp[idx].discount = discount
         setVariations(temp);
     };
 
@@ -482,19 +517,13 @@ function Product() {
     const inputFile = React.useRef(null);
 
     const onChangeFile = (event) => {
-        // const files = [event.target.files];
-        // const overSize = checkFileSize(files);
-        // if (overSize) {
-        //     alert(`You can only upload files that are lower than 2MB in size.`);
-        // } else {
-        //     setFileProduct(event.target.files);
-        // }
         setFileProduct(event.target.files[0]);
     };
 
     // ------------------------------ EDIT VARIANT ------------------------------------
 
     const [variationsEdit, setVariationsEdit] = React.useState([]);
+    console.log(`variationsEdit`, variationsEdit);
     const [productId, setProductId] = React.useState()
     const onBtnEdit = async (
         id,
@@ -537,7 +566,8 @@ function Product() {
             memoryId: null,
             warehouseId: null,
             price: 0,
-            stock: 0
+            stock: 0,
+            discount: 0
         }
         setVariationsEdit([...variationsEdit, newVariaton])
     }
@@ -616,7 +646,13 @@ function Product() {
                 }
             })
             if (res.data.success) {
-                alert(res.data.message);
+                // alert(res.data.message);
+                toast({
+                    title: `${res.data.message}`,
+                    status: "success",
+                    duration: 2000,
+                    isClosable: true
+                })
                 getProduct();
                 setProductName("");
                 setCategoryId();
@@ -626,7 +662,13 @@ function Product() {
             }
         } catch (error) {
             console.log(error);
-            alert(error.response.data.message)
+            // alert(error.response.data.message)
+            toast({
+                title: `${error.response.data.message}`,
+                status: "error",
+                duration: 2000,
+                isClosable: true
+            })
         }
     };
 
@@ -645,7 +687,7 @@ function Product() {
                 price: activeIndex.price,
                 stock: activeIndex.stock,
                 discount: activeIndex.discount,
-                creatorId: warehouseId
+                creatorId: activeIndex.warehouseId
             }, {
                 headers: {
                     "Authorization": `Bearer ${token}`
@@ -653,7 +695,13 @@ function Product() {
             })
             console.log(`editVariant`, res);
             if (res.data.success) {
-                alert(res.data.message);
+                // alert(res.data.message);
+                toast({
+                    title: `${res.data.message}`,
+                    status: "success",
+                    duration: 2000,
+                    isClosable: true
+                })
                 setActiveIndex(null)
             }
         } catch (error) {
@@ -701,7 +749,7 @@ function Product() {
                         finalFocusRef={finalRef}
                         isOpen={modalAdd.isOpen}
                         onClose={modalAdd.onClose}
-                        size={"6xl"}
+                        size={{ md: "3xl", lg: "5xl", xl: "6xl" }}
                     >
                         <ModalOverlay />
                         <ModalContent>
@@ -788,6 +836,7 @@ function Product() {
                                                         <Th>Color</Th>
                                                         <Th>Memory</Th>
                                                         <Th>Price</Th>
+                                                        <Th>Disc (%)</Th>
                                                         <Th>Warehouse</Th>
                                                         <Th>Stock</Th>
                                                         <Th>
@@ -847,6 +896,16 @@ function Product() {
                                                                     }
                                                                 </Td>
                                                                 <Td>
+                                                                    {
+                                                                        <Input
+                                                                            size={"sm"}
+                                                                            width="14"
+                                                                            variant={"filled"}
+                                                                            onChange={(e) => handleVariationChangeDiscount(idx, e.target.value)}
+                                                                        />
+                                                                    }
+                                                                </Td>
+                                                                <Td>
                                                                     {<Select
                                                                         size={"sm"}
                                                                         variant={"filled"}
@@ -857,7 +916,15 @@ function Product() {
                                                                     </Select>
                                                                     }
                                                                 </Td>
-                                                                <Td>{<Input size={"sm"} width="24" variant={"filled"} onChange={(e) => handleVariationChangeStock(idx, e.target.value)} />}</Td>
+                                                                <Td>
+                                                                    {<Input
+                                                                        size={"sm"}
+                                                                        width="14"
+                                                                        variant={"filled"}
+                                                                        onChange={(e) => handleVariationChangeStock(idx, e.target.value)}
+                                                                    />
+                                                                    }
+                                                                </Td>
                                                                 <Td>
                                                                     {
                                                                         <Button
@@ -901,7 +968,7 @@ function Product() {
                         finalFocusRef={finalRef}
                         isOpen={modalEdit.isOpen}
                         onClose={modalEdit.onClose}
-                        size={"6xl"}
+                        size={{ md: "3xl", lg: "5xl", xl: "6xl" }}
                     >
                         <ModalOverlay />
                         <ModalContent>
@@ -937,7 +1004,7 @@ function Product() {
 
                                             <Image
                                                 src={
-                                                    fileProductEditNew ? URL.createObjectURL(fileProductEditNew) : `${API_URL}${fileProductEdit}`
+                                                    fileProductEditNew ? URL.createObjectURL(fileProductEditNew) : `${API_IMG_URL}${fileProductEdit}`
                                                 }
                                                 style={{
                                                     width: "80px", height: "80px", aspectRatio: "1/1", objectFit: "contain"
@@ -1080,7 +1147,7 @@ function Product() {
                                                                             width="12"
                                                                             variant={"filled"}
                                                                             onChange={(e) => handleVariationChangeDiscountEdit(idx, e.target.value)}
-                                                                            defaultValue={variationEdit.discount}
+                                                                            defaultValue={variationEdit.discount * 100}
                                                                             disabled={activeIndex?.id != variationEdit?.id ? isDisabled : !isDisabled}
                                                                         />
                                                                     }
@@ -1221,15 +1288,25 @@ function Product() {
                             </Tbody>
                         </Table>
                     </TableContainer>
-                    {
-                        <div className='justify-end flex'>
+                    <Flex h={"30px"} mt="30px" justifyContent={"right"}>
+                        <Pagination
+                            paginate={paginate}
+                            size={size}
+                            totalData={totalData}
+                            page={page}
+                        />
+                    </Flex>
+
+                    {/* {
+                        <div className='justify-end flex h-7'>
                             <Pagination
                                 paginate={paginate} size={size} totalData={totalData}
                             />
                         </div>
-                    }
+                    } */}
                 </Box >
-            )}
+            )
+            }
         </>
     );
 }
