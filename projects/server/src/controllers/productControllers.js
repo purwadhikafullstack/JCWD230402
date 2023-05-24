@@ -563,6 +563,7 @@ module.exports = {
             ? [[{ model: model.type }, "discountedPrice", order]]
             : [[sortby, order]],
       });
+      
       const counter = await model.product.count({
         where: {
           isDisabled: false,
@@ -587,7 +588,7 @@ module.exports = {
         attributes: ["id", "name"],
         where: { name: req.query.name },
       });
-      // console.log("find data by prod name", findByName.dataValues);
+      console.log("find data by prod name", findByName.dataValues);
 
       let findType = await model.type.findAll({
         where: {
@@ -743,6 +744,8 @@ module.exports = {
   },
 
   addToCart: async (req, res, next) => {
+    const ormTransaction = await model.sequelize.transaction();
+
     try {
       const findCustomer = await model.customer.findOne({
         where: {
@@ -817,24 +820,32 @@ module.exports = {
             return res.status(200).send({ update_success: true });
           } else {
             // if cart blom ada item yg sma
-            let createCart = await model.cart.create({
-              totalQty: req.body.qty,
-              productId: productId,
-              colorId: req.body.color,
-              memoryId: req.body.memory,
-              customerId: customerId,
-            });
+            let createCart = await model.cart.create(
+              {
+                totalQty: req.body.qty,
+                productId: productId,
+                colorId: req.body.color,
+                memoryId: req.body.memory,
+                customerId: customerId,
+              },
+              {
+                transaction: ormTransaction,
+              }
+            );
 
+            await ormTransaction.commit();
             return res.status(200).send({ data: createCart });
           }
         } else {
           // if item out of stock
+          await ormTransaction.commit();
           return res
             .status(400)
             .send({ success: false, message: "Item currently out of stock" });
         }
       }
     } catch (error) {
+      await ormTransaction.rollback();
       console.log(error);
       next(error);
     }
@@ -919,6 +930,7 @@ module.exports = {
     }
   },
   deleteOneFromCart: async (req, res, next) => {
+    const ormTransaction = await model.sequelize.transaction();
     try {
       const findCustomer = await model.customer.findOne({
         where: {
@@ -926,19 +938,27 @@ module.exports = {
         },
       });
 
-      await model.cart.destroy({
-        where: {
-          customerId: findCustomer.dataValues.id,
-          id: req.params.id,
+      await model.cart.destroy(
+        {
+          where: {
+            customerId: findCustomer.dataValues.id,
+            id: req.params.id,
+          },
         },
-      });
+        {
+          transaction: ormTransaction,
+        }
+      );
+      await ormTransaction.commit();
       res.status(200).send({ success: true });
     } catch (error) {
+      await ormTransaction.rollback();
       console.log("error delete from cart", error);
       next(error);
     }
   },
   deleteAll: async (req, res, next) => {
+    const ormTransaction = await model.sequelize.transaction();
     try {
       const findCustomer = await model.customer.findOne({
         where: {
@@ -946,18 +966,27 @@ module.exports = {
         },
       });
 
-      await model.cart.destroy({
-        where: {
-          customerId: findCustomer.dataValues.id,
+      await model.cart.destroy(
+        {
+          where: {
+            customerId: findCustomer.dataValues.id,
+          },
         },
-      });
+        {
+          transaction: ormTransaction,
+        }
+      );
+
+      await ormTransaction.commit();
       res.status(200).send({ success: true });
     } catch (error) {
+      await ormTransaction.rollback();
       console.log("error deleteAll", error);
       next(error);
     }
   },
   minusItem: async (req, res, next) => {
+    const ormTransaction = await model.sequelize.transaction();
     try {
       let findCart = await model.cart.findOne({
         where: {
@@ -966,12 +995,18 @@ module.exports = {
       });
 
       if (findCart.dataValues.totalQty === 1) {
-        await model.cart.destroy({
-          where: {
-            id: req.body.id,
+        await model.cart.destroy(
+          {
+            where: {
+              id: req.body.id,
+            },
           },
-        });
+          {
+            transaction: ormTransaction,
+          }
+        );
 
+        await ormTransaction.commit();
         res.status(200).send({ delete: true });
       } else {
         await model.cart.update(
@@ -980,17 +1015,22 @@ module.exports = {
           },
           {
             where: { id: req.body.id },
+          },
+          {
+            transaction: ormTransaction,
           }
         );
-
+        await ormTransaction.commit();
         res.status(200).send({ update: true });
       }
     } catch (error) {
+      await ormTransaction.rollback();
       console.log(error);
       next(error);
     }
   },
   addItem: async (req, res, next) => {
+    const ormTransaction = await model.sequelize.transaction();
     try {
       let findCart = await model.cart.findOne({
         where: {
@@ -1004,11 +1044,16 @@ module.exports = {
           where: {
             id: req.body.id,
           },
+        },
+        {
+          transaction: ormTransaction,
         }
       );
 
+      await ormTransaction.commit();
       return res.status(200).send({ success: true });
     } catch (error) {
+      await ormTransaction.rollback();
       console.log(error);
       next(error);
     }

@@ -15,6 +15,7 @@ function ProductCard(props) {
   return (
     <Card
       w={{ base: "11.5rem", md: "14rem", xl: "25rem" }}
+      boxShadow={"dark-lg"}
       direction="column"
       overflow="hidden"
       variant="outline"
@@ -29,7 +30,8 @@ function ProductCard(props) {
     >
       <NavLink to={`/product/${forURL}`}>
         <Image
-          objectFit="contain"
+          objectFit={{ base: "cover", xl: "fill" }}
+          borderTopRadius={"lg"}
           height={{ base: "200px", md: "270px", lg: "300px", xl: "350px" }}
           width="full"
           src={props.productimage}

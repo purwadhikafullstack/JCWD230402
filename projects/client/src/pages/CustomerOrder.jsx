@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { API_URL } from "../helper";
+import { API_URL, API_IMG_URL } from "../helper";
 import axios from "axios";
 
 import {
@@ -206,7 +206,7 @@ function CustomerOrder() {
                       w={"full"}
                       rounded={"xl"}
                       alt="product picture"
-                      src={`${API_URL}${val.orderdetails[0].type.product.productImage}`}
+                      src={`${API_IMG_URL}${val.orderdetails[0].type.product.productImage}`}
                     />
                   </Flex>
                   <Flex
@@ -527,7 +527,7 @@ function CustomerOrder() {
                     w={"full"}
                     rounded={"xl"}
                     alt="product picture"
-                    src={`${API_URL}${val.type.product.productImage}`}
+                    src={`${API_IMG_URL}${val.type.product.productImage}`}
                   />
                 </Flex>
                 <Flex
@@ -753,8 +753,12 @@ function CustomerOrder() {
                     float={"right"}
                     color={"#1BF597"}
                   >
-                    <option value="DESC">Newest</option>
-                    <option value="ASC">Oldest</option>
+                    <option style={{ backgroundColor: "#18181B" }} value="DESC">
+                      Newest
+                    </option>
+                    <option style={{ backgroundColor: "#18181B" }} value="ASC">
+                      Oldest
+                    </option>
                   </Select>
                 </Box>
                 {printOrders()}
@@ -779,8 +783,12 @@ function CustomerOrder() {
                     float={"right"}
                     color={"#1BF597"}
                   >
-                    <option value="DESC">Newest</option>
-                    <option value="ASC">Oldest</option>
+                    <option style={{ backgroundColor: "#18181B" }} value="DESC">
+                      Newest
+                    </option>
+                    <option style={{ backgroundColor: "#18181B" }} value="ASC">
+                      Oldest
+                    </option>
                   </Select>
                 </Box>
                 {printOrders()}
@@ -804,8 +812,12 @@ function CustomerOrder() {
                     float={"right"}
                     color={"#1BF597"}
                   >
-                    <option value="DESC">Newest</option>
-                    <option value="ASC">Oldest</option>
+                    <option style={{ backgroundColor: "#18181B" }} value="DESC">
+                      Newest
+                    </option>
+                    <option style={{ backgroundColor: "#18181B" }} value="ASC">
+                      Oldest
+                    </option>
                   </Select>
                 </Box>
                 {printOrders()}
@@ -829,8 +841,12 @@ function CustomerOrder() {
                     float={"right"}
                     color={"#1BF597"}
                   >
-                    <option value="DESC">Newest</option>
-                    <option value="ASC">Oldest</option>
+                    <option style={{ backgroundColor: "#18181B" }} value="DESC">
+                      Newest
+                    </option>
+                    <option style={{ backgroundColor: "#18181B" }} value="ASC">
+                      Oldest
+                    </option>
                   </Select>
                 </Box>
                 {printOrders()}
@@ -854,8 +870,12 @@ function CustomerOrder() {
                     float={"right"}
                     color={"#1BF597"}
                   >
-                    <option value="DESC">Newest</option>
-                    <option value="ASC">Oldest</option>
+                    <option style={{ backgroundColor: "#18181B" }} value="DESC">
+                      Newest
+                    </option>
+                    <option style={{ backgroundColor: "#18181B" }} value="ASC">
+                      Oldest
+                    </option>
                   </Select>
                 </Box>
                 {printOrders()}
@@ -879,8 +899,12 @@ function CustomerOrder() {
                     float={"right"}
                     color={"#1BF597"}
                   >
-                    <option value="DESC">Newest</option>
-                    <option value="ASC">Oldest</option>
+                    <option style={{ backgroundColor: "#18181B" }} value="DESC">
+                      Newest
+                    </option>
+                    <option style={{ backgroundColor: "#18181B" }} value="ASC">
+                      Oldest
+                    </option>
                   </Select>
                 </Box>
                 {printOrders()}
@@ -905,8 +929,12 @@ function CustomerOrder() {
                     float={"right"}
                     color={"#1BF597"}
                   >
-                    <option value="DESC">Newest</option>
-                    <option value="ASC">Oldest</option>
+                    <option style={{ backgroundColor: "#18181B" }} value="DESC">
+                      Newest
+                    </option>
+                    <option style={{ backgroundColor: "#18181B" }} value="ASC">
+                      Oldest
+                    </option>
                   </Select>
                 </Box>
                 {printOrders()}

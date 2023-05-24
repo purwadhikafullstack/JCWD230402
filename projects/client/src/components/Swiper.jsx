@@ -21,9 +21,10 @@ export default function SwiperCarousel(props) {
           <Image
             w="full"
             minH={{ lg: "700px" }}
+            maxH={"720px"}
             src={val.picture}
             alt="Product image"
-            objectFit="cover"
+            objectFit="contain"
             borderRadius={"lg"}
           />
         </SwiperSlide>

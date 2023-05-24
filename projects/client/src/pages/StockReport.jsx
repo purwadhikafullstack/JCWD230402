@@ -193,18 +193,18 @@ function StockReport() {
       return (
         <Tr>
           <Td textAlign={"center"}>{idx + 1}</Td>
-          {
-            !val.order ?
-              <Td textAlign={"center"}>-</Td> :
-              <Td textAlign={"center"}>{shorten(val?.order.uuid)}</Td>
-          }
+          {!val.order ? (
+            <Td textAlign={"center"}>-</Td>
+          ) : (
+            <Td textAlign={"center"}>{shorten(val?.order.uuid)}</Td>
+          )}
           <Td textAlign={"center"}>{val?.type.product.name}</Td>
           <Td textAlign={"center"}>{val?.initialStock}</Td>
           <Td textAlign={"center"}>+ {val?.addition}</Td>
           <Td textAlign={"center"}>- {val?.subtraction}</Td>
           <Td textAlign={"center"}>{val.warehouse?.name || "-"}</Td>
           <Td textAlign={"center"}>{dateFormat(val?.createdAt)}</Td>
-        </Tr >
+        </Tr>
       );
     });
   };
@@ -531,18 +531,29 @@ function StockReport() {
                   </Th>
                 </Tr>
               </Thead>
-              <Tbody overflowY={stockList.length == 0 ? ("hidden") : "scroll"}>
-                {stockList.length == 0 ? <Box>No Data</Box> : printTable()}
-              </Tbody>
+
+              {stockList.length == 0 ? (
+                <Tbody overflowY="scroll">
+                  <Text as={"h1"} fontWeight={"semibold"} fontSize={"3xl"}>
+                    No Orders Found
+                  </Text>
+                </Tbody>
+              ) : (
+                <Tbody overflowY="scroll">
+                  {stockList.length == 0 ? <Box>No Data</Box> : printTable()}
+                </Tbody>
+              )}
             </Table>
           </TableContainer>
           <Flex justifyContent={"flex-end"} mt={6} h={"30px"}>
-            <Pagination
-              paginate={paginate}
-              size={size}
-              totalData={totalData}
-              page={page}
-            />
+            {stockList.length != 0 ? (
+              <Pagination
+                paginate={paginate}
+                size={size}
+                totalData={totalData}
+                page={page}
+              />
+            ) : null}
           </Flex>
         </Box>
       )}
