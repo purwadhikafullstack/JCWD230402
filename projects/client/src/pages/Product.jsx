@@ -273,7 +273,7 @@ function Product() {
                                 </Button>
 
                                 <Switch
-                                    ml={2}
+                                    ml={5}
                                     colorScheme={"red"}
                                     size='lg'
                                     isChecked={val.isDisabled}
@@ -749,7 +749,7 @@ function Product() {
                         finalFocusRef={finalRef}
                         isOpen={modalAdd.isOpen}
                         onClose={modalAdd.onClose}
-                        size={"6xl"}
+                        size={{ md: "3xl", lg: "5xl", xl: "6xl" }}
                     >
                         <ModalOverlay />
                         <ModalContent>
@@ -899,7 +899,7 @@ function Product() {
                                                                     {
                                                                         <Input
                                                                             size={"sm"}
-                                                                            width="24"
+                                                                            width="14"
                                                                             variant={"filled"}
                                                                             onChange={(e) => handleVariationChangeDiscount(idx, e.target.value)}
                                                                         />
@@ -916,7 +916,15 @@ function Product() {
                                                                     </Select>
                                                                     }
                                                                 </Td>
-                                                                <Td>{<Input size={"sm"} width="24" variant={"filled"} onChange={(e) => handleVariationChangeStock(idx, e.target.value)} />}</Td>
+                                                                <Td>
+                                                                    {<Input
+                                                                        size={"sm"}
+                                                                        width="14"
+                                                                        variant={"filled"}
+                                                                        onChange={(e) => handleVariationChangeStock(idx, e.target.value)}
+                                                                    />
+                                                                    }
+                                                                </Td>
                                                                 <Td>
                                                                     {
                                                                         <Button
@@ -960,7 +968,7 @@ function Product() {
                         finalFocusRef={finalRef}
                         isOpen={modalEdit.isOpen}
                         onClose={modalEdit.onClose}
-                        size={"6xl"}
+                        size={{ md: "3xl", lg: "5xl", xl: "6xl" }}
                     >
                         <ModalOverlay />
                         <ModalContent>
@@ -1280,15 +1288,25 @@ function Product() {
                             </Tbody>
                         </Table>
                     </TableContainer>
-                    {
-                        <div className='justify-end flex'>
+                    <Flex h={"30px"} mt="30px" justifyContent={"right"}>
+                        <Pagination
+                            paginate={paginate}
+                            size={size}
+                            totalData={totalData}
+                            page={page}
+                        />
+                    </Flex>
+
+                    {/* {
+                        <div className='justify-end flex h-7'>
                             <Pagination
                                 paginate={paginate} size={size} totalData={totalData}
                             />
                         </div>
-                    }
+                    } */}
                 </Box >
-            )}
+            )
+            }
         </>
     );
 }

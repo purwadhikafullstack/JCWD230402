@@ -178,7 +178,7 @@ function Category() {
               </Button>
 
               <Switch
-                ml={2}
+                ml={5}
                 colorScheme={"red"}
                 size="lg"
                 // defaultChecked={val.isDisabled}
@@ -473,17 +473,14 @@ function Category() {
               <Tbody>{printCategory()}</Tbody>
             </Table>
           </TableContainer>
-
-          {
-            <div className="justify-end flex">
-              <Pagination
-                paginate={paginate}
-                size={size}
-                totalData={totalData}
-                page={page}
-              />
-            </div>
-          }
+          <Flex h={"30px"} mt="30px" justifyContent={"right"}>
+            <Pagination
+              paginate={paginate}
+              size={size}
+              totalData={totalData}
+              page={page}
+            />
+          </Flex>
         </Box>
       )}
     </>
