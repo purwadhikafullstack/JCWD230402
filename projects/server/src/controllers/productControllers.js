@@ -42,7 +42,7 @@ module.exports = {
           {
             uuid,
             name,
-            productImage: `/imgProduct/${req.files[0]?.filename}`,
+            productImage: `/ImgProduct/${req.files[0]?.filename}`,
             description,
             categoryId,
           }, {

@@ -70,6 +70,14 @@ function UserManagement() {
   const [totalData, setTotalData] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
 
+  const [username, setUsername] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [phone, setPhone] = React.useState("");
+  const [gender, setGender] = React.useState("");
+  const [warehouse, setWarehouse] = React.useState();
+  const [role, setRole] = React.useState();
+
   let token = localStorage.getItem("gadgetwarehouse_adminlogin");
 
   const [visible, setVisible] = React.useState("password");
@@ -100,7 +108,7 @@ function UserManagement() {
         }
       );
 
-      // console.log(`getAllAdmin`, res.data);
+      console.log(`getAllAdmin`, res.data);
       setTotalData(res.data.datanum);
       setAdminList(res.data.data);
       setLoading(false);
@@ -141,18 +149,15 @@ function UserManagement() {
                     val.name,
                     val.email,
                     val.phone,
-                    val.password,
-                    val.uuid,
                     val.gender,
                     val.warehouseId,
-                    val.roleId
+                    val.roleId,
+                    val.uuid,
                   )
                 }
               >
                 Edit
               </Button>
-
-
               {name === val.name ? null : val.isDeleted === false ? (
                 <Switch
                   ml={5}
@@ -178,22 +183,14 @@ function UserManagement() {
 
   //------------------------------ ADD ADMIN (SAVE AND CANCEL) ----------------------------------
 
-  const [username, setUsername] = React.useState(" ");
-  const [email, setEmail] = React.useState(" ");
-  const [password, setPassword] = React.useState(" ");
-  const [phone, setPhone] = React.useState(" ");
-  const [gender, setGender] = React.useState(" ");
-  const [warehouse, setWarehouse] = React.useState();
-  const [role, setRole] = React.useState();
-
-  const isErrorUsername = username === "";
-  const isErrorEmail = email === "";
-  const isErrorPassword = password === "";
-  const isErrorPhone = phone === "";
+  // const isErrorUsername = username === "";
+  // const isErrorEmail = email === "";
+  // const isErrorPassword = password === "";
+  // const isErrorPhone = phone === "";
 
   const btnSaveAddAdmin = async () => {
     try {
-      if (username == " " || email == " " || phone == " " || password == " ") {
+      if (username == "" || email == "" || phone == "" || password == "") {
         toast({
           title: `your input is empty`,
           status: "error",
@@ -281,7 +278,7 @@ function UserManagement() {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(`getAllWarehouse`, res);
+      // console.log(`getAllWarehouse`, res);
       setWarehouseList(res.data);
     } catch (error) {
       console.log(error);
@@ -328,24 +325,24 @@ function UserManagement() {
     name,
     email,
     phone,
-    uuid,
     gender,
     warehouseId,
-    roleId
+    roleId,
+    uuid,
   ) => {
     modalEdit.onOpen();
     setUsername(name);
     setEmail(email);
     setPhone(phone);
-    setUuid(uuid);
     setGender(gender);
     setWarehouse(warehouseId);
     setRole(roleId);
+    setUuid(uuid);
   };
 
   const btnSaveEditAdmin = async () => {
     try {
-      if (username == "" || email == "" || phone == "" ) {
+      if (username == "" || email == "" || phone == "") {
         toast({
           title: `your input is empty`,
           status: "error",
@@ -534,35 +531,45 @@ function UserManagement() {
               <ModalBody pb={6}>
                 <Flex>
                   <Box>
-                    <FormControl isInvalid={isErrorUsername} isRequired>
+                    <FormControl
+                      // isInvalid={isErrorUsername}
+                      isRequired
+                    >
                       <FormLabel>User Name</FormLabel>
                       <Input
                         type={"text"}
                         onChange={(e) => setUsername(e.target.value)}
                         placeholder={"User Name"}
                       />
-                      {!isErrorUsername ? (
+                      {/* {!isErrorUsername ? (
                         <FormHelperText />
                       ) : (
                         <FormErrorMessage>Username is required.</FormErrorMessage>
-                      )}
+                      )} */}
                     </FormControl>
 
-                    <FormControl mt={2} isInvalid={isErrorEmail} isRequired>
+                    <FormControl
+                      mt={2}
+                      // isInvalid={isErrorEmail}
+                      isRequired
+                    >
                       <FormLabel>Email</FormLabel>
                       <Input
                         type={"email"}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder={"Email"}
                       />
-                      {!isErrorEmail ? (
+                      {/* {!isErrorEmail ? (
                         <FormHelperText />
                       ) : (
                         <FormErrorMessage>Email is required.</FormErrorMessage>
-                      )}
+                      )} */}
                     </FormControl>
 
-                    <FormControl mt={2} isInvalid={isErrorPassword} isRequired>
+                    <FormControl
+                      mt={2}
+                      // isInvalid={isErrorPassword}
+                      isRequired>
                       <FormLabel>Password</FormLabel>
                       <Flex>
                         <Input
@@ -579,25 +586,27 @@ function UserManagement() {
                           {visible === "password" ? <HiEyeOff /> : <HiEye />}
                         </Button>
                       </Flex>
-
-                      {!isErrorPassword ? (
+                      {/* {!isErrorPassword ? (
                         <FormHelperText />
                       ) : (
                         <FormErrorMessage>Password is required.</FormErrorMessage>
-                      )}
+                      )} */}
                     </FormControl>
 
-                    <FormControl isInvalid={isErrorPhone} isRequired>
+                    <FormControl
+                      // isInvalid={isErrorPhone}
+                      isRequired
+                    >
                       <FormLabel>Phone</FormLabel>
                       <Input
                         onChange={(e) => setPhone(e.target.value)}
                         placeholder={"Phone"}
                       />
-                      {!isErrorPhone ? (
+                      {/* {!isErrorPhone ? (
                         <FormHelperText />
                       ) : (
                         <FormErrorMessage>Phone is required.</FormErrorMessage>
-                      )}
+                      )} */}
                     </FormControl>
                   </Box>
 
@@ -681,7 +690,7 @@ function UserManagement() {
                       />
                     </FormControl>
 
-                    <FormControl  mt={2} isRequired>
+                    <FormControl mt={2} isRequired>
                       <FormLabel>Phone</FormLabel>
                       <Input
                         onChange={(e) => setPhone(e.target.value)}
@@ -697,7 +706,7 @@ function UserManagement() {
                       <Select
                         onChange={(e) => setGender(e.target.value)}
                         placeholder={"-- Select --"}
-                        defaultValue={gender}
+                        defaultValue={`${gender}`}
                       >
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
@@ -822,11 +831,14 @@ function UserManagement() {
               <Tbody>{printAllAdmin()}</Tbody>
             </Table>
           </TableContainer>
-          {
-            <div className="justify-end flex">
-              <Pagination paginate={paginate} size={size} totalData={totalData} />
-            </div>
-          }
+          <Flex h={"30px"} mt="30px" justifyContent={"right"}>
+            <Pagination
+              paginate={paginate}
+              size={size}
+              totalData={totalData}
+              page={page}
+            />
+          </Flex>
         </Box>
       )}
     </>

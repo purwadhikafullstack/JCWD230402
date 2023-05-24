@@ -16,6 +16,7 @@ import {
     Select,
     Spinner,
     Tab,
+    TabIndicator,
     Table,
     TableContainer,
     TabList,
@@ -569,11 +570,17 @@ function StockManagement() {
                         </Flex>
                     </Flex>
 
-                    <Tabs mt={"20px"} isFitted variant='enclosed'>
+                    <Tabs mt={"20px"} isFitted variant='unstyled'>
                         <TabList mb='1em'>
                             <Tab>Incoming Request</Tab>
                             <Tab>Waiting For Confirmation</Tab>
                         </TabList>
+                        <TabIndicator
+                            mt="-1.5px"
+                            height="2px"
+                            bg="#1BFD9C"
+                            borderRadius="1px"
+                        />
                         <TabPanels>
                             <TabPanel>
                                 <TableContainer>
