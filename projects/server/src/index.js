@@ -19,7 +19,7 @@ app.get("/api/greetings", (req, res, next) => {
     message: "Hello, Student !",
   });
 });
-app.use("/api/static", express.static(__dirname + "/public"));
+app.use("/", express.static(__dirname + "/public"));
 
 //#region API ROUTES
 
