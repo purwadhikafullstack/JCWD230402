@@ -13,14 +13,21 @@ import { Link, useNavigate } from "react-router-dom";
 
 function Sidebar() {
   const name = useSelector((state) => state.adminReducer.name);
+  const roleId = useSelector((state) => state.adminReducer.roleId);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const adminlogoutBtn = () => {
-    localStorage.removeItem("gadgetwarehouse_adminlogin");
+    // localStorage.removeItem("gadgetwarehouse_adminlogin");
     dispatch(adminlogoutAction());
-    navigate("/", { replace: true });
+    // navigate("/", { replace: true });
   };
+
+  React.useEffect(() => {
+    if (roleId == null) {
+      navigate("/", { replace: true });
+    }
+  }, [roleId])
 
   return (
     <div className="flex flex-col top-0 left-0 bg-bgglass h-screen border-r lg:w-[18vw]">

@@ -8,11 +8,8 @@ import {
   Heading,
   Icon,
   Input,
-  InputGroup,
-  InputLeftElement,
   Modal,
   ModalBody,
-  ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
@@ -87,7 +84,6 @@ function Warehouse() {
   const getProvince = async () => {
     try {
       let res = await axios.get(`${API_URL}/rajaongkir/province`);
-      // console.log(`ini res getProvince`, res.data.rajaongkir.results);
 
       setProvince(res.data.rajaongkir.results);
     } catch (error) {
@@ -98,7 +94,6 @@ function Warehouse() {
   const getCity = async () => {
     try {
       let res = await axios.get(`${API_URL}/rajaongkir/city/${provinceId}`);
-      // console.log(`ini res getCity`, res.data.rajaongkir.results);
 
       setCity(res.data.rajaongkir.results);
     } catch (error) {
@@ -110,19 +105,13 @@ function Warehouse() {
     getProvince();
     getCity();
     getAllWarehouse();
-    // console.log(`provincename`, provinceName);
   }, [provinceId, provinceName]);
-
-  // React.useEffect(() => {
-  //     getCity()
-  // }, [cityName, postalCode])
 
   const onClickPrintProvince = (namaprovinsi) => {
     setProvinceName(namaprovinsi);
   };
 
   const printProvince = () => {
-    // console.log(`province`, province);
     return province.map((val, idx) => {
       return (
         <option
@@ -138,17 +127,13 @@ function Warehouse() {
   const onClickPrintCity = (namakota, kodepos) => {
     setCityName(namakota);
     setPostalCode(kodepos);
-    console.log(`postalcode`, postalCode);
   };
 
   const printCity = () => {
-    // console.log(`ini dari city`, city);
-
     return city.map((val, idx) => {
       return (
         <option
           onClick={() => onClickPrintCity(val.city_name, val.postal_code)}
-          // value={city_id == "" ? `${val.city_id}` : `${val.city_id = city_id}`}
           value={`${val.city_id}`}
         >
           {val.city_name}
@@ -192,7 +177,6 @@ function Warehouse() {
             },
           }
         );
-        // console.log(`ini dari resp addnewuser`, res);
 
         if (res.data.success) {
           toast({
@@ -215,7 +199,6 @@ function Warehouse() {
     } catch (error) {
       console.log("ini error addnewarehouse:", error);
       if (error.response.data.error) {
-        // alert(error.response.data.error[0].msg);
         toast({
           title: `${error.response.data.error[0].msg}`,
           description: "please check your email",
@@ -224,7 +207,6 @@ function Warehouse() {
           isClosable: true
         })
       } else {
-        // alert(error.response.data.message);
         toast({
           title: `${error.response.data.message}`,
           status: "error",
@@ -255,8 +237,6 @@ function Warehouse() {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(`getallwarehouse`, res.data);
-
       setTotalData(res.data.count);
       setWarehouseList(res.data.rows);
       setLoading(false);
@@ -269,7 +249,6 @@ function Warehouse() {
   };
 
   const printWarehouse = () => {
-    // console.log(`ini dari warehouselist`, warehouseList);
     return warehouseList.map((val, idx) => {
       return (
         <Tr textColor={"white"}>
@@ -377,7 +356,6 @@ function Warehouse() {
             },
           }
         );
-        // console.log(`ini dari resp addnewuser`, res);
 
         if (res.data.success) {
           toast({
@@ -435,8 +413,6 @@ function Warehouse() {
           Authorization: `Bearer ${token}`,
         },
       });
-
-      // alert(res.data.message);
       getAllWarehouse();
     } catch (error) {
       console.log(error);
@@ -474,7 +450,6 @@ function Warehouse() {
   }, [sortby, order, page]);
 
   const paginate = (pageNumber) => {
-    // console.log(`pagenumber`, pageNumber.selected);
     setPage(pageNumber.selected);
     params.set("page", pageNumber.selected + 1);
     if (pageNumber.selected !== 0) {
@@ -484,7 +459,6 @@ function Warehouse() {
       params.delete("page");
       navigate({ search: params.toString() }); // buat update url
     }
-    // console.log("location on pagination click", location);
   };
 
   //--------------------- SEARCH BAR ---------------------------------------
@@ -596,7 +570,6 @@ function Warehouse() {
                       <Select
                         onChange={(e) => {
                           setProvinceId(e.target.value);
-                          // setProvinceName(e.target.value.split(",")[1]);
                         }}
                         placeholder={"-- Select --"}
                       >
@@ -610,8 +583,6 @@ function Warehouse() {
                       <FormLabel>City</FormLabel>
                       <Select
                         onChange={(e) => {
-                          // setCityName(e.target.value.split(",")[0]);
-                          // setPostalCode(e.target.value.split(",")[1]);
                           setCity_id(e.target.value);
                         }}
                         placeholder={"-- Select --"}
@@ -760,12 +731,6 @@ function Warehouse() {
               </ModalFooter>
             </ModalContent>
           </Modal>
-
-          {/* <InputGroup mt={"28px"} w={{ sm: "40", md: "96", lg: "96" }}>
-                <InputLeftElement pointerEvents="none" children={<MdSearch size={"22"} color='gray.800' />} />
-                <Input type="text" placeholder="Search List" bg="white" color="gray.800" />
-            </InputGroup> */}
-
           <TableContainer mt={"10px"}>
             <Table>
               <Thead>

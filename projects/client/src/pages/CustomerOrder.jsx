@@ -13,7 +13,6 @@ import {
   Spinner,
   Box,
   Heading,
-  Icon,
   Image,
   Divider,
   Modal,
@@ -26,8 +25,6 @@ import {
   Button,
   useDisclosure,
   FormControl,
-  FormLabel,
-  Input,
   Select,
   TabIndicator,
   Stack,
@@ -61,7 +58,6 @@ function CustomerOrder() {
   const [fileProduct, setFileProduct] = useState(null);
   const [order, setOrder] = useState("");
 
-  console.log("totaldata", totalData);
 
   function shorten(params) {
     return params.toUpperCase().split("-")[params.split("-").length - 1];
@@ -116,7 +112,6 @@ function CustomerOrder() {
           }
         );
 
-        console.log("aaaaaaaaaaaaa", res.data);
         setLoading(false);
         setOrderList(res.data.data);
         setTotalData(res.data.datanum);
@@ -632,7 +627,6 @@ function CustomerOrder() {
   };
 
   const paginate = (pageNumber) => {
-    // console.log(`pagenumber`, pageNumber.selected);
     setPage(pageNumber.selected);
 
     params.set("page", pageNumber.selected + 1);

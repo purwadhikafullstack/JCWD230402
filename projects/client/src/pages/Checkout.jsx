@@ -3,7 +3,6 @@ import { API_URL } from "../helper";
 import axios from "axios";
 import { cartAction } from "../reducers/cart";
 import { useDispatch } from "react-redux";
-
 import {
   Text,
   Flex,
@@ -146,7 +145,6 @@ function Checkout() {
       return (
         <option
           onClick={() => onClickPrintCity(val.city_name, val.postal_code)}
-          // value={city_id == "" ? `${val.city_id}` : `${val.city_id = city_id}`}
           value={`${val.city_id}`}
         >
           {val.city_name}
@@ -180,8 +178,7 @@ function Checkout() {
           },
         }
       );
-      console.log(`ini dari resp btnSaveNewAddress`, res);
-
+      // console.log(`ini dari resp btnSaveNewAddress`, res);
       if (res.data.success) {
         // alert(res.data.message);
         toast({
@@ -198,7 +195,6 @@ function Checkout() {
     } catch (error) {
       console.log("ini error add Location:", error);
       if (error.response.data.error) {
-        // alert(error.response.data.error[0].msg);
         toast({
           title: `${error.response.data.error[0].msg}`,
           status: "error",
@@ -206,7 +202,6 @@ function Checkout() {
           isClosable: true,
         });
       } else {
-        // alert(error.response.data.message);
         toast({
           title: `${error.response.data.message}`,
           status: "error",
@@ -231,7 +226,7 @@ function Checkout() {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(`getallAddress`, res.data.data);
+      // console.log(`getallAddress`, res.data.data);
       setAddressList(res.data.data);
     } catch (error) {
       console.log(error);
@@ -295,7 +290,6 @@ function Checkout() {
         }
       );
       // console.log("btnConfirmAddress", res);
-
       if (res.data.status) {
         // alert(res.data.message);
         toast({
@@ -326,7 +320,6 @@ function Checkout() {
           },
         }
       );
-
       // console.log(`distance`, distance);
       setOngkirList(distance.data.data[0].costs);
       setSelectedWarehouse(distance.data.warehouse);
@@ -336,7 +329,6 @@ function Checkout() {
   };
 
   const printOngkir = () => {
-    // console.log(`ongkirList`, ongkirList);
     return ongkirList.map((val, idx) => {
       let temp = idx.toString();
       return (
@@ -376,7 +368,6 @@ function Checkout() {
 
   const printSummary = () => {
     return cartList.map((val, idx) => {
-      // console.log(`pricelist`, priceList);
       return (
         <>
           {/* card body */}
@@ -713,7 +704,6 @@ function Checkout() {
           <Box
             color={"white"}
             w={{ base: "full", md: "30%", lg: "25%" }}
-            // flexWrap={"wrap"}
             boxShadow={"dark-lg"}
             h={`fit-content`}
           >
@@ -895,7 +885,6 @@ function Checkout() {
                 <Select
                   onChange={(e) => {
                     setProvinceId(e.target.value);
-                    // setProvinceName(e.target.value.split(",")[1]);
                   }}
                   placeholder={"-- Select --"}
                 >

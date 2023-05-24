@@ -406,9 +406,9 @@ module.exports = {
               }
             } else {
               // case 1-2: jika di warehouse pling dkat, availablenya memenuhi qty yg diorder oleh customer
-              console.log(
-                "warehouse pling dkat, availablenya memenuhi qty yg diorder oleh customer"
-              );
+              // console.log(
+              //   "warehouse pling dkat, availablenya memenuhi qty yg diorder oleh customer"
+              // );
               // Step 1. ubah jumlah booked di warehouse yg ngirim.
               await model.type.update(
                 {
@@ -456,7 +456,7 @@ module.exports = {
               cart[i].dataValues.totalQty >
               findbooked[0].dataValues.stock - findbooked[0].dataValues.booked
             ) {
-              console.log("w2 tidak memenuhi kebutuhan -- loop");
+              // console.log("w2 tidak memenuhi kebutuhan -- loop");
 
               for (let k = 0; k < allDistance[i].length; k++) {
                 const updatedCart = await model.cart.findAll({
@@ -695,7 +695,7 @@ module.exports = {
 
               // case 2-2:  warehouse pertama memenuhi kebutuhan customer
             } else {
-              console.log("w2 memenuhi kebutuhan");
+              // console.log("w2 memenuhi kebutuhan");
 
               // 3. check dlu typenya yg warehouseId == chosenWarehouseId dan bawa item yg user mau
               const checkType = await model.type.findOne({
@@ -1038,17 +1038,17 @@ module.exports = {
   payment: async (req, res, next) => {
     try {
       if (req.files) {
-        console.log("aaaaaaaaaaaaaaaaaaaaa", req.body.data);
+        // console.log("aaaaaaaaaaaaaaaaaaaaa", req.body.data);
 
         let { order } = JSON.parse(req.body.data);
-        console.log("order = ", order);
+        // console.log("order = ", order);
 
         const findOrderId = await model.order.findOne({
           where: {
             uuid: order,
           },
         });
-        console.log("bbbbbbbbbbbbbbbb", findOrderId);
+        // console.log("bbbbbbbbbbbbbbbb", findOrderId);
         const orderId = findOrderId.dataValues.id;
 
         await model.order.update(
@@ -1305,7 +1305,7 @@ module.exports = {
 
   customerOrderDetails: async (req, res, next) => {
     try {
-      console.log(`req.params`, req.params);
+      // console.log(`req.params`, req.params);
       let getOrderDetails = await model.order.findOne({
         where: {
           uuid: req.params.uuid,
@@ -1316,7 +1316,6 @@ module.exports = {
             include: [
               {
                 model: model.type,
-                // attribute: ["price", "discountedPrice"],
                 include: [
                   { model: model.color, attributes: ["color"] },
                   { model: model.memory, attributes: ["memory"] },

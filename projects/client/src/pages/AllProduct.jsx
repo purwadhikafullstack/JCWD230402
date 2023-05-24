@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import {
   Text,
   Flex,
-  ButtonGroup,
   IconButton,
   Select,
   Stack,
@@ -53,9 +52,7 @@ function AllProduct() {
         `${API_URL}/product/customer-product/?page=${page}&size=${size}&sortby=${sortby}&order=${order}&name=${filter}`,
         {}
       );
-
-      console.log(`response getallprodcut =`, res);
-
+      // console.log(`response getallprodcut =`, res);
       setProductList(res.data.data);
       setTotalData(res.data.datanum);
     } catch (error) {
@@ -115,8 +112,8 @@ function AllProduct() {
   }
 
   useEffect(() => {
-    console.log("current filtering", filter);
-    console.log("filtering length", filter.length);
+    // console.log("current filtering", filter);
+    // console.log("filtering length", filter.length);
   }, [filter]);
 
   useEffect(() => {
@@ -125,7 +122,7 @@ function AllProduct() {
 
   useEffect(() => {
     getAllProducts();
-    console.log("page number: ", page);
+    // console.log("page number: ", page);
   }, [sortby, order, page]);
 
   const onSearchBtn = () => {
@@ -210,7 +207,6 @@ function AllProduct() {
             pb={1}
           ></IconButton>
           <Select
-            // options={[{ colorScheme: "black" }]}
             w={"120px"}
             backgroundColor={"transparent"}
             borderColor={"#34D399"}

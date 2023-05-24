@@ -77,7 +77,6 @@ function ProductPage() {
       );
 
       setProductData(res.data.data);
-      // console.log(productData);
       setLoading(false);
       if (!res.data.data) {
         navigate("*");
@@ -367,7 +366,6 @@ function ProductPage() {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("getcart", res.data.datanum);
 
       dispatch(cartAction(res.data.datanum));
     } catch (error) {
@@ -432,7 +430,6 @@ function ProductPage() {
   const onBtnLogin = async () => {
     try {
       if (email === "" || password === "") {
-        // alert("Please enter your credentials");
         toast({
           title: "Please enter your credentials",
           status: "error",

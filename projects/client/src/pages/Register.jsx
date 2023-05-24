@@ -24,9 +24,7 @@ function Register() {
                 email: email,
             }
             );
-            console.log("ini dari btn regis", res);
             if (res.data.success) {
-                // alert(res.data.message);
                 toast({
                     title: `${res.data.message}`,
                     status: "success",
@@ -36,7 +34,6 @@ function Register() {
             }
         } catch (error) {
             console.log("error", error);
-            // alert(error.response.data.error[0].msg);
             toast({
                 title: `${error.response.data.error[0].msg}`,
                 status: "success",

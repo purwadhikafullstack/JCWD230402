@@ -88,7 +88,6 @@ function Navbar() {
                   </div>
                 )}
               </div>
-              {/* <button className='flex gap-2 text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium' onClick={toggleMenu}> <img src={profileImage ? `${API_URL}${profileImage}` : ''} className='text-2xl text-white cursor-pointer '/>{name}</button> */}
               <div
                 className="flex items-center gap-2 text-xs md:text-base text-[#1BFD9C] hover:text-[#82ffc9] hover:text-sm duration-500 font-medium cursor-pointer"
                 onClick={toggleMenu}

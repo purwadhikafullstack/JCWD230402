@@ -71,8 +71,6 @@ function StockManagement() {
                     Authorization: `Bearer ${token}`
                 }
             });
-
-            console.log(`getAllProduct :`, res);
             setProductList(res.data.data);
         } catch (error) {
             console.log(error);
@@ -94,8 +92,6 @@ function StockManagement() {
                     Authorization: `Bearer ${token}`
                 }
             })
-
-            console.log(`getAllcolor res:`, res);
             setColorList(res.data.data)
 
         } catch (error) {
@@ -118,8 +114,6 @@ function StockManagement() {
                     Authorization: `Bearer ${token}`
                 }
             })
-
-            console.log(`getAllMemory res:`, res);
             setMemoryList(res.data.data)
 
         } catch (error) {
@@ -146,9 +140,6 @@ function StockManagement() {
                     Authorization: `Bearer ${token}`
                 }
             })
-
-            console.log(`getWarehouse: `, res);
-
             setWarehouseList(res.data.data);
         } catch (error) {
             console.log(error);
@@ -162,9 +153,7 @@ function StockManagement() {
                     Authorization: `Bearer ${token}`
                 }
             })
-            console.log("getAllWarehouse", res.data);
             setAllWarehouseList(res.data)
-
         } catch (error) {
             console.log(error);
         }
@@ -217,11 +206,7 @@ function StockManagement() {
                         Authorization: `Bearer ${token}`
                     }
                 })
-
-                console.log(`btnSendRequest`, res);
-
                 if (res.data.success) {
-                    // alert(res.data.message);
                     toast({
                         title: `${res.data.message}`,
                         status: "success",
@@ -251,11 +236,7 @@ function StockManagement() {
                         Authorization: `Bearer ${token}`
                     }
                 })
-
-                console.log(`btnSendRequest`, res);
-
                 if (res.data.success) {
-                    // alert(res.data.message);
                     toast({
                         title: `${res.data.message}`,
                         status: "success",
@@ -307,8 +288,6 @@ function StockManagement() {
                         Authorization: `Bearer ${token}`
                     }
                 })
-                // console.log(`getRequest :`, res.data.data);
-
                 setRequest(res.data.data)
                 setLoading(false);
             } else {
@@ -317,20 +296,15 @@ function StockManagement() {
                         Authorization: `Bearer ${token}`
                     }
                 })
-                console.log(`getRequest :`, res);
-
                 setRequest(res.data.data)
                 setLoading(false);
             }
-
-
         } catch (error) {
             console.log(error);
         }
     }
 
     const printRequest = () => {
-        // console.log(`request`, request);
         return request.map((val, idx) => {
             if (roleId == 1) {
                 return <RequestStock
@@ -390,21 +364,15 @@ function StockManagement() {
                         Authorization: `Bearer ${token}`
                     }
                 })
-
-                console.log("getSend", res.data.data);
                 setSend(res.data.data)
-
             } else {
                 let res = await axios.get(`${API_URL}/mutation/get-send?warehouseId`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
                 })
-
-                console.log("getSend", res.data.data);
                 setSend(res.data.data)
             }
-
         } catch (error) {
             console.log(error);
         }
@@ -452,11 +420,7 @@ function StockManagement() {
                         Authorization: `Bearer ${token}`
                     }
                 })
-
-                console.log(`btnAccept`, res);
-
                 if (res.data.success == true) {
-                    // alert(res.data.message);
                     toast({
                         title: `${res.data.message}`,
                         status: "success",
@@ -478,11 +442,7 @@ function StockManagement() {
                         Authorization: `Bearer ${token}`
                     }
                 })
-
-                console.log(`btnAccept`, res);
-
                 if (res.data.success == true) {
-                    // alert(res.data.message);
                     toast({
                         title: `${res.data.message}`,
                         status: "success",
@@ -495,7 +455,6 @@ function StockManagement() {
         } catch (error) {
             console.log(error);
             if (error.response.data.success == false) {
-                // alert(error.response.data.message);
                 toast({
                     title: `${error.response.data.message}`,
                     status: "error",
@@ -514,10 +473,7 @@ function StockManagement() {
                     Authorization: `Bearer ${token}`
                 }
             })
-
-            console.log(`btnReject`, res);
             if (res.data.success) {
-                // alert(res.data.message);
                 toast({
                     title: `${res.data.message}`,
                     status: "success",

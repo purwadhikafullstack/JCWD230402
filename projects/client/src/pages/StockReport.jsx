@@ -210,7 +210,6 @@ function StockReport() {
   };
 
   const paginate = (pageNumber) => {
-    // console.log(`pagenumber`, pageNumber.selected);
     setPage(pageNumber.selected);
 
     params.set("page", pageNumber.selected + 1);
@@ -221,7 +220,6 @@ function StockReport() {
       params.delete("page");
       navigate({ search: params.toString() }); // buat update url
     }
-    // console.log("location on pagination click", location);
   };
 
   function ordering(sortby) {

@@ -5,7 +5,7 @@ const axios = require("axios");
 module.exports = {
   distance: async (req, res, next) => {
     try {
-      console.log(`req.body`, req.body);
+      // console.log(`req.body`, req.body);
 
       let getWarehouse = await model.warehouse.findAll(
         {
@@ -59,7 +59,7 @@ module.exports = {
       });
 
       const fixDistance = tempArr[0];
-      console.log(`fixDistance`, tempArr);
+      // console.log(`fixDistance`, tempArr);
 
       let ongkir = await axios.post(
         `https://api.rajaongkir.com/starter/cost`,
@@ -76,7 +76,7 @@ module.exports = {
         }
       );
 
-      console.log(`ongkir`, ongkir);
+      // console.log(`ongkir`, ongkir);
 
       return res.status(200).send({
         data: ongkir.data.rajaongkir.results,

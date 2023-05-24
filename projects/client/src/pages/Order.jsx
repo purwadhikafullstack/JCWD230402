@@ -103,7 +103,6 @@ function Order() {
                 },
               }
             );
-
             setOrderList(res.data.data);
             setTotalData(res.data.datanum);
           } else {
@@ -115,7 +114,6 @@ function Order() {
                 },
               }
             );
-            console.log(`getOrder`, res.data.data);
             setOrderList(res.data.data);
             setTotalData(res.data.datanum);
           }
@@ -129,7 +127,6 @@ function Order() {
                 },
               }
             );
-            console.log(`getOrder`, res.data.data);
             setOrderList(res.data.data);
             setTotalData(res.data.datanum);
           } else {
@@ -141,7 +138,6 @@ function Order() {
                 },
               }
             );
-            console.log(`getOrder`, res.data.data);
             setOrderList(res.data.data);
             setTotalData(res.data.datanum);
           }
@@ -156,7 +152,6 @@ function Order() {
               },
             }
           );
-          console.log(`getOrder`, res.data.data);
           setOrderList(res.data.data);
           setTotalData(res.data.datanum);
         } else {
@@ -168,7 +163,6 @@ function Order() {
               },
             }
           );
-          console.log(`getOrder`, res.data.data);
           setOrderList(res.data.data);
           setTotalData(res.data.datanum);
         }
@@ -182,8 +176,6 @@ function Order() {
     getOrder();
   }, [status, orderBy]);
 
-
-  console.log(`orderList`, orderList);
   const printOrder = () => {
     if (orderList.length === 0) {
       return (
@@ -371,7 +363,6 @@ function Order() {
         },
       });
 
-      console.log(`getOrderDetails`, res.data.data);
       setOrderDetails(res.data.data);
     } catch (error) {
       console.log(error);
@@ -515,7 +506,6 @@ function Order() {
   };
 
   const paginate = (pageNumber) => {
-    // console.log(`pagenumber`, pageNumber.selected);
     setPage(pageNumber.selected);
 
     params.set("page", pageNumber.selected + 1);

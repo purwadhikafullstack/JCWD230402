@@ -1,23 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
-import { NavLink } from 'react-router-dom';
 import { FaUserAlt, FaHome, } from 'react-icons/fa'
 import { MdPhoneIphone } from 'react-icons/md'
 import { BsCamera } from 'react-icons/bs'
 import axios from 'axios';
 import { API_URL } from '../helper';
-import { Radio, useToast } from '@chakra-ui/react';
+import { useToast } from '@chakra-ui/react';
 
 
 function CustomerProfile(props) {
 
   const toast = useToast();
-  const statusId = useSelector((state) => state.authReducer.statusId);
   const nameUser = useSelector((state) => state.authReducer.name);
   const genderUser = useSelector((state) => state.authReducer.gender);
   const phoneUser = useSelector((state) => state.authReducer.phone);
-  const addressUser = useSelector((state) => state.authReducer.address);
-  const password = useSelector((state) => state.authReducer.password);
   const id = useSelector((state) => state.authReducer.id);
 
   // ----------------------profileInfo---------------------------//
@@ -44,11 +40,7 @@ function CustomerProfile(props) {
           "Authorization": `Bearer ${token}`
         }
       })
-
-      // console.log(`getAllAdmin`, res.data.data);
-
       setUserInfo(res.data.data)
-
     } catch (error) {
       console.log(error);
     }
@@ -59,8 +51,6 @@ function CustomerProfile(props) {
   const saveProfile = async () => {
     try {
       let token = localStorage.getItem("Gadgetwarehouse_userlogin");
-      console.log(token)
-      console.log("ini data darisaveprofile:", name, phone, gender)
       let response = await axios.patch(`${API_URL}/profile/edit`,
         {
           name: name,
@@ -72,18 +62,13 @@ function CustomerProfile(props) {
         },
       }
       );
-      console.log("button saveProfile", response)
       if (response.data.success) {
-        // alert(response.data.message);
         toast({
           title: `${response.data.message}`,
           status: "success",
           duration: 2000,
           isClosable: true,
         });
-        // setTimeout(() => {
-        //   window.location.reload();
-        // }, 1000); // this will refresh the page after 1 second
         setName('');
         setPhone('');
         setGender('');
@@ -91,7 +76,6 @@ function CustomerProfile(props) {
       };
     } catch (error) {
       console.log("ini error dari onBtnEditProfile : ", error);
-      // alert(error.response.data.error[0].msg);
       toast({
         title: `${error.response.data.error[0].msg}`,
         status: "error",
@@ -102,9 +86,6 @@ function CustomerProfile(props) {
   }
 
   const btnCancelEdit = () => {
-    // setTimeout(() => {
-    //   window.location.reload();
-    // }, 10);
     setName("")
     setPhone("")
     setGender("")
@@ -134,10 +115,7 @@ function CustomerProfile(props) {
   const getCity = async () => {
     try {
       let res = await axios.get(`${API_URL}/rajaongkir/city/${province_id}`)
-      // console.log(`ini res getCity`, res.data.rajaongkir.results);
-
       setCity(res.data.rajaongkir.results)
-
     } catch (error) {
       console.log("error getCity", error);
     }
@@ -151,13 +129,10 @@ function CustomerProfile(props) {
   }, [province_id, provinceName])
 
   const clickProvince = (provinceName) => {
-    // setProvinceName(nameprovince)
-    console.log("privince name", provinceName)
     setProvinceName(provinceName)
   }
 
   const printProvince = () => {
-    console.log(`province`, province);
     return province.map((val, idx) => {
       return (
         <option
@@ -172,8 +147,6 @@ function CustomerProfile(props) {
   const clickCity = (cityName, postalCode) => {
     setCityName(cityName);
     setPostalCode(postalCode);
-    console.log('postalCode', postalCode)
-    console.log("city name ", cityName)
   }
 
   const printCity = () => {
@@ -238,10 +211,8 @@ function CustomerProfile(props) {
           "Authorization": `Bearer ${token}`
         }
       })
-      console.log(`ini dari resp addnewuser`, res);
 
       if (res.data.success) {
-        // alert(res.data.message);
         toast({
           title: `${res.data.message}`,
           status: "success",
@@ -255,7 +226,6 @@ function CustomerProfile(props) {
     } catch (error) {
       console.log("ini error add Location:", error);
       if (error.response.data.error) {
-        // alert(error.response.data.error[0].msg)
         toast({
           title: `${error.response.data.error[0].msg}`,
           status: "error",
@@ -263,7 +233,6 @@ function CustomerProfile(props) {
           isClosable: true,
         });
       } else {
-        // alert(error.response.data.message)
         toast({
           title: `${error.response.data.message}`,
           status: "error",
@@ -295,20 +264,6 @@ function CustomerProfile(props) {
   }
 
   const printAddress = () => {
-    // const handleSetPrimary = (idx) => {
-    //   // make API call to set address as primary in database
-    //   // update local state to reflect the change
-    //   setAddressList((prevList) => {
-    //     const newList = prevList.map((val, i) => {
-    //       if (i === idx) {
-    //         return { ...val, isPrimary: true };
-    //       } else {
-    //         return { ...val, isPrimary: false };
-    //       }
-    //     });
-    //     return newList;
-    //   });
-    // };
     return addressList.map((val, idx) => {
       return (<tr className='text-white gap-3 w-full'>
         <div className='flex justify-between gap-6 py-3'>
@@ -356,8 +311,6 @@ function CustomerProfile(props) {
 
   const btneditAddress = async () => {
     try {
-      alert(cityName)
-      alert(provinceName)
       let token = localStorage.getItem("Gadgetwarehouse_userlogin");
       let res = await axios.patch(`${API_URL}/profile/address`, {
         address: address,
@@ -373,7 +326,6 @@ function CustomerProfile(props) {
       })
 
       if (res.data.success) {
-        // alert(res.data.message);
         toast({
           title: `${res.data.message}`,
           status: "success",
@@ -388,7 +340,6 @@ function CustomerProfile(props) {
     } catch (error) {
       console.log("ini error:", error);
       if (error.response.data.error) {
-        // alert(error.response.data.error[0].msg)
         toast({
           title: `${error.response.data.error[0].msg}`,
           status: "error",
@@ -396,7 +347,6 @@ function CustomerProfile(props) {
           isClosable: true,
         });
       } else {
-        // alert(error.response.data.message)
         toast({
           title: `${error.response.data.message}`,
           status: "error",
@@ -415,8 +365,6 @@ function CustomerProfile(props) {
           "Authorization": `Bearer ${token}`
         }
       })
-
-      // alert(res.data.message);
       toast({
         title: `${res.data.message}`,
         status: "success",

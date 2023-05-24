@@ -4,11 +4,8 @@ import ReactPaginate from "react-paginate";
 import { Flex } from "@chakra-ui/react";
 
 const Pagination = (props) => {
-  // console.log("ini props.totaldata", props.totalData);
-  // console.log("ini props.size", props.size);
   const pageCount = Math.ceil(props.totalData / props.size);
 
-  // console.log("pageCount = ", pageCount);
 
   return (
     <Flex>
@@ -29,8 +26,6 @@ const Pagination = (props) => {
         previousLinkClassName={"page-num"}
         nextClassName={"page-item"}
         nextLinkClassName={"page-num "}
-        // breakClassName={"page-item"}
-        // breakLinkClassName={"page-num"}
         activeLinkClassName={"active"}
       />
     </Flex>
