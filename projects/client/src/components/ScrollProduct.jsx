@@ -3,7 +3,6 @@ import { motion } from 'framer-motion'
 import { MdShoppingBasket } from "react-icons/md";
 import { FiChevronRight, FiChevronLeft } from "react-icons/fi";
 import Iphone14 from '../img/IphoneA.png'
-import NotFound from "../img/NotFound.svg";
 import { useSelector } from 'react-redux'
 import { useNavigate } from "react-router-dom";
 

@@ -86,7 +86,7 @@ module.exports = {
     editAdmin: async (req, res, next) => {
         const ormTransaction = await model.sequelize.transaction();
         try {
-            console.log(`ini dari req params`, req.params.uuid);
+            // console.log(`ini dari req params`, req.params.uuid);
             let cekAdmin = await model.admin.findAll({
                 where: {
                     [sequelize.Op.or]: [
@@ -94,10 +94,9 @@ module.exports = {
                         { email: req.body.email },
                         { phone: req.body.phone }
                     ],
-                    // uuid: { [sequelize.Op.ne]: req.params.uuid }
                 }
             });
-            console.log(`ini cekAdmin`, cekAdmin);
+            // console.log(`ini cekAdmin`, cekAdmin);
 
             if (cekAdmin.length == 0) {
                 req.body.password = bcrypt.hashSync(req.body.password, salt)

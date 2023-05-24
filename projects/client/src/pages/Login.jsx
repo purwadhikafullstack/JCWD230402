@@ -29,7 +29,6 @@ function Login() {
     const onBtnLogin = async () => {
         try {
             if (email === "" || password === "") {
-                // alert("Please enter your credentials");
                 toast({
                     title: `Please enter your credentials`,
                     status: "error",
@@ -42,10 +41,8 @@ function Login() {
                     email: email,
                     password: password,
                 });
-                console.log("data from LOGIN", res.data);
 
                 if (res.data.success) {
-                    // alert("Login Successfull");
                     toast({
                         title: `${res.data.message}`,
                         status: "success",
@@ -59,7 +56,6 @@ function Login() {
             }
         } catch (error) {
             console.log(error);
-            // alert(error.response.data.message);
             toast({
                 title: `Login Failed`,
                 description: `Email or Password wrong`,

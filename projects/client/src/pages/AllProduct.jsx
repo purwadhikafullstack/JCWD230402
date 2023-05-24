@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import {
   Text,
   Flex,
-  ButtonGroup,
   IconButton,
   Select,
   Stack,
@@ -53,7 +52,6 @@ function AllProduct() {
         `${API_URL}/product/customer-product/?page=${page}&size=${size}&sortby=${sortby}&order=${order}&name=${filter}`,
         {}
       );
-
       setProductList(res.data.data);
       setTotalData(res.data.datanum);
     } catch (error) {
@@ -201,7 +199,6 @@ function AllProduct() {
             pb={1}
           ></IconButton>
           <Select
-            // options={[{ colorScheme: "black" }]}
             w={"120px"}
             backgroundColor={"transparent"}
             borderColor={"#34D399"}

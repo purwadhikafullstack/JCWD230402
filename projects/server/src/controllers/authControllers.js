@@ -17,7 +17,7 @@ module.exports = {
           email: req.body.email,
         },
       });
-      console.log("check user exist", checkUser);
+      // console.log("check user exist", checkUser);
 
       if (checkUser.length === 0) {
         const uuid = uuidv4();
@@ -86,16 +86,16 @@ module.exports = {
 
   verify: async (req, res, next) => {
     try {
-      console.log("data dari token", req.decript);
+      // console.log("data dari token", req.decript);
       let checkUser = await model.customer.findAll({
         where: {
           uuid: req.decript.uuid,
         },
       });
-      console.log("check user exist", checkUser);
+      // console.log("check user exist", checkUser);
       if (checkUser.length > 0) {
         if (req.body.password === req.body.confirmationpassword) {
-          console.log("data before hash", req.body);
+          // console.log("data before hash", req.body);
           req.body.password = bcrypt.hashSync(req.body.password, salt);
 
           let verification = await model.customer.update(
@@ -127,12 +127,12 @@ module.exports = {
 
   login: async (req, res, next) => {
     try {
-      console.log("data from req", req.body);
+      // console.log("data from req", req.body);
 
       let get = await model.customer.findAll({
         where: { email: req.body.email },
       });
-      console.log("for get user login", get);
+      // console.log("for get user login", get);
       if (get.length > 0) {
         let check = bcrypt.compareSync(
           req.body.password,
@@ -175,14 +175,14 @@ module.exports = {
 
   keepLogin: async (req, res, next) => {
     try {
-      console.log("Decript token:", req.decript);
+      // console.log("Decript token:", req.decript);
       let get = await model.customer.findAll({
         where: {
           uuid: req.decript.uuid,
         },
       });
 
-      console.log("Data from get[0].dataValues", get[0].dataValues);
+      // console.log("Data from get[0].dataValues", get[0].dataValues);
 
       let { id, uuid, name, email, phone, gender, profileImage, statusId } =
         get[0].dataValues;
@@ -214,7 +214,7 @@ module.exports = {
           email: req.body.email,
         },
       });
-      console.log("data dari get data", getData[0].dataValues);
+      // console.log("data dari get data", getData[0].dataValues);
 
       //send email and create token
       let { id, statusId } = getData[0].dataValues;
@@ -257,7 +257,7 @@ module.exports = {
     const ormTransaction = await model.sequelize.transaction();
     try {
       if (req.body.Password === req.body.confirmationPassword) {
-        console.log("dcript token", req.decript);
+        // console.log("dcript token", req.decript);
         req.body.password = bcrypt.hashSync(req.body.password, salt);
 
         await model.customer.update(
@@ -297,14 +297,9 @@ module.exports = {
           email: req.body.email,
         },
       });
-      console.log("check user exist", checkUser.length);
+      // console.log("check user exist", checkUser.length);
 
       if (checkUser.length === 0) {
-        // if (req.body.password == req.body.confirmationPassword) {
-        //     delete req.body.confirmationPassword
-        //     console.log("check data before create", req.body);
-        //     req.body.password = bcrypt.hashSync(req.body.password.salt);
-        //     console.log("check data after  hash password :", req.body);
 
         const uuid = uuidv4();
         req.body.password = bcrypt.hashSync(req.body.password, salt);
@@ -378,7 +373,7 @@ module.exports = {
             profileImage,
           } = get[0].dataValues;
           let token = createToken({ uuid, roleId });
-          console.log(`ini token admin login`, token);
+          // console.log(`ini token admin login`, token);
           return res.status(200).send({
             success: true,
             message: "login success",
@@ -411,7 +406,7 @@ module.exports = {
 
   keepadminLogin: async (req, res, next) => {
     try {
-      console.log("Decript token:", req.decript);
+      // console.log("Decript token:", req.decript);
       let get = await model.admin.findAll({
         where: {
           uuid: req.decript.uuid,
@@ -453,7 +448,7 @@ module.exports = {
 
   edit: async (req, res, next) => {
     try {
-      console.log("Decript token:", req.decript);
+      // console.log("Decript token:", req.decript);
       const uuid = uuidv4();
       const { name, gender, phone } = req.body;
       if (name || gender || phone) {

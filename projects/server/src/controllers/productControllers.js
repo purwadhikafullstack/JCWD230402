@@ -15,12 +15,7 @@ function formating(params) {
 
 module.exports = {
   addProduct: async (req, res, next) => {
-    // const ormTransaction = await model.sequelize.transaction();
     try {
-      console.log(`reqbody `, req.body);
-      console.log(`req.files `, req.files);
-      // console.log(`reqfile `, req.body.images[0]);
-
       let { name, categoryId, description, variations } = JSON.parse(
         req.body.data
       );
@@ -31,7 +26,6 @@ module.exports = {
         },
       });
 
-      // console.log(`cekproduk`, cekProduk);
 
       if (cekProduk.length == 0) {
         //CASE = produk blm ada sama sekali, buat produk baru di table produk, dan variant di table type
@@ -45,12 +39,9 @@ module.exports = {
             productImage: `/ImgProduct/${req.files[0]?.filename}`,
             description,
             categoryId,
-          }, {
-          // transaction: ormTransaction,
-        });
+          });
 
         variations.forEach(async (variant) => {
-          console.log(`variant`, variant);
 
           await model.type.create(
             {
@@ -64,13 +55,9 @@ module.exports = {
               warehouseId: variant.warehouseId,
               statusId: 4,
               booked: 0,
-            },
-            {
-              // transaction: ormTransaction,
             }
           );
         });
-        // await ormTransaction.commit();
         return res.status(200).send({
           success: true,
           message: "produk added",
@@ -83,7 +70,6 @@ module.exports = {
           },
           attributes: ["id"],
         });
-        // console.log(`productId`, productId);
 
         let newArr = [];
 
@@ -98,7 +84,7 @@ module.exports = {
               ],
             },
           });
-          console.log(`cektype`, cektype);
+          // console.log(`cektype`, cektype);
 
           if (cektype.length == 0) {
             // kalo variasi belum ada di database type
@@ -116,36 +102,27 @@ module.exports = {
                 warehouseId: variations[i].warehouseId,
                 statusId: 4,
                 booked: 0,
-              },
-              {
-                // transaction: ormTransaction,
               }
             );
-
-            // console.log(`newArr`, newArr);
           } else {
             // kalo variasi ternyata sudah ada di database type
             newArr.push("true");
-            // console.log(`newArr`, newArr);
           }
         }
 
         // kondisi dibawah ini jalan ketika loopingan variant sudah selesai
-        console.log(`hasil newArr`, newArr);
-        console.log(`hasil include`, newArr.includes("false"));
+        // console.log(`hasil newArr`, newArr);
+        // console.log(`hasil include`, newArr.includes("false"));
 
         if (newArr.includes("false")) {
-          console.log(`hasil include 1:`, newArr.includes("false"));
+          // console.log(`hasil include 1:`, newArr.includes("false"));
 
-          // await ormTransaction.commit();
           return res.status(200).send({
             success: true,
             message: "variasi berhasil ditambah, duplikasi tidak dibikin",
           });
         } else {
-          console.log(`hasil include 2:`, newArr.includes("false"));
-
-          // await ormTransaction.commit();
+          // console.log(`hasil include 2:`, newArr.includes("false"));
           return res.status(400).send({
             success: false,
             message:
@@ -154,7 +131,6 @@ module.exports = {
         }
       }
     } catch (error) {
-      // await ormTransaction.rollback();
       console.log(error);
       next(error);
     }
@@ -191,11 +167,7 @@ module.exports = {
             [sequelize.Op.like]: `%${req.query.name}%`,
           },
         },
-        // order: [["name", "ASC"]],
       });
-
-      // console.log(`getProduct`, get);
-      // console.log(`getcount`, count);
 
       return res.status(200).send({
         data: get.rows,
@@ -209,9 +181,6 @@ module.exports = {
 
   editProduct: async (req, res, next) => {
     try {
-      console.log(`reqbody `, JSON.parse(req.body.data));
-      // console.log(`req.files `, req.files);
-
       let { name, categoryId, description, variationsEdit } = JSON.parse(
         req.body.data
       );
@@ -228,6 +197,7 @@ module.exports = {
           {
             name,
             categoryId,
+            productImage: `/ImgProduct/${req.files[0]?.filename}`,
             description,
           },
           {
@@ -276,9 +246,6 @@ module.exports = {
                 discountedPrice: parseInt(variationsEdit[i].price) - (parseInt(variationsEdit[i].price * parseInt(variationsEdit[i].discount) / 100)),
                 warehouseId: variationsEdit[i].warehouseId,
                 statusId: 4,
-              },
-              {
-                // transaction: ormTransaction,
               }
             );
 
@@ -292,19 +259,17 @@ module.exports = {
 
         if (newArr.includes("false")) {
           // console.log(`hasil include 1:`, newArr.includes("false"));
-
-          // await ormTransaction.commit();
           return res.status(200).send({
             success: true,
-            message: "variasi berhasil ditambah, duplikasi tidak dibikin",
+            message: "type added, no duplication made",
           });
         } else {
           // console.log(`hasil include 2:`, newArr.includes("false"));
-
-          return res.status(400).send({
-            success: false,
+          return res.status(200).send({
+            success: true,
+            data: editProduct,
             message:
-              "produk yang ingin ditambah dan semua variasinya sudah ada di database",
+              "Product change, and type not duplicate",
           });
         }
       }
@@ -316,7 +281,6 @@ module.exports = {
 
   deleteProduct: async (req, res, next) => {
     try {
-      console.log(`req.params`, req.params);
       let findProduct = await model.product.findAll({
         where: {
           id: req.params.id,
@@ -332,7 +296,7 @@ module.exports = {
             },
           }
         );
-        console.log(`deleteProduct`, deleteProduct);
+        // console.log(`deleteProduct`, deleteProduct);
         res.status(200).send({
           success: true,
           message: "product disabled",
@@ -346,7 +310,7 @@ module.exports = {
             },
           }
         );
-        console.log(`deleteProduct`, deleteProduct);
+        // console.log(`deleteProduct`, deleteProduct);
         res.status(200).send({
           success: true,
           message: "product enabled",
@@ -394,16 +358,13 @@ module.exports = {
 
   editVariant: async (req, res, next) => {
     try {
-      console.log(`req.params`, req.params);
-      console.log(`req.body`, req.body);
-
       let findStock = await model.type.findOne({
         where: {
           id: req.params.id,
         },
       });
 
-      console.log(`findStock`, findStock);
+      // console.log(`findStock`, findStock);
       if (req.body.stock - findStock.dataValues.stock < 0) {
         let stockMutation = await model.stockmutation.create({
           typeId: req.params.id,
@@ -414,7 +375,7 @@ module.exports = {
           creatorId: req.body.creatorId,
         });
 
-        console.log(`stockMutation`, stockMutation);
+        // console.log(`stockMutation`, stockMutation);
       } else {
         let stockMutation = await model.stockmutation.create({
           typeId: req.params.id,
@@ -425,7 +386,7 @@ module.exports = {
           creatorId: req.body.creatorId,
         });
 
-        console.log(`stockMutation`, stockMutation);
+        // console.log(`stockMutation`, stockMutation);
       }
 
       let editVariant = await model.type.update(
@@ -442,7 +403,7 @@ module.exports = {
           },
         }
       );
-      console.log("editVariant", editVariant);
+      // console.log("editVariant", editVariant);
 
       return res.status(200).send({
         success: true,
@@ -456,7 +417,7 @@ module.exports = {
 
   getPrice: async (req, res, next) => {
     try {
-      console.log(`req.query`, req.query);
+      // console.log(`req.query`, req.query);
       let get = await model.type.findAll({
         where: {
           productId: req.query.id,
@@ -505,8 +466,6 @@ module.exports = {
         let addColor = await model.color.create({
           color: req.body.color,
         });
-
-        // console.log(`addcolor`, addColor);
 
         res.status(200).send({
           success: true,
@@ -557,8 +516,6 @@ module.exports = {
           memory: req.body.memory,
         });
 
-        // console.log(`addcolor`, addColor);
-
         res.status(200).send({
           success: true,
           message: "memory added",
@@ -606,14 +563,14 @@ module.exports = {
             ? [[{ model: model.type }, "discountedPrice", order]]
             : [[sortby, order]],
       });
-
+      
       const counter = await model.product.count({
         where: {
           isDisabled: false,
         },
       });
 
-      console.log(counter);
+      // console.log(counter);
 
       return res.status(200).send({
         data: get.rows,
@@ -653,7 +610,7 @@ module.exports = {
           },
         ],
       });
-      console.log("find type", findType);
+      // console.log("find type", findType);
 
       return res.status(200).send({ data: findType });
     } catch (error) {

@@ -21,13 +21,6 @@ function Pagenotfound() {
           maxW={"100vw"}
           mx={"auto"}
         >
-          {/* <Spinner
-            thickness="4px"
-            speed="0.65s"
-            emptyColor="gray.200"
-            color="blue.500"
-            size="xl"
-          /> */}
         </Flex>
       ) : (
         <div className='body w-full h-screen'>

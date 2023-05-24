@@ -12,7 +12,7 @@ module.exports = {
   getUser: async (req, res, next) => {
     try {
       let getUser = await model.customer.findAll({});
-      console.log(`getUser`, getUser);
+      // console.log(`getUser`, getUser);
 
       return res.status(200).send({
         success: true,
@@ -26,7 +26,7 @@ module.exports = {
 
   editProfileUser: async (req, res, next) => {
     try {
-      console.log("Decript token:", req.decript);
+      // console.log("Decript token:", req.decript);
       const uuid = uuidv4();
       const { name, gender, phone } = req.body;
       if (name || gender || phone) {
@@ -54,7 +54,7 @@ module.exports = {
   // ------------------------------------Address--------------------------------//
   addNewAddress: async (req, res, next) => {
     try {
-      console.log("from req body:", req.body);
+      // console.log("from req body:", req.body);
       let checkAddress = await model.address.findAll({
         where: {
           address: req.body.address,
@@ -136,7 +136,7 @@ module.exports = {
           customerId: req.params.id
         }
       });
-      console.log(`data`, data);
+      // console.log(`data`, data);
 
       return res.status(200).send(data);
     } catch (error) {
@@ -146,14 +146,14 @@ module.exports = {
 
   updateAddress: async (req, res, next) => {
     try {
-      console.log("id = ", req.body.id);
+      // console.log("id = ", req.body.id);
       let cekAddress = await model.address.findAll({
         where: {
           address: req.body.address,
           id: { [sequelize.Op.ne]: req.body.id },
         },
       });
-      console.log(`ini cekAddress`, cekAddress);
+      // console.log(`ini cekAddress`, cekAddress);
 
       if (cekAddress.length == 0) {
         // const uuid = uuidv4();
@@ -164,7 +164,7 @@ module.exports = {
           `https://api.opencagedata.com/geocode/v1/json?q=${city}&key=${process.env.OPENCAGE_KEY}`
         );
 
-        console.log(`ini coordinate`, coordinate.results);
+        // console.log(`ini coordinate`, coordinate.results);
 
         let lat = coordinate.results[0].geometry.lat;
         let lng = coordinate.results[0].geometry.lng;
@@ -187,7 +187,7 @@ module.exports = {
           }
         );
 
-        console.log(editAddress);
+        // console.log(editAddress);
 
         return res.status(200).send({
           success: true,
@@ -214,7 +214,7 @@ module.exports = {
         },
       });
 
-      console.log(`findAddress`, findAddress[0].dataValues.isDisabled);
+      // console.log(`findAddress`, findAddress[0].dataValues.isDisabled);
 
       if (findAddress[0].dataValues.isDisabled == false) {
         let deleteAddress = await model.address.update(
@@ -225,7 +225,7 @@ module.exports = {
             },
           }
         );
-        console.log(`deleteAddress`, deleteAddress);
+        // console.log(`deleteAddress`, deleteAddress);
         return res.status(200).send({
           success: true,
         });
@@ -238,7 +238,7 @@ module.exports = {
             },
           }
         );
-        console.log(`deleteAddress`, deleteAddress);
+        // console.log(`deleteAddress`, deleteAddress);
         return res.status(200).send({
           success: true,
         });

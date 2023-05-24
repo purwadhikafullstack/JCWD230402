@@ -428,7 +428,6 @@ function ProductPage() {
   const onBtnLogin = async () => {
     try {
       if (email === "" || password === "") {
-        // alert("Please enter your credentials");
         toast({
           title: "Please enter your credentials",
           status: "error",

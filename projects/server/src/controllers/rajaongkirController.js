@@ -31,7 +31,7 @@ module.exports = {
           },
         }
       );
-      console.log(`ini res getCity`, response.data);
+      // console.log(`ini res getCity`, response.data);
 
       return res.status(200).send(response.data);
     } catch (error) {

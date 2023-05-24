@@ -3,7 +3,6 @@ import { API_URL, API_IMG_URL } from "../helper";
 import axios from "axios";
 import { cartAction } from "../reducers/cart";
 import { useDispatch } from "react-redux";
-
 import {
   Text,
   Flex,
@@ -177,7 +176,6 @@ function Checkout() {
           },
         }
       );
-
       if (res.data.success) {
         // alert(res.data.message);
         toast({
@@ -194,7 +192,6 @@ function Checkout() {
     } catch (error) {
       console.log("ini error add Location:", error);
       if (error.response.data.error) {
-        // alert(error.response.data.error[0].msg);
         toast({
           title: `${error.response.data.error[0].msg}`,
           status: "error",
@@ -202,7 +199,6 @@ function Checkout() {
           isClosable: true,
         });
       } else {
-        // alert(error.response.data.message);
         toast({
           title: `${error.response.data.message}`,
           status: "error",
@@ -227,7 +223,6 @@ function Checkout() {
           Authorization: `Bearer ${token}`,
         },
       });
-
       setAddressList(res.data.data);
     } catch (error) {
       console.log(error);
@@ -290,7 +285,6 @@ function Checkout() {
           },
         }
       );
-
       if (res.data.status) {
         toast({
           title: `${res.data.message}`,
@@ -321,7 +315,6 @@ function Checkout() {
           },
         }
       );
-
       setOngkirList(distance.data.data[0].costs);
       setSelectedWarehouse(distance.data.warehouse);
     } catch (error) {

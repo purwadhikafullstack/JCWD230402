@@ -12,9 +12,7 @@ function RequestPassword() {
         email: email,
       }
       );
-      console.log("ini dari btn regis", res);
       if (res.data.success) {
-        alert(res.data.message);
         toast({
           title: `${res.data.message}`,
           status: "success",
@@ -24,7 +22,6 @@ function RequestPassword() {
       }
     } catch (error) {
       console.log("error", error);
-      // alert(error.response.data.error[0].msg);
       toast({
         title: `${error.response.data.error[0].msg}`,
         status: "error",

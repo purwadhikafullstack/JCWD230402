@@ -2,11 +2,8 @@ import React from 'react';
 import {
     Box,
     Button,
-    ButtonGroup,
     Flex,
     FormControl,
-    FormErrorMessage,
-    FormHelperText,
     FormLabel,
     Heading,
     IconButton,
@@ -21,7 +18,6 @@ import {
     ModalOverlay,
     Select,
     Spinner,
-    Stack,
     Switch,
     Table,
     TableContainer,
@@ -34,7 +30,7 @@ import {
     useDisclosure,
     useToast
 } from '@chakra-ui/react';
-import { MdCancel, MdOutlineAdd, MdPhone, MdSearch, MdImage, MdDeleteForever } from "react-icons/md";
+import { MdOutlineAdd, MdDeleteForever } from "react-icons/md";
 import Pagination from '../components/Pagination';
 import { API_IMG_URL, API_URL } from '../helper';
 import axios from 'axios';
@@ -63,14 +59,11 @@ function Product() {
     const [description, setDescription] = React.useState("");
     const [variations, setVariations] = React.useState([]);
     const [warehouseList, setWarehouseList] = React.useState([]);
-    // const [warehouseId, setWarehouseId] = React.useState(0);
 
     const [isLoading, setIsLoading] = React.useState(false);
     const [optionsColor, setOptionsColor] = React.useState([]);
-    // const [valueColor, setValueColor] = React.useState([]);
 
     const [optionsMemory, setOptionsMemory] = React.useState([]);
-    // const [valueMemory, setValueMemory] = React.useState(null);
 
     let size = 6
     let sortby = "name"
@@ -80,7 +73,7 @@ function Product() {
     const [totalData, setTotalData] = React.useState(0);
 
     const [fileProduct, setFileProduct] = React.useState(null);
-    const [fileProductEdit, setFileProductEdit] = React.useState("");
+    const [fileProductEdit, setFileProductEdit] = React.useState(null);
     const [fileProductEditNew, setFileProductEditNew] = React.useState(null);
 
     const [isDisabled, setIsDisabled] = React.useState(true)
@@ -119,7 +112,6 @@ function Product() {
                     "Authorization": `Bearer ${token}`
                 }
             })
-            // console.log(`getCategory`, res);
             setCategory(res.data.data)
         } catch (error) {
             console.log(error);
@@ -127,7 +119,6 @@ function Product() {
     }
 
     const printCategory = () => {
-        // console.log(`category`, category);  
         return category.map((val, idx) => {
             return (
                 <option value={val.id} >
@@ -164,18 +155,13 @@ function Product() {
                     formData.append("images", fileProduct);
                 }
 
-                console.log(`add variation`, variations);
-                console.log(`formData`, formData);
                 let res = await axios.post(`${API_URL}/product`, formData, {
                     headers: {
                         "Authorization": `Bearer ${token}`
                     }
                 })
 
-                console.log(`btnSaveAddProduct`, res);
-
                 if (res.data.success) {
-                    // alert(res.data.message);
                     toast({
                         title: `${res.data.message}`,
                         status: "success",
@@ -194,7 +180,6 @@ function Product() {
 
         } catch (error) {
             console.log(error);
-            // alert(error.response.data.message)
             toast({
                 title: `${error.response.data.message}`,
                 status: "error",
@@ -223,7 +208,6 @@ function Product() {
                 }
             })
 
-            console.log(`res getProduct`, res);
             setProductList(res.data.data)
             setTotalData(res.data.datanum)
             setLoading(false);
@@ -237,11 +221,10 @@ function Product() {
     }
 
     const printProduct = () => {
-        // console.log(`productList`, productList);
         return productList.map((val, idx) => {
             return (
                 <Tr textColor={"white"}>
-                    <Td>{idx + 1}</Td>
+                    <Td>{idx + 1 + (page * size)}</Td>
                     <Td>
                         {<Image h={"auto"} width={"75px"} src={`${API_IMG_URL}${val.productImage}`} />}
                     </Td>
@@ -314,7 +297,6 @@ function Product() {
                     "Authorization": `Bearer ${token}`
                 }
             })
-            console.log(`res deleteAdmin`, res);
 
             if (res.data.success) {
                 getProduct()
@@ -328,7 +310,6 @@ function Product() {
     // ------------------------------ PAGINATION -----------------------------------------
 
     const paginate = (pageNumber) => {
-        // console.log(`pagenumber`, pageNumber.selected);
         setPage(pageNumber.selected);
         params.set("page", pageNumber.selected + 1);
         if (pageNumber.selected !== 0) {
@@ -356,8 +337,6 @@ function Product() {
     }
 
     const RemoveVariation = (idx) => {
-        console.log("cek delete", idx);
-        // const updatedVariations = variations.filter((variation) => variation.id !== id);
         let temp = [...variations]
         temp.splice(idx, 1)
 
@@ -410,7 +389,6 @@ function Product() {
                         "Authorization": `Bearer ${token}`
                     }
                 })
-                // console.log(`getAllWarehouse`, res);
                 setWarehouseList(res.data)
             } else {
                 let res = await axios.get(`${API_URL}/warehouse/all-warehouse?warehouseId=${warehouseId}`, {
@@ -418,7 +396,6 @@ function Product() {
                         "Authorization": `Bearer ${token}`
                     }
                 })
-                // console.log(`getAllWarehouse`, res);
                 setWarehouseList(res.data)
             }
         } catch (error) {
@@ -427,7 +404,6 @@ function Product() {
     }
 
     const printAllWarehouse = () => {
-        // console.log(`warehouseList`, warehouseList);
         return warehouseList.map((val, idx) => {
             return (
                 <option value={val.id} >
@@ -445,9 +421,7 @@ function Product() {
                     "Authorization": `Bearer ${token}`
                 }
             })
-
             setOptionsColor(get.data.data);
-
         } catch (error) {
             console.log(error);
         }
@@ -462,8 +436,6 @@ function Product() {
                     "Authorization": `Bearer ${token}`
                 }
             })
-            console.log(`createColor`, add);
-
         } catch (error) {
             console.log(error);
         }
@@ -483,9 +455,7 @@ function Product() {
                     "Authorization": `Bearer ${token}`
                 }
             })
-
             setOptionsMemory(get.data.data);
-
         } catch (error) {
             console.log(error);
         }
@@ -500,8 +470,6 @@ function Product() {
                     "Authorization": `Bearer ${token}`
                 }
             })
-            console.log(`createMemory`, add);
-
         } catch (error) {
             console.log(error);
         }
@@ -523,7 +491,6 @@ function Product() {
     // ------------------------------ EDIT VARIANT ------------------------------------
 
     const [variationsEdit, setVariationsEdit] = React.useState([]);
-    console.log(`variationsEdit`, variationsEdit);
     const [productId, setProductId] = React.useState()
     const onBtnEdit = async (
         id,
@@ -561,7 +528,6 @@ function Product() {
 
     const addVariationEdit = () => {
         const newVariaton = {
-            // id: variationsEdit.length + 1,
             colorId: null,
             memoryId: null,
             warehouseId: null,
@@ -573,8 +539,6 @@ function Product() {
     }
 
     const RemoveVariationEdit = (idx) => {
-        console.log("cek delete", idx);
-        // const updatedVariations = variations.filter((variation) => variation.id !== id);
         let temp = [...variationsEdit]
         temp.splice(idx, 1)
 
@@ -638,15 +602,12 @@ function Product() {
                 formData.append("images", fileProductEditNew);
             }
 
-            console.log(`formData`, formData);
-
             let res = await axios.patch(`${API_URL}/product/?id=${productId}`, formData, {
                 headers: {
                     "Authorization": `Bearer ${token}`
                 }
             })
             if (res.data.success) {
-                // alert(res.data.message);
                 toast({
                     title: `${res.data.message}`,
                     status: "success",
@@ -657,12 +618,12 @@ function Product() {
                 setProductName("");
                 setCategoryId();
                 setDescription("");
+                setFileProductEditNew();
                 setVariationsEdit([]);
                 modalEdit.onClose();
             }
         } catch (error) {
             console.log(error);
-            // alert(error.response.data.message)
             toast({
                 title: `${error.response.data.message}`,
                 status: "error",
@@ -693,9 +654,7 @@ function Product() {
                     "Authorization": `Bearer ${token}`
                 }
             })
-            console.log(`editVariant`, res);
             if (res.data.success) {
-                // alert(res.data.message);
                 toast({
                     title: `${res.data.message}`,
                     status: "success",
@@ -823,7 +782,6 @@ function Product() {
                                     </Box>
 
                                     <Box
-                                        // border={"1px solid red" }
                                         h={"350px"}
                                         w={"80%"}
                                         overflowX={"hidden"}
@@ -865,7 +823,6 @@ function Product() {
                                                                             onChange={(newValue) => handleVariationChangeColor(idx, newValue)}
                                                                             onCreateOption={handleCreateColor}
                                                                             options={optionsColor}
-                                                                            // value={variation.colorId}
                                                                             defaultValue={variation.colorId}
                                                                         />
                                                                     }
@@ -880,7 +837,6 @@ function Product() {
                                                                             onChange={(newValue) => handleVariationChangeMemory(idx, newValue)}
                                                                             onCreateOption={handleCreateMemory}
                                                                             options={optionsMemory}
-                                                                            // value={valueMemory}
                                                                             defaultValue={variation.memoryId}
                                                                         />
                                                                     }
@@ -1047,7 +1003,6 @@ function Product() {
                                     </Box>
 
                                     <Box
-                                        // border={"1px solid red" }
                                         h={"350px"}
                                         w={"81%"}
                                         overflowX={"hidden"}
@@ -1063,7 +1018,6 @@ function Product() {
                                                         <Th>Disc (%)</Th>
                                                         <Th>Warehouse</Th>
                                                         <Th>Stock</Th>
-                                                        {/* <Th>Status</Th> */}
                                                         <Th>
                                                             {<IconButton
                                                                 onClick={addVariationEdit}
@@ -1090,8 +1044,6 @@ function Product() {
                                                                             onChange={(newValue) => handleVariationChangeColorEdit(idx, newValue)}
                                                                             onCreateOption={handleCreateColor}
                                                                             options={optionsColor}
-                                                                            // value={1}
-                                                                            // defaultValue={(colorList) => { console.log(`colorlist`, colorList); }}
                                                                             defaultInputValue={() => {
                                                                                 let value = optionsColor.filter(val => variationEdit.colorId == val.value)
                                                                                 if (value.length) {
@@ -1113,8 +1065,6 @@ function Product() {
                                                                             onChange={(newValue) => handleVariationChangeMemoryEdit(idx, newValue)}
                                                                             onCreateOption={handleCreateMemory}
                                                                             options={optionsMemory}
-                                                                            // value={valueMemory}
-                                                                            // defaultValue={variationEdit.memoryId}
                                                                             defaultInputValue={() => {
                                                                                 let value = optionsMemory.filter(val => variationEdit.memoryId == val.value)
                                                                                 if (value.length) {
@@ -1123,8 +1073,6 @@ function Product() {
                                                                                     return null
                                                                                 }
                                                                             }}
-                                                                        // disabled={variationEdit.id == isDisabled}
-                                                                        // isDisabled={variationEdit.id ? isDisabled : !isDisabled}
                                                                         />
                                                                     }
                                                                 </Td>
@@ -1178,11 +1126,6 @@ function Product() {
                                                                         />
                                                                     }
                                                                 </Td>
-                                                                {/* <Td>
-                                                            {
-                                                                variationEdit.status.status
-                                                            }
-                                                        </Td> */}
                                                                 <Td>
                                                                     {
                                                                         !variationEdit.id ? (
@@ -1208,7 +1151,6 @@ function Product() {
                                                                                     </Button>
                                                                                     <Button
                                                                                         onClick={() => {
-                                                                                            // setIsDisabled(!isDisabled);
                                                                                             setActiveIndex(null)
                                                                                         }}
                                                                                         size={"sm"}
@@ -1221,7 +1163,6 @@ function Product() {
                                                                                 </> : <>
                                                                                     <Button
                                                                                         onClick={() => {
-                                                                                            // setIsDisabled(isDisabled)
                                                                                             setActiveIndex(variationEdit)
                                                                                         }}
                                                                                         size={"sm"}
@@ -1297,16 +1238,8 @@ function Product() {
                         />
                     </Flex>
 
-                    {/* {
-                        <div className='justify-end flex h-7'>
-                            <Pagination
-                                paginate={paginate} size={size} totalData={totalData}
-                            />
-                        </div>
-                    } */}
                 </Box >
-            )
-            }
+            )}
         </>
     );
 }

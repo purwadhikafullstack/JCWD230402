@@ -1216,13 +1216,11 @@ module.exports = {
     try {
       if (req.files) {
         let { order } = JSON.parse(req.body.data);
-
         const findOrderId = await model.order.findOne({
           where: {
             uuid: order,
           },
         });
-
         const orderId = findOrderId.dataValues.id;
 
         await model.order.update(
@@ -1498,7 +1496,6 @@ module.exports = {
             include: [
               {
                 model: model.type,
-                // attribute: ["price", "discountedPrice"],
                 include: [
                   { model: model.color, attributes: ["color"] },
                   { model: model.memory, attributes: ["memory"] },
