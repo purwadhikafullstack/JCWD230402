@@ -1,5 +1,5 @@
 const { join } = require("path");
-require('dotenv').config({path:join(__dirname,'../.env')});
+require("dotenv").config({ path: join(__dirname, "../.env") });
 const express = require("express");
 const cors = require("cors");
 const PORT = process.env.PORT || 8000;
@@ -48,7 +48,6 @@ app.use("/api/checkout", checkout);
 app.use("/api/mutation", stockMutation);
 app.use("/api/order", order);
 app.use("/api/report", report);
-
 
 const { statusUpdater } = require("./helpers/schedule");
 

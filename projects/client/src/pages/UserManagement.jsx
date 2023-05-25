@@ -7,15 +7,12 @@ import {
   Button,
   Flex,
   FormControl,
-  FormErrorMessage,
-  FormHelperText,
   FormLabel,
   Heading,
   Icon,
   Input,
   Modal,
   ModalBody,
-  ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
@@ -107,8 +104,6 @@ function UserManagement() {
           },
         }
       );
-
-      console.log(`getAllAdmin`, res.data);
       setTotalData(res.data.datanum);
       setAdminList(res.data.data);
       setLoading(false);
@@ -121,7 +116,6 @@ function UserManagement() {
   };
 
   const printAllAdmin = () => {
-    // console.log(`admin`, adminList);
     return adminList.map((val, idx) => {
       return (
         <Tr textColor={"white"}>
@@ -136,8 +130,8 @@ function UserManagement() {
           <Td textColor={val.isDeleted === true ? "red.500" : "green.500"}>
             {val.isDeleted === false ? "Active" : "InActive"}
           </Td>
-          {roleId === 1 ? (
-            // disini nanti tambahin, jika roleId nya sama maka button delete nya hilang
+          {roleId === 1 ? ( 
+            //jika roleId nya sama maka button delete nya hilang
             <Td>
               <Button
                 _hover={"none"}
@@ -183,11 +177,6 @@ function UserManagement() {
 
   //------------------------------ ADD ADMIN (SAVE AND CANCEL) ----------------------------------
 
-  // const isErrorUsername = username === "";
-  // const isErrorEmail = email === "";
-  // const isErrorPassword = password === "";
-  // const isErrorPhone = phone === "";
-
   const btnSaveAddAdmin = async () => {
     try {
       if (username == "" || email == "" || phone == "" || password == "") {
@@ -215,8 +204,6 @@ function UserManagement() {
             },
           }
         );
-
-        console.log(`btnSaveAdmin`, res);
         if (res.data.success) {
           modalAdd.onClose();
           getAllAdmin();
@@ -278,7 +265,6 @@ function UserManagement() {
           Authorization: `Bearer ${token}`,
         },
       });
-      // console.log(`getAllWarehouse`, res);
       setWarehouseList(res.data);
     } catch (error) {
       console.log(error);
@@ -286,7 +272,6 @@ function UserManagement() {
   };
 
   const printAllWarehouse = () => {
-    // console.log(`warehouseList`, warehouseList);
     return warehouseList.map((val, idx) => {
       return <option value={val.id}>{val.name}</option>;
     });
@@ -301,15 +286,8 @@ function UserManagement() {
           Authorization: `Bearer ${token}`,
         },
       });
-      // console.log(`res deleteAdmin`, res);
 
       if (res.data.success) {
-        // toast({
-        //   title: `${res.data.message}`,
-        //   status: "success",
-        //   duration: 2000,
-        //   isClosable: true,
-        // });
         getAllAdmin();
       }
     } catch (error) {
@@ -365,8 +343,6 @@ function UserManagement() {
             },
           }
         );
-
-        console.log(`res btnSaveEditAdmin`, res);
         if (res.data.success) {
           toast({
             title: `${res.data.message}`,
@@ -446,7 +422,6 @@ function UserManagement() {
   }, [sortby, order, page]);
 
   const paginate = (pageNumber) => {
-    // console.log(`pagenumber`, pageNumber.selected);
     setPage(pageNumber.selected);
     params.set("page", pageNumber.selected + 1);
     if (pageNumber.selected !== 0) {
@@ -456,7 +431,6 @@ function UserManagement() {
       params.delete("page");
       navigate({ search: params.toString() }); // buat update url
     }
-    // console.log("location on pagination click", location);
   };
   // ===========================SearchBAR====================================
 
@@ -532,7 +506,6 @@ function UserManagement() {
                 <Flex>
                   <Box>
                     <FormControl
-                      // isInvalid={isErrorUsername}
                       isRequired
                     >
                       <FormLabel>User Name</FormLabel>
@@ -541,16 +514,10 @@ function UserManagement() {
                         onChange={(e) => setUsername(e.target.value)}
                         placeholder={"User Name"}
                       />
-                      {/* {!isErrorUsername ? (
-                        <FormHelperText />
-                      ) : (
-                        <FormErrorMessage>Username is required.</FormErrorMessage>
-                      )} */}
                     </FormControl>
 
                     <FormControl
                       mt={2}
-                      // isInvalid={isErrorEmail}
                       isRequired
                     >
                       <FormLabel>Email</FormLabel>
@@ -559,16 +526,10 @@ function UserManagement() {
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder={"Email"}
                       />
-                      {/* {!isErrorEmail ? (
-                        <FormHelperText />
-                      ) : (
-                        <FormErrorMessage>Email is required.</FormErrorMessage>
-                      )} */}
                     </FormControl>
 
                     <FormControl
                       mt={2}
-                      // isInvalid={isErrorPassword}
                       isRequired>
                       <FormLabel>Password</FormLabel>
                       <Flex>
@@ -586,15 +547,9 @@ function UserManagement() {
                           {visible === "password" ? <HiEyeOff /> : <HiEye />}
                         </Button>
                       </Flex>
-                      {/* {!isErrorPassword ? (
-                        <FormHelperText />
-                      ) : (
-                        <FormErrorMessage>Password is required.</FormErrorMessage>
-                      )} */}
                     </FormControl>
 
                     <FormControl
-                      // isInvalid={isErrorPhone}
                       isRequired
                     >
                       <FormLabel>Phone</FormLabel>
@@ -602,11 +557,6 @@ function UserManagement() {
                         onChange={(e) => setPhone(e.target.value)}
                         placeholder={"Phone"}
                       />
-                      {/* {!isErrorPhone ? (
-                        <FormHelperText />
-                      ) : (
-                        <FormErrorMessage>Phone is required.</FormErrorMessage>
-                      )} */}
                     </FormControl>
                   </Box>
 
@@ -754,11 +704,6 @@ function UserManagement() {
               </ModalFooter>
             </ModalContent>
           </Modal>
-
-          {/* <InputGroup mt={"28px"} w={{ sm: "40", md: "96", lg: "96" }}>
-                <InputLeftElement pointerEvents="none" children={<MdSearch size={"22"} color='gray.800' />} />
-                <Input type="text" placeholder="Search List" bg="white" color="gray.800" />
-            </InputGroup> */}
 
           <TableContainer mt={"20px"}>
             <Table>

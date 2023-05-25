@@ -20,7 +20,7 @@ module.exports = {
         }, {
           transaction: ormTransaction,
         });
-        console.log(`addCategory`, addCategory);
+        // console.log(`addCategory`, addCategory);
 
         await ormTransaction.commit();
         return res.status(200).send({
@@ -72,7 +72,7 @@ module.exports = {
           order: [[sortby, order]],
         });
 
-        console.log(`getCategory`, get);
+        // console.log(`getCategory`, get);
 
         return res.status(200).send({
           data: get.rows,
@@ -88,14 +88,14 @@ module.exports = {
   deleteCategory: async (req, res, next) => {
     const ormTransaction = await model.sequelize.transaction();
     try {
-      console.log(`req params`, req.params);
+      // console.log(`req params`, req.params);
       let findCategory = await model.category.findAll({
         where: {
           id: req.params.id,
         },
       });
 
-      console.log("findCategory", findCategory);
+      // console.log("findCategory", findCategory);
 
       if (findCategory[0].dataValues.isDisabled == false) {
         let deleteCategory = await model.category.update(
@@ -107,7 +107,7 @@ module.exports = {
           }, {
           transaction: ormTransaction,
         });
-        console.log(`deleteCategory`, deleteCategory);
+        // console.log(`deleteCategory`, deleteCategory);
 
         await ormTransaction.commit();
         return res.status(200).send({
@@ -124,7 +124,7 @@ module.exports = {
           }, {
           transaction: ormTransaction,
         });
-        console.log(`deleteCategory`, deleteCategory);
+        // console.log(`deleteCategory`, deleteCategory);
 
         await ormTransaction.commit();
         return res.status(200).send({
@@ -142,13 +142,13 @@ module.exports = {
   editCategory: async (req, res, next) => {
     const ormTransaction = await model.sequelize.transaction();
     try {
-      console.log(`ini dari req params`, req.params.id);
+      // console.log(`ini dari req params`, req.params.id);
       let cekCategory = await model.category.findAll({
         where: {
           type: req.body.type,
         },
       });
-      console.log(`ini cekCategory`, cekCategory);
+      // console.log(`ini cekCategory`, cekCategory);
 
       if (cekCategory.length == 0) {
         let editCategory = await model.category.update(

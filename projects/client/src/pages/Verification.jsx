@@ -35,11 +35,9 @@ function Verification() {
             'Authorization': `Bearer ${param.token}`
           }
         })
-        console.log('ini res dari verify', res)
         navigate("/login");
       }
       else {
-        // alert("password not match")
         toast({
           title: `password not match`,
           status: "error",
@@ -49,7 +47,6 @@ function Verification() {
       }
     } catch (error) {
       console.log(error)
-      // alert(error.response.data.error[0].msg)
       if (error.response.data.error[0].msg == "Invalid value") {
         toast({
           title: `Your password is empty`,

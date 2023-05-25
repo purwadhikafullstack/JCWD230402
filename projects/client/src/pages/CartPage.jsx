@@ -10,7 +10,7 @@ import {
   Box,
   Button,
 } from "@chakra-ui/react";
-import { API_URL } from "../helper";
+import { API_IMG_URL, API_URL } from "../helper";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -95,14 +95,13 @@ function CartPage() {
 
   const printCart = () => {
     return cartList.map((val, idx) => {
-      console.log("aaaaaaaaaaaaa", priceList[idx]);
       return (
         <CardCart
           color={val.color.color}
           memory={val.memory.memory}
           brand={val.product.category.type}
           product={val.product.name}
-          image={`${API_URL}${val.product.productImage}`}
+          image={`${API_IMG_URL}${val.product.productImage}`}
           id={val.id}
           totalQty={val.totalQty}
           removeItem={removeItem}

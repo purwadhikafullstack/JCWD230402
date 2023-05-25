@@ -1,14 +1,7 @@
 import React from 'react';
 import {
-  Table,
-  Thead,
   Tbody,
-  Tfoot,
-  Tr,
-  Th,
   Td,
-  TableCaption,
-  TableContainer,
   Button,
 } from '@chakra-ui/react'
 import { useSelector } from 'react-redux';

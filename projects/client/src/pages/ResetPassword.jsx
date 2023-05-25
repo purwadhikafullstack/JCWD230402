@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Await, NavLink, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { API_URL } from '../helper'
 import axios from 'axios'
 import { HiEye, HiEyeOff } from 'react-icons/hi'
@@ -34,11 +34,9 @@ function ResetPassword() {
             'Authorization': `Bearer ${param.token}`
           }
         })
-        console.log('ini res dari reset password', res)
         navigate("/");
       }
       else {
-        // alert("password not match")
         toast({
           title: `password not match`,
           status: "error",
