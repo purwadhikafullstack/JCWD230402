@@ -8,5 +8,5 @@ export const checkEmail = (email) => {
 };
 
 // export const API_URL = "http://localhost:2000";
-export const API_URL = "http://localhost:2342/api";
-export const API_IMG_URL = "http://localhost:2342";
+export const API_URL = "https://jcwd230402.purwadhikabootcamp.com/api";
+export const API_IMG_URL = "https://jcwd230402.purwadhikabootcamp.com";
