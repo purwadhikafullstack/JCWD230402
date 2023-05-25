@@ -245,11 +245,11 @@ function UserManagement() {
   const btnCancelAddAdmin = () => {
     modalAdd.onClose();
     getAllAdmin();
-    setUsername(" ");
-    setEmail(" ");
-    setPassword(" ");
-    setPhone(" ");
-    setGender(" ");
+    setUsername("");
+    setEmail("");
+    setPassword("");
+    setPhone("");
+    setGender("");
     setWarehouse();
     setRole();
     setVisible("password");

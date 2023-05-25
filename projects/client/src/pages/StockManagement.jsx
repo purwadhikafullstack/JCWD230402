@@ -257,7 +257,7 @@ function StockManagement() {
         } catch (error) {
             console.log(error);
             toast({
-                title: "cek kembali input yang anda masukin",
+                title: "your input is wrong, please recheck",
                 status: "error",
                 duration: 2000,
                 isClosable: true,

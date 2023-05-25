@@ -255,7 +255,7 @@ function CustomerProfile(props) {
           "Authorization": `Bearer ${token}`
         }
       })
-      console.log(`getAllLocation`, res);
+      // console.log(`getAllLocation`, res);
       setAddressList(res.data)
 
     } catch (error) {
@@ -384,7 +384,7 @@ function CustomerProfile(props) {
   const [profileImage, setProfileImage] = useState(null);
 
   const uploadImage = (event) => {
-    console.log("ini isi dari event.target.files onchangefile :", event.target.files);
+    // console.log("ini isi dari event.target.files onchangefile :", event.target.files);
     toggleMenuImage()
     setProfileImage(event.target.files[0]);
   };
@@ -416,8 +416,8 @@ function CustomerProfile(props) {
         throw new Error("Only .jpg, .png, webp and .jpeg format allowed!");
       }
       formData.append("image_profile", profileImage);
-      console.log("ini isi dari formData", formData);
-      console.log("ini tipe dari image_profile :", profileImage.type)
+      // console.log("ini isi dari formData", formData);
+      // console.log("ini tipe dari image_profile :", profileImage.type)
       let response = await axios.patch(`${API_URL}/profile/updateprofileimage`, {},
         {
           headers: {
@@ -425,8 +425,8 @@ function CustomerProfile(props) {
           },
         }
       );
-      console.log("response onbtneditprofileimage :", response);
-      console.log("response onbtneditprofileimage message be :", response.data.message);
+      // console.log("response onbtneditprofileimage :", response);
+      // console.log("response onbtneditprofileimage message be :", response.data.message);
       // alert(response.data.message);
       toast({
         title: `${response.data.message}`,
