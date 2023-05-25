@@ -86,7 +86,7 @@ module.exports = {
                 await ormTransaction.commit();
                 return res.status(200).send({
                     success: true,
-                    message: "request berhasil di buat, menunggu konfirmasi",
+                    message: "request has been made, waiting for confirmation",
                     data: requestStock
                 })
 
@@ -136,7 +136,7 @@ module.exports = {
                 await ormTransaction.commit();
                 return res.status(200).send({
                     success: true,
-                    message: `variasi berhasil ditambah, request berhasil di buat, menunggu konfirmasi`,
+                    message: "variation added, request added, waiting for confirmation",
                     data: stockMutation
                 })
             }
@@ -398,7 +398,7 @@ module.exports = {
                 await ormTransaction.commit();
                 return res.status(200).send({
                     success: true,
-                    message: "permintaan stok diterima"
+                    message: "stock request accepted"
                 })
             }
         } catch (error) {
@@ -428,7 +428,7 @@ module.exports = {
             await ormTransaction.commit();
             return res.status(200).send({
                 success: true,
-                message: "permintaan stock di tolak"
+                message: "Request stock rejected"
             })
 
         } catch (error) {
