@@ -119,7 +119,7 @@ function UserManagement() {
     return adminList.map((val, idx) => {
       return (
         <Tr textColor={"white"}>
-          <Td>{idx + 1}</Td>
+          <Td>{idx + 1 + page * size}</Td>
           <Td>{val.name}</Td>
           <Td>{val.email}</Td>
           <Td>{val.phone}</Td>
@@ -130,7 +130,7 @@ function UserManagement() {
           <Td textColor={val.isDeleted === true ? "red.500" : "green.500"}>
             {val.isDeleted === false ? "Active" : "InActive"}
           </Td>
-          {roleId === 1 ? ( 
+          {roleId === 1 ? (
             //jika roleId nya sama maka button delete nya hilang
             <Td>
               <Button
@@ -146,7 +146,7 @@ function UserManagement() {
                     val.gender,
                     val.warehouseId,
                     val.roleId,
-                    val.uuid,
+                    val.uuid
                   )
                 }
               >
@@ -184,8 +184,8 @@ function UserManagement() {
           title: `your input is empty`,
           status: "error",
           duration: 2000,
-          isClosable: true
-        })
+          isClosable: true,
+        });
       } else {
         let res = await axios.post(
           `${API_URL}/auth/admin/register`,
@@ -299,15 +299,7 @@ function UserManagement() {
 
   const [uuid, setUuid] = React.useState("");
 
-  const onBtnEdit = (
-    name,
-    email,
-    phone,
-    gender,
-    warehouseId,
-    roleId,
-    uuid,
-  ) => {
+  const onBtnEdit = (name, email, phone, gender, warehouseId, roleId, uuid) => {
     modalEdit.onOpen();
     setUsername(name);
     setEmail(email);
@@ -325,8 +317,8 @@ function UserManagement() {
           title: `your input is empty`,
           status: "error",
           duration: 2000,
-          isClosable: true
-        })
+          isClosable: true,
+        });
       } else {
         let res = await axios.patch(
           `${API_URL}/admin/${uuid}`,
@@ -359,7 +351,6 @@ function UserManagement() {
           setWarehouse();
           setRole();
         }
-
       }
     } catch (error) {
       if (error.response.data.description) {
@@ -476,19 +467,17 @@ function UserManagement() {
               User Management
             </Heading>
             <SearchBar setprops={setprops} onSearchBtn={onSearchBtn} />
-            {
-              roleId == 1 ? (
-                <Button
-                  onClick={modalAdd.onOpen}
-                  _hover={"none"}
-                  bgColor={"#1BFD9C"}
-                  style={{ color: "black" }}
-                  leftIcon={<MdOutlineAdd />}
-                >
-                  Add User
-                </Button>
-              ) : null
-            }
+            {roleId == 1 ? (
+              <Button
+                onClick={modalAdd.onOpen}
+                _hover={"none"}
+                bgColor={"#1BFD9C"}
+                style={{ color: "black" }}
+                leftIcon={<MdOutlineAdd />}
+              >
+                Add User
+              </Button>
+            ) : null}
           </Flex>
 
           {/* ----------------------------------------------MODAL ADD------------------------------------------------ */}
@@ -505,9 +494,7 @@ function UserManagement() {
               <ModalBody pb={6}>
                 <Flex>
                   <Box>
-                    <FormControl
-                      isRequired
-                    >
+                    <FormControl isRequired>
                       <FormLabel>User Name</FormLabel>
                       <Input
                         type={"text"}
@@ -516,10 +503,7 @@ function UserManagement() {
                       />
                     </FormControl>
 
-                    <FormControl
-                      mt={2}
-                      isRequired
-                    >
+                    <FormControl mt={2} isRequired>
                       <FormLabel>Email</FormLabel>
                       <Input
                         type={"email"}
@@ -528,9 +512,7 @@ function UserManagement() {
                       />
                     </FormControl>
 
-                    <FormControl
-                      mt={2}
-                      isRequired>
+                    <FormControl mt={2} isRequired>
                       <FormLabel>Password</FormLabel>
                       <Flex>
                         <Input
@@ -549,9 +531,7 @@ function UserManagement() {
                       </Flex>
                     </FormControl>
 
-                    <FormControl
-                      isRequired
-                    >
+                    <FormControl isRequired>
                       <FormLabel>Phone</FormLabel>
                       <Input
                         onChange={(e) => setPhone(e.target.value)}
@@ -595,16 +575,21 @@ function UserManagement() {
                         </Select>
                       </FormControl>
                     ) : null}
-
                   </Box>
                 </Flex>
               </ModalBody>
 
               <ModalFooter>
-                <Button onClick={() => btnSaveAddAdmin()} colorScheme="blue" mr={3}>
+                <Button
+                  onClick={() => btnSaveAddAdmin()}
+                  colorScheme="blue"
+                  mr={3}
+                >
                   Save
                 </Button>
-                <Button onClick={btnCancelAddAdmin}>Cancel</Button>
+                <Button colorScheme="red" onClick={btnCancelAddAdmin}>
+                  Cancel
+                </Button>
               </ModalFooter>
             </ModalContent>
           </Modal>
@@ -686,8 +671,6 @@ function UserManagement() {
                         {printAllWarehouse()}
                       </Select>
                     </FormControl>
-
-
                   </Box>
                 </Flex>
               </ModalBody>
@@ -700,7 +683,9 @@ function UserManagement() {
                 >
                   Save
                 </Button>
-                <Button onClick={btnCancelEditAddAdmin}>Cancel</Button>
+                <Button colorScheme="red" onClick={btnCancelEditAddAdmin}>
+                  Cancel
+                </Button>
               </ModalFooter>
             </ModalContent>
           </Modal>

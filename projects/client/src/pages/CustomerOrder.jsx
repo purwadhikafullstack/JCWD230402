@@ -58,7 +58,6 @@ function CustomerOrder() {
   const [fileProduct, setFileProduct] = useState(null);
   const [order, setOrder] = useState("");
 
-
   function shorten(params) {
     return params.toUpperCase().split("-")[params.split("-").length - 1];
   }
@@ -139,7 +138,7 @@ function CustomerOrder() {
         </Flex>
       );
     } else {
-      return orderList.map((val, idx) => {
+      return orderList.map((val) => {
         return (
           <>
             <Box w={"full"} boxShadow={"dark-lg"} mb={"6"} rounded={"lg"}>
@@ -151,9 +150,9 @@ function CustomerOrder() {
                   </Text>
                   <Flex
                     backgroundColor={
-                      val.status === 13
+                      val.statusId === 13
                         ? "rgba(52,211,153,0.1)"
-                        : val.status === 14
+                        : val.statusId === 14
                         ? "rgba(255,0,0,0.3)"
                         : "rgba(240,220,91,0.5)"
                     }
@@ -161,7 +160,7 @@ function CustomerOrder() {
                     px={"5px"}
                   >
                     <Text
-                      color={val.status === 13 ? "#34D399" : "black"}
+                      color={val.statusId === 13 ? "#34D399" : "black"}
                       textAlign={"center"}
                       fontWeight={"semibold"}
                       fontSize={{ base: "xs", lg: "xs" }}
@@ -493,16 +492,10 @@ function CustomerOrder() {
   };
 
   const printModalBody = () => {
-    return oneOrderList.orderdetails.map((val, idx) => {
+    return oneOrderList.orderdetails.map((val) => {
       return (
         <>
-          <Box
-            w={"full"}
-            boxShadow={"dark-lg"}
-            mb={"6"}
-            rounded={"lg"}
-            mx="auto"
-          >
+          <Box w={"full"} mb={"3"} mx="auto">
             {/*===================================================================== TOP section ===========================================================================*/}
             <Flex w={"full"} flexDirection={"column"} px="3" pt="3">
               {/*===================================================================== MIddle section ===========================================================================*/}
@@ -967,13 +960,19 @@ function CustomerOrder() {
               <Divider />
               {modalLoading === true ? (
                 <ModalBody p={3}>
-                  <Spinner
-                    thickness="4px"
-                    speed="0.65s"
-                    emptyColor="gray.200"
-                    color="blue.500"
-                    size="xl"
-                  />
+                  <Flex
+                    justifyContent={"center"}
+                    alignItems={"center"}
+                    w={"full"}
+                  >
+                    <Spinner
+                      thickness="4px"
+                      speed="0.65s"
+                      emptyColor="gray.200"
+                      color="blue.500"
+                      size="xl"
+                    />
+                  </Flex>
                 </ModalBody>
               ) : (
                 <ModalBody p={3}>

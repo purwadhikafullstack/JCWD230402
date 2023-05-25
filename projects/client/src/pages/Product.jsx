@@ -912,6 +912,7 @@ function Product() {
                                     Save
                                 </Button>
                                 <Button
+                                colorScheme='red'
                                     onClick={onBtnCancelModalAdd}
                                 >
                                     Cancel</Button>
@@ -1154,6 +1155,7 @@ function Product() {
                                                                                             setActiveIndex(null)
                                                                                         }}
                                                                                         size={"sm"}
+                                                                                        colorScheme='red'
                                                                                         ml={1}
                                                                                         variant={"outline"}
                                                                                         colorScheme={"red"}
@@ -1204,6 +1206,7 @@ function Product() {
                                     Save
                                 </Button>
                                 <Button
+                                colorScheme='red'
                                     onClick={onBtnCancelModalEdit}
                                 >
                                     Cancel</Button>

@@ -75,7 +75,6 @@ function Warehouse() {
   const [city, setCity] = React.useState([]);
   const [cityName, setCityName] = React.useState("");
   const [postalCode, setPostalCode] = React.useState();
-  // const [province_id, setProvince_id] = React.useState()
   const [city_id, setCity_id] = React.useState("");
   const [uuid, setuuid] = React.useState("");
 
@@ -155,8 +154,8 @@ function Warehouse() {
           title: `your input is empty`,
           status: "error",
           duration: 2000,
-          isClosable: true
-        })
+          isClosable: true,
+        });
       } else {
         let res = await axios.post(
           `${API_URL}/warehouse/`,
@@ -183,8 +182,8 @@ function Warehouse() {
             title: `${res.data.message}`,
             status: "success",
             duration: 2000,
-            isClosable: true
-          })
+            isClosable: true,
+          });
           modalAdd.onClose();
           setPostalCode(null);
           setName("");
@@ -193,9 +192,7 @@ function Warehouse() {
           setAddress("");
           getAllWarehouse();
         }
-
       }
-
     } catch (error) {
       console.log("ini error addnewarehouse:", error);
       if (error.response.data.error) {
@@ -204,15 +201,15 @@ function Warehouse() {
           description: "please check your email",
           status: "error",
           duration: 2000,
-          isClosable: true
-        })
+          isClosable: true,
+        });
       } else {
         toast({
           title: `${error.response.data.message}`,
           status: "error",
           duration: 2000,
-          isClosable: true
-        })
+          isClosable: true,
+        });
       }
     }
   };
@@ -232,11 +229,14 @@ function Warehouse() {
 
   const getAllWarehouse = async () => {
     try {
-      let res = await axios.get(`${API_URL}/warehouse/?page=${page}&size=${size}&sortby=${sortby}&order=${order}&name=${filter}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      let res = await axios.get(
+        `${API_URL}/warehouse/?page=${page}&size=${size}&sortby=${sortby}&order=${order}&name=${filter}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setTotalData(res.data.count);
       setWarehouseList(res.data.rows);
       setLoading(false);
@@ -252,7 +252,7 @@ function Warehouse() {
     return warehouseList.map((val, idx) => {
       return (
         <Tr textColor={"white"}>
-          <Td>{idx + 1}</Td>
+          <Td>{idx + 1 + page * size}</Td>
           <Td>{val.name}</Td>
           <Td>{val.email}</Td>
           <Td>{val.phone}</Td>
@@ -334,8 +334,8 @@ function Warehouse() {
           title: `your input is empty`,
           status: "error",
           duration: 2000,
-          isClosable: true
-        })
+          isClosable: true,
+        });
       } else {
         let res = await axios.patch(
           `${API_URL}/warehouse/${uuid}`,
@@ -362,8 +362,8 @@ function Warehouse() {
             title: `${res.data.message}`,
             status: "success",
             duration: 2000,
-            isClosable: true
-          })
+            isClosable: true,
+          });
           modalEdit.onClose();
           setPostalCode(null);
           setName("");
@@ -382,15 +382,15 @@ function Warehouse() {
           description: "please check your email",
           status: "error",
           duration: 2000,
-          isClosable: true
-        })
+          isClosable: true,
+        });
       } else {
         toast({
           title: `${error.response.data.message}`,
           status: "error",
           duration: 2000,
-          isClosable: true
-        })
+          isClosable: true,
+        });
       }
     }
   };
@@ -619,7 +619,9 @@ function Warehouse() {
                 <Button onClick={btnSaveWarehouse} colorScheme="blue" mr={3}>
                   Save
                 </Button>
-                <Button onClick={onBtnCancelModalAdd}>Cancel</Button>
+                <Button colorScheme="red" onClick={onBtnCancelModalAdd}>
+                  Cancel
+                </Button>
               </ModalFooter>
             </ModalContent>
           </Modal>
@@ -724,10 +726,16 @@ function Warehouse() {
               </ModalBody>
 
               <ModalFooter>
-                <Button onClick={btnSaveEditWarehouse} colorScheme="blue" mr={3}>
+                <Button
+                  onClick={btnSaveEditWarehouse}
+                  colorScheme="blue"
+                  mr={3}
+                >
                   Save
                 </Button>
-                <Button onClick={onBtnCancelModalEdit}>Cancel</Button>
+                <Button colorScheme="red" onClick={onBtnCancelModalEdit}>
+                  Cancel
+                </Button>
               </ModalFooter>
             </ModalContent>
           </Modal>
