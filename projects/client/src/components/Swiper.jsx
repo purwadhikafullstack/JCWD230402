@@ -15,21 +15,19 @@ import { Image } from "@chakra-ui/react";
 
 export default function SwiperCarousel(props) {
   function printImages() {
-    return props.productPictures.map((val) => {
-      return (
-        <SwiperSlide>
-          <Image
-            w="full"
-            minH={{ lg: "700px" }}
-            maxH={"720px"}
-            src={val.picture}
-            alt="Product image"
-            objectFit="contain"
-            borderRadius={"lg"}
-          />
-        </SwiperSlide>
-      );
-    });
+    return (
+      <SwiperSlide>
+        <Image
+          w="full"
+          minH={{ lg: "700px" }}
+          maxH={"720px"}
+          src={props.productPictures}
+          alt="Product image"
+          objectFit="contain"
+          borderRadius={"lg"}
+        />
+      </SwiperSlide>
+    );
   }
 
   return (
