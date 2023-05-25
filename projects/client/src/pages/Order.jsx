@@ -33,7 +33,7 @@ import {
 import emptyImg from "../img/empty.png";
 import React from "react";
 import axios from "axios";
-import { API_IMG_URL, API_URL } from "../helper";
+import { API_URL, API_IMG_URL } from "../helper";
 import { useSelector } from "react-redux";
 import Pagination from "../components/Pagination";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -103,7 +103,6 @@ function Order() {
                 },
               }
             );
-
             setOrderList(res.data.data);
             setTotalData(res.data.datanum);
           } else {
@@ -115,7 +114,6 @@ function Order() {
                 },
               }
             );
-            console.log(`getOrder`, res.data.data);
             setOrderList(res.data.data);
             setTotalData(res.data.datanum);
           }
@@ -129,7 +127,6 @@ function Order() {
                 },
               }
             );
-            console.log(`getOrder`, res.data.data);
             setOrderList(res.data.data);
             setTotalData(res.data.datanum);
           } else {
@@ -141,7 +138,6 @@ function Order() {
                 },
               }
             );
-            console.log(`getOrder`, res.data.data);
             setOrderList(res.data.data);
             setTotalData(res.data.datanum);
           }
@@ -156,7 +152,6 @@ function Order() {
               },
             }
           );
-          console.log(`getOrder`, res.data.data);
           setOrderList(res.data.data);
           setTotalData(res.data.datanum);
         } else {
@@ -168,7 +163,6 @@ function Order() {
               },
             }
           );
-          console.log(`getOrder`, res.data.data);
           setOrderList(res.data.data);
           setTotalData(res.data.datanum);
         }
@@ -182,8 +176,6 @@ function Order() {
     getOrder();
   }, [status, orderBy]);
 
-
-  console.log(`orderList`, orderList);
   const printOrder = () => {
     if (orderList.length === 0) {
       return (
@@ -371,7 +363,6 @@ function Order() {
         },
       });
 
-      console.log(`getOrderDetails`, res.data.data);
       setOrderDetails(res.data.data);
     } catch (error) {
       console.log(error);
@@ -515,7 +506,6 @@ function Order() {
   };
 
   const paginate = (pageNumber) => {
-    // console.log(`pagenumber`, pageNumber.selected);
     setPage(pageNumber.selected);
 
     params.set("page", pageNumber.selected + 1);
@@ -817,7 +807,12 @@ function Order() {
             <Box>{printOrder()}</Box>
           </TabPanel>
         </TabPanels>
-        <Flex h={"30px"}  mt="30px"  justifyContent={"center"}>
+        <Flex
+          h={"30px"}  
+          mt="30px"
+          justifyContent={"center"}
+          display={orderList.length === 0 ? "none" : "flex"}
+        >
           <Pagination
             paginate={paginate}
             size={size}

@@ -10,7 +10,6 @@ import {
   Input,
   Modal,
   ModalBody,
-  ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
@@ -55,7 +54,7 @@ function Category() {
   const modalEdit = useDisclosure();
   const initialRef = React.useRef(null);
   const finalRef = React.useRef(null);
-  const [page, setPage] = React.useState(defautlPage); // const [size, setSize] = React.useState(5)
+  const [page, setPage] = React.useState(defautlPage);
   const [size] = React.useState(8);
   const [sortby, setSortby] = React.useState(defaultSort);
   const [order, setOrder] = React.useState(defaultOrder);
@@ -92,9 +91,7 @@ function Category() {
             },
           }
         );
-
-        console.log(`res btnSaveCategory`, res);
-
+        // console.log(`res btnSaveCategory`, res);
         if (res.data.success) {
           modalAdd.onClose();
           getCategory();
@@ -142,7 +139,6 @@ function Category() {
           },
         }
       );
-
       // console.log(`res getCategory`, res);
       setLoading(false);
       if (!res.data.data) {
@@ -156,7 +152,6 @@ function Category() {
   };
 
   const printCategory = () => {
-    console.log(`categorylist`, categoryList);
     return categoryList.map((val, idx) => {
       return (
         <Tr textColor={"white"}>
@@ -181,7 +176,6 @@ function Category() {
                 ml={5}
                 colorScheme={"red"}
                 size="lg"
-                // defaultChecked={val.isDisabled}
                 onChange={() => deleteCategory(val.id)}
                 isChecked={val.isDisabled}
               />
@@ -195,7 +189,6 @@ function Category() {
   // ------------------------------ PAGINATION ------------------------------------
 
   const paginate = (pageNumber) => {
-    // console.log(`pagenumber`, pageNumber.selected);
     setPage(pageNumber.selected);
 
     params.set("page", pageNumber.selected + 1);
@@ -206,7 +199,6 @@ function Category() {
       params.delete("page");
       navigate({ search: params.toString() }); // buat update url
     }
-    // console.log("location on pagination click", location);
   };
 
   // ------------------------------ DELETE CATEGORY ------------------------------------
@@ -218,8 +210,7 @@ function Category() {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(`res deleteCategory`, res);
-
+      // console.log(`res deleteCategory`, res);
       if (res.data.success) {
         getCategory();
         toast({
@@ -264,8 +255,7 @@ function Category() {
             },
           }
         );
-
-        console.log(`res btnSaveEditCategory`, res);
+        // console.log(`res btnSaveEditCategory`, res);
         if (res.data.success) {
           modalEdit.onClose();
           getCategory();
@@ -391,7 +381,6 @@ function Category() {
             <ModalOverlay />
             <ModalContent>
               <ModalHeader>New Category</ModalHeader>
-              {/* <ModalCloseButton /> */}
               <ModalBody pb={6}>
                 <FormControl isRequired>
                   <FormLabel>Category Name</FormLabel>

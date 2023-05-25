@@ -2,25 +2,35 @@ import React, { useState } from "react";
 import Logo from "./Logo";
 import axios from "axios";
 import { API_URL } from "../helper";
+import { useToast } from "@chakra-ui/react";
 
 function Footer() {
-  // const dispatch = useDispatch();
-  // const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  // const [password, setPassword] = React.useState("");
+  const toast = useToast();
 
   const onBtnRegis = async () => {
     try {
       let res = await axios.post(`${API_URL}/auth/customer/register`, {
         email: email,
       });
-      console.log("ini dari btn regis", res);
       if (res.data.success) {
-        alert(res.data.message);
+        // alert(res.data.message);
+        toast({
+          title: `${res.data.message}`,
+          status: "success",
+          duration: 2000,
+          isClosable: true
+        })
       }
     } catch (error) {
       console.log("error", error);
-      alert(error.response.data.error[0].msg);
+      // alert(error.response.data.error[0].msg);
+      toast({
+        title: `${error.response.data.error[0].msg}`,
+        status: "error",
+        duration: 2000,
+        isClosable: true
+      })
     }
   };
 

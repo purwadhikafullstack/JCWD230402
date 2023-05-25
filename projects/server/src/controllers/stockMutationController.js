@@ -23,7 +23,7 @@ module.exports = {
 
     getWarehouse: async (req, res, next) => {
         try {
-            console.log(`req.body`, req.body);
+            // console.log(`req.body`, req.body);
 
             let getWarehouse = await model.type.findAll({
                 attributes: ["id", "warehouseId"],
@@ -53,7 +53,7 @@ module.exports = {
     requestStock: async (req, res, next) => {
         const ormTransaction = await model.sequelize.transaction();
         try {
-            console.log(`req.body`, req.body);
+            // console.log(`req.body`, req.body);
             let { productId, colorId, memoryId, warehouseRequest, warehouseSend, stock } = req.body
 
             let cekType = await model.type.findOne({
@@ -65,7 +65,7 @@ module.exports = {
                 }
             })
 
-            console.log(`cektype`, cekType);
+            // console.log(`cektype`, cekType);
 
             if (cekType) {
                 let requestStock = await model.stockmutation.create({
@@ -100,7 +100,7 @@ module.exports = {
                     }
                 })
 
-                console.log(`cekType`, cekType);
+                // console.log(`cekType`, cekType);
 
                 let addVariant = await model.type.create({
                     price: cekType.dataValues.price,
@@ -114,7 +114,7 @@ module.exports = {
                     warehouseId: warehouseRequest,
                     booked: 0
                 })
-                console.log(`addVariant`, addVariant);
+                // console.log(`addVariant`, addVariant);
 
                 let stockMutation = await model.stockmutation.create({
                     typeId: addVariant.dataValues.id,
@@ -131,7 +131,7 @@ module.exports = {
                     transaction: ormTransaction,
                 })
 
-                console.log(`stockMutation`, stockMutation);
+                // console.log(`stockMutation`, stockMutation);
 
                 await ormTransaction.commit();
                 return res.status(200).send({
@@ -152,7 +152,7 @@ module.exports = {
     getRequest: async (req, res, next) => {
         try {
             if (req.query.warehouseId) {
-                console.log(`ini req.query`, req.query);
+                // console.log(`ini req.query`, req.query);
                 let getRequest = await model.stockmutation.findAll({
                     where: {
                         requestId: 1,
@@ -210,7 +210,7 @@ module.exports = {
                     ]
                 })
 
-                console.log(`getRequest`, getRequest);
+                // console.log(`getRequest`, getRequest);
 
                 return res.status(200).send({
                     success: true,
@@ -227,7 +227,7 @@ module.exports = {
     getSend: async (req, res, next) => {
         try {
             if (req.query.warehouseId) {
-                console.log(`ini req.query`, req.query);
+                // console.log(`ini req.query`, req.query);
                 let getSend = await model.stockmutation.findAll({
                     where: {
                         requestId: 1,
@@ -262,7 +262,7 @@ module.exports = {
                     data: getSend
                 })
             } else {
-                console.log(`ini req.query`, req.query);
+                // console.log(`ini req.query`, req.query);
                 let getSend = await model.stockmutation.findAll({
                     where: {
                         requestId: 1,
@@ -307,7 +307,7 @@ module.exports = {
     acceptRequest: async (req, res, next) => {
         const ormTransaction = await model.sequelize.transaction();
         try {
-            console.log(`req.body`, req.body);
+            // console.log(`req.body`, req.body);
 
             // cek type di warehouse yang di minta
             let findType = await model.type.findOne({
@@ -319,7 +319,7 @@ module.exports = {
                 }
             })
 
-            console.log(`findType`, findType);
+            // console.log(`findType`, findType);
 
             // case ketika sudah ketemu type nya, cek stock nya mencukupi atau tidak
             if (findType.dataValues.stock - req.body.request <= 0) {
@@ -338,7 +338,7 @@ module.exports = {
                 }, {
                     transaction: ormTransaction,
                 })
-                console.log(`accept`, accept);
+                // console.log(`accept`, accept);
 
                 // update stock di warehouse yang diminta (stock warehouse yang diminta - stok yang diminta)
                 let updateStock = await model.type.update({
@@ -351,7 +351,7 @@ module.exports = {
                     transaction: ormTransaction,
                 })
 
-                console.log(`updateStock`, updateStock);
+                // console.log(`updateStock`, updateStock);
 
                 // bikin stock mutation untuk warehouse yang diminta
                 let changeStock = await model.stockmutation.create({
@@ -369,7 +369,7 @@ module.exports = {
                     transaction: ormTransaction,
                 })
 
-                console.log(`changeStock`, changeStock);
+                // console.log(`changeStock`, changeStock);
 
                 // get type stock di warehouse yang request
                 let getTypeWarehouseRequest = await model.type.findOne({
@@ -380,7 +380,7 @@ module.exports = {
                         warehouseId: req.body.warehouseRequest,
                     }
                 })
-                console.log(`getTypeWarehouseRequest: `, getTypeWarehouseRequest);
+                // console.log(`getTypeWarehouseRequest: `, getTypeWarehouseRequest);
 
                 // update stock di warehouse yang request
                 let updateStockRequest = await model.type.update({
@@ -393,7 +393,7 @@ module.exports = {
                     transaction: ormTransaction,
                 })
 
-                console.log(`updateStockRequest`, updateStockRequest);
+                // console.log(`updateStockRequest`, updateStockRequest);
 
                 await ormTransaction.commit();
                 return res.status(200).send({
@@ -411,7 +411,7 @@ module.exports = {
     rejectRequest: async (req, res, next) => {
         const ormTransaction = await model.sequelize.transaction();
         try {
-            console.log(`req.params`, req.params);
+            // console.log(`req.params`, req.params);
 
             let rejectRequest = await model.stockmutation.update({
                 statusId: 8
@@ -423,7 +423,7 @@ module.exports = {
                 transaction: ormTransaction,
             })
 
-            console.log(`rejectRequest`, rejectRequest);
+            // console.log(`rejectRequest`, rejectRequest);
 
             await ormTransaction.commit();
             return res.status(200).send({

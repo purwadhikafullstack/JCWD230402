@@ -7,7 +7,7 @@ module.exports = {
   addNewWarehouse: async (req, res, next) => {
     const ormTransaction = await model.sequelize.transaction();
     try {
-      console.log(`ini dari req body`, req.body);
+      // console.log(`ini dari req body`, req.body);
       let cekWarehouse = await model.warehouse.findAll({
         where: sequelize.or(
           { name: req.body.name },
@@ -16,7 +16,7 @@ module.exports = {
           { address: req.body.address }
         ),
       });
-      console.log(`ini cekwarehouse`, cekWarehouse);
+      // console.log(`ini cekwarehouse`, cekWarehouse);
 
       if (cekWarehouse.length == 0) {
         const uuid = uuidv4();
@@ -37,7 +37,7 @@ module.exports = {
             `https://api.opencagedata.com/geocode/v1/json?q=${city}&key=${process.env.OPENCAGE_KEY}`
           )
         ).data;
-        console.log(`ini koordinat`, koordinat.results[0].geometry.lat);
+        // console.log(`ini koordinat`, koordinat.results[0].geometry.lat);
 
         let lat = koordinat.results[0].geometry.lat;
         let lng = koordinat.results[0].geometry.lng;
@@ -94,7 +94,7 @@ module.exports = {
         },
         order: [[sortby, order]],
       });
-      console.log(`data`, data);
+      // console.log(`data`, data);
 
       return res.status(200).send(data);
     } catch (error) {
@@ -134,7 +134,7 @@ module.exports = {
   updateWarehouse: async (req, res, next) => {
     const ormTransaction = await model.sequelize.transaction();
     try {
-      console.log(`ini dari req params`, req.params.uuid);
+      // console.log(`ini dari req params`, req.params.uuid);
       const {
         name,
         email,
@@ -155,7 +155,7 @@ module.exports = {
           { phone: phone }
         )
       });
-      console.log(`ini cekwarehouse`, cekWarehouse);
+      // console.log(`ini cekwarehouse`, cekWarehouse);
 
       if (cekWarehouse.length == 0) {
         // const uuid = uuidv4();
@@ -165,7 +165,7 @@ module.exports = {
             `https://api.opencagedata.com/geocode/v1/json?q=${city}&key=${process.env.OPENCAGE_KEY}`
           )
         ).data;
-        console.log(`ini koordinat`, koordinat.results[0].geometry.lat);
+        // console.log(`ini koordinat`, koordinat.results[0].geometry.lat);
 
         let lat = koordinat.results[0].geometry.lat;
         let lng = koordinat.results[0].geometry.lng;
@@ -192,7 +192,7 @@ module.exports = {
           transaction: ormTransaction,
         });
 
-        console.log(`editWarehouse`, editWarehouse);
+        // console.log(`editWarehouse`, editWarehouse);
 
         await ormTransaction.commit();
         return res.status(200).send({
@@ -223,7 +223,7 @@ module.exports = {
         },
       });
 
-      console.log(`findwarehouse`, findWarehouse[0].dataValues.isDisabled);
+      // console.log(`findwarehouse`, findWarehouse[0].dataValues.isDisabled);
 
       if (findWarehouse[0].dataValues.isDisabled == false) {
         let deleteWarehouse = await model.warehouse.update(
@@ -235,7 +235,7 @@ module.exports = {
           }, {
           transaction: ormTransaction,
         });
-        console.log(`deleteWarehouse`, deleteWarehouse);
+        // console.log(`deleteWarehouse`, deleteWarehouse);
 
         await ormTransaction.commit();
         return res.status(200).send({
@@ -252,7 +252,7 @@ module.exports = {
           }, {
           transaction: ormTransaction,
         });
-        console.log(`deleteWarehouse`, deleteWarehouse);
+        // console.log(`deleteWarehouse`, deleteWarehouse);
 
         await ormTransaction.commit();
         return res.status(200).send({

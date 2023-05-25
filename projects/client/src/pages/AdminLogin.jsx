@@ -27,7 +27,6 @@ function AdminLogin() {
     const onBtnLogin = async () => {
         try {
             if (email === "" || password === "") {
-                // alert("Please enter your credentials");
                 toast({
                     title: "Please enter your credentials",
                     status: "error",
@@ -40,9 +39,8 @@ function AdminLogin() {
                     email: email,
                     password: password,
                 });
-                console.log("data from admin LOGIN", res.data);
+                // console.log("data from admin LOGIN", res.data);
 
-                // alert("Login Successfull");
                 toast({
                     title: "Login Successfull",
                     status: "success",
@@ -62,7 +60,6 @@ function AdminLogin() {
                 duration: 2000,
                 isClosable: true,
             });
-            // alert(error.response.data.message);
         }
     };
 
