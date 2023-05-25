@@ -119,14 +119,14 @@ module.exports = {
 
           return res.status(200).send({
             success: true,
-            message: "variasi berhasil ditambah, duplikasi tidak dibikin",
+            message: "variations added, no duplication",
           });
         } else {
           // console.log(`hasil include 2:`, newArr.includes("false"));
           return res.status(400).send({
             success: false,
             message:
-              "produk yang ingin ditambah dan semua variasinya sudah ada di database",
+              "product and variations already exist in database"
           });
         }
       }
@@ -563,7 +563,7 @@ module.exports = {
             ? [[{ model: model.type }, "discountedPrice", order]]
             : [[sortby, order]],
       });
-      
+
       const counter = await model.product.count({
         where: {
           isDisabled: false,

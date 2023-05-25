@@ -43,7 +43,6 @@ import { FiPlus } from "react-icons/fi";
 function Checkout() {
   const toast = useToast();
   const navigate = useNavigate();
-  const fromSession = sessionStorage.getItem("total all item");
   const token = localStorage.getItem("Gadgetwarehouse_userlogin");
 
   const modalChangeAddress = useDisclosure();
@@ -112,7 +111,7 @@ function Checkout() {
   };
 
   const printProvince = () => {
-    return province.map((val, idx) => {
+    return province.map((val) => {
       return (
         <option
           onClick={() => onClickPrintProvince(val.province)}
@@ -177,13 +176,12 @@ function Checkout() {
         }
       );
       if (res.data.success) {
-        // alert(res.data.message);
         toast({
           title: `${res.data.message}`,
           status: "success",
           duration: 2000,
-          isClosable: true
-        })
+          isClosable: true,
+        });
         modalAddAddress.onClose();
         getPrimaryAddress();
         getallAddress();
@@ -549,7 +547,7 @@ function Checkout() {
             ongkirList[ongkirValue].cost[0].value +
             (parseInt(sessionStorage.getItem("total all item")) +
               ongkirList[ongkirValue].cost[0].value) *
-            0.1,
+              0.1,
           warehousechoice: selectedWarehouse,
         },
         {
@@ -753,12 +751,12 @@ function Checkout() {
                         {ongkirValue == ""
                           ? "-"
                           : formating(
-                            (parseInt(
-                              sessionStorage.getItem("total all item")
-                            ) +
-                              ongkirList[ongkirValue].cost[0].value) *
-                            0.1
-                          )}
+                              (parseInt(
+                                sessionStorage.getItem("total all item")
+                              ) +
+                                ongkirList[ongkirValue].cost[0].value) *
+                                0.1
+                            )}
                       </Text>
                     </Flex>
                   </Box>
@@ -783,16 +781,16 @@ function Checkout() {
                         {ongkirValue == ""
                           ? "-"
                           : formating(
-                            parseInt(
-                              sessionStorage.getItem("total all item")
-                            ) +
-                            ongkirList[ongkirValue].cost[0].value +
-                            (parseInt(
-                              sessionStorage.getItem("total all item")
-                            ) +
-                              ongkirList[ongkirValue].cost[0].value) *
-                            0.1
-                          )}
+                              parseInt(
+                                sessionStorage.getItem("total all item")
+                              ) +
+                                ongkirList[ongkirValue].cost[0].value +
+                                (parseInt(
+                                  sessionStorage.getItem("total all item")
+                                ) +
+                                  ongkirList[ongkirValue].cost[0].value) *
+                                  0.1
+                            )}
                       </Text>
                     )}
                   </Flex>
