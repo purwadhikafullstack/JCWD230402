@@ -13,15 +13,12 @@ import {
 import { API_IMG_URL, API_URL } from "../helper";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { cartAction } from "../reducers/cart";
 
 function CartPage() {
   const navigate = useNavigate();
-  const location = useLocation();
   const token = localStorage.getItem("Gadgetwarehouse_userlogin");
-
-  const params = new URLSearchParams(location.search);
 
   const [cartList, setCartList] = useState([]);
   const [priceList, setPriceList] = useState([]);

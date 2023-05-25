@@ -206,7 +206,7 @@ function Order() {
             <CardHeader borderTopRadius={"lg"}>
               <Flex justifyContent={"space-between"} alignContent={"center"}>
                 <Text>
-                  {val.customer.name} |{ }
+                  {val.customer.name} |{}
                   <Text as="span" color={"#1EDB8A"}>
                     {` No. ${shorten(val.uuid)}`}
                   </Text>
@@ -220,8 +220,8 @@ function Order() {
                       val.status.status === 13
                         ? "#34D399"
                         : val.status.status === 14
-                          ? "red.500"
-                          : "yellow.500"
+                        ? "red.500"
+                        : "yellow.500"
                     }
                   >
                     {val.status.status}
@@ -264,7 +264,7 @@ function Order() {
                 </Box>
                 <Box>
                   <Text>Total Price</Text>
-                  <Text>{formating(val.finalPrice)}</Text>
+                  <Text color={"#1BFD9C"}>{formating(val.finalPrice)}</Text>
                 </Box>
               </Flex>
             </CardBody>
@@ -370,15 +370,15 @@ function Order() {
   };
 
   const printProductDetails = () => {
-    return orderdetails?.orderdetails.map((val, idx) => {
+    return orderdetails?.orderdetails.map((val) => {
       return (
         <>
           <Box
             w={"full"}
-            boxShadow={"dark-lg"}
             mb={"4"}
-            rounded={"lg"}
             mx="auto"
+            bgColor={"#18181B"}
+            color={"white"}
           >
             {/*===================================================================== TOP section ===========================================================================*/}
             <Flex w={"full"} flexDirection={"column"} px="3" pt="3">
@@ -409,7 +409,6 @@ function Order() {
                 </Flex>
                 <Flex
                   w={{ base: "50%", md: "40%" }}
-                  color={"black"}
                   wrap={"wrap"}
                   p={2}
                   alignItems={"center"}
@@ -475,7 +474,6 @@ function Order() {
                 <Text
                   as={"span"}
                   textAlign={"center"}
-                  color={"black"}
                   letterSpacing={"wider"}
                   fontSize={{ base: "xs", md: "md", lg: "xl" }}
                   fontWeight={"semibold"}
@@ -485,10 +483,10 @@ function Order() {
                 <Text
                   as={"span"}
                   textAlign={"center"}
-                  color={"black"}
                   letterSpacing={"wider"}
                   fontSize={{ base: "xs", md: "md", lg: "xl" }}
                   fontWeight={"semibold"}
+                  color={"#1BFD9C"}
                 >
                   {formating(val.priceOnDate * val.totalQty)}
                 </Text>
@@ -651,6 +649,8 @@ function Order() {
 
         {roleId == 1 ? (
           <Select
+            borderColor={"#34D399"}
+            borderWidth={"2px"}
             color={"#e8e8e8"}
             w={"3xs"}
             placeholder={"All Warehouse"}
@@ -693,6 +693,8 @@ function Order() {
           <TabPanel overflowY={"scroll"} height={"69vh"}>
             <Flex mb={"8px"} justifyContent="right">
               <Select
+                borderColor={"#34D399"}
+                borderWidth={"2px"}
                 onChange={(e) => {
                   setOrderBy(e.target.value);
                 }}
@@ -713,6 +715,44 @@ function Order() {
           <TabPanel>
             <Flex mb={"8px"} justifyContent="right">
               <Select
+                borderColor={"#34D399"}
+                borderWidth={"2px"}
+                onChange={(e) => {
+                  setOrderBy(e.target.value);
+                }}
+                w={{ base: "36%", md: "16%", lg: "13%" }}
+                float={"right"}
+                color={"#e8e8e8"}
+              >
+                <option value="DESC">Newest</option>
+                <option value="ASC">Oldest</option>
+              </Select>
+            </Flex>
+            <Box>{printOrder()}</Box>
+          </TabPanel>
+          <TabPanel>
+            <Flex mb={"8px"} justifyContent="right">
+              <Select
+                borderColor={"#34D399"}
+                borderWidth={"2px"}
+                onChange={(e) => {
+                  setOrderBy(e.target.value);
+                }}
+                w={{ base: "36%", md: "16%", lg: "13%" }}
+                float={"right"}
+                color={"#e8e8e8"}
+              >
+                <option value="DESC">Newest</option>
+                <option value="ASC">Oldest</option>
+              </Select>
+            </Flex>
+            <Box>{printOrder()}</Box>
+          </TabPanel>
+          <TabPanel>
+            <Flex mb={"8px"} justifyContent="right">
+              <Select
+                borderColor={"#34D399"}
+                borderWidth={"2px"}
                 onChange={(e) => {
                   setOrderBy(e.target.value);
                 }}
@@ -745,6 +785,8 @@ function Order() {
           <TabPanel>
             <Flex mb={"8px"} justifyContent="right">
               <Select
+                borderColor={"#34D399"}
+                borderWidth={"2px"}
                 onChange={(e) => {
                   setOrderBy(e.target.value);
                 }}
@@ -761,38 +803,8 @@ function Order() {
           <TabPanel>
             <Flex mb={"8px"} justifyContent="right">
               <Select
-                onChange={(e) => {
-                  setOrderBy(e.target.value);
-                }}
-                w={{ base: "36%", md: "16%", lg: "13%" }}
-                float={"right"}
-                color={"#e8e8e8"}
-              >
-                <option value="DESC">Newest</option>
-                <option value="ASC">Oldest</option>
-              </Select>
-            </Flex>
-            <Box>{printOrder()}</Box>
-          </TabPanel>
-          <TabPanel>
-            <Flex mb={"8px"} justifyContent="right">
-              <Select
-                onChange={(e) => {
-                  setOrderBy(e.target.value);
-                }}
-                w={{ base: "36%", md: "16%", lg: "13%" }}
-                float={"right"}
-                color={"#e8e8e8"}
-              >
-                <option value="DESC">Newest</option>
-                <option value="ASC">Oldest</option>
-              </Select>
-            </Flex>
-            <Box>{printOrder()}</Box>
-          </TabPanel>
-          <TabPanel>
-            <Flex mb={"8px"} justifyContent="right">
-              <Select
+                borderColor={"#34D399"}
+                borderWidth={"2px"}
                 onChange={(e) => {
                   setOrderBy(e.target.value);
                 }}
@@ -808,7 +820,7 @@ function Order() {
           </TabPanel>
         </TabPanels>
         <Flex
-          h={"30px"}  
+          h={"30px"}
           mt="30px"
           justifyContent={"center"}
           display={orderList.length === 0 ? "none" : "flex"}
@@ -829,7 +841,11 @@ function Order() {
         scrollBehavior={"inside"}
       >
         <ModalOverlay />
-        <ModalContent bgColor={"white"} textColor={"black"}>
+        <ModalContent
+          bgColor={"white"}
+          textColor={"white"}
+          backgroundColor={"#18181B"}
+        >
           <ModalHeader>Order Details</ModalHeader>
           <ModalCloseButton />
           <Divider />

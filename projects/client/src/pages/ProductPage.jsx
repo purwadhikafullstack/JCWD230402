@@ -28,7 +28,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { API_URL } from "../helper";
+import { API_URL, API_IMG_URL } from "../helper";
 import axios from "axios";
 import SwiperCarousel from "../components/Swiper";
 import { GoPrimitiveDot } from "react-icons/go";
@@ -43,7 +43,6 @@ import { cartAction } from "../reducers/cart";
 
 function ProductPage() {
   const statusId = useSelector((state) => state.authReducer.statusId);
-  const customerEmail = useSelector((state) => state.authReducer.email);
 
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -375,7 +374,7 @@ function ProductPage() {
   const onCartClick = async () => {
     try {
       if (!statusId || statusId === 1) {
-        // klo gk login, verified
+        // klo gk login or verified
         onOpen();
       } else {
         const token = localStorage.getItem("Gadgetwarehouse_userlogin");
@@ -399,7 +398,6 @@ function ProductPage() {
           duration: 2000,
           isClosable: true,
         });
-        // if success get cart
         getCart();
       }
     } catch (error) {
@@ -476,7 +474,6 @@ function ProductPage() {
   useEffect(() => {
     getProduct();
     getColors();
-    // getDetails();
   }, []);
 
   useEffect(() => {
@@ -533,7 +530,7 @@ function ProductPage() {
               maxH={"730px"}
             >
               <SwiperCarousel
-                productPictures={productData[0]?.product.pictures}
+                productPictures={`${API_IMG_URL}${productData[0]?.product.productImage}`}
               />
             </Box>
             {/*==========================================================================================================================================  */}

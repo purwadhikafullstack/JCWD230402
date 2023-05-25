@@ -77,8 +77,8 @@ function Category() {
           title: `your input is empty`,
           status: "error",
           duration: 2000,
-          isClosable: true
-        })
+          isClosable: true,
+        });
       } else {
         let res = await axios.post(
           `${API_URL}/category`,
@@ -139,7 +139,6 @@ function Category() {
           },
         }
       );
-      // console.log(`res getCategory`, res);
       setLoading(false);
       if (!res.data.data) {
         navigate("*");
@@ -155,7 +154,7 @@ function Category() {
     return categoryList.map((val, idx) => {
       return (
         <Tr textColor={"white"}>
-          <Td>{idx + 1}</Td>
+          <Td>{idx + 1 + page * size}</Td>
           <Td>{val.type}</Td>
           <Td textColor={val.isDisabled === true ? "red.500" : "green.500"}>
             {val.isDisabled === false ? "Active" : "InActive"}
@@ -210,7 +209,7 @@ function Category() {
           Authorization: `Bearer ${token}`,
         },
       });
-      // console.log(`res deleteCategory`, res);
+
       if (res.data.success) {
         getCategory();
         toast({
@@ -241,8 +240,8 @@ function Category() {
           title: `your input is empty`,
           status: "error",
           duration: 2000,
-          isClosable: true
-        })
+          isClosable: true,
+        });
       } else {
         let res = await axios.patch(
           `${API_URL}/category/${id}`,
@@ -255,7 +254,7 @@ function Category() {
             },
           }
         );
-        // console.log(`res btnSaveEditCategory`, res);
+
         if (res.data.success) {
           modalEdit.onClose();
           getCategory();
@@ -269,7 +268,6 @@ function Category() {
           });
         }
       }
-
     } catch (error) {
       toast({
         title: `${error.response.data.message}`,
@@ -349,25 +347,23 @@ function Category() {
           />
         </Flex>
       ) : (
-        < Box my={"20px"} textColor="white">
+        <Box my={"20px"} textColor="white">
           <Flex justifyContent={"space-between"}>
             <Heading size={"lg"} fontStyle="inherit">
               Category List
             </Heading>
             <SearchBar setprops={setprops} onSearchBtn={onSearchBtn} />
-            {
-              roleId == 1 ? (
-                <Button
-                  onClick={modalAdd.onOpen}
-                  _hover={"none"}
-                  bgColor={"#1BFD9C"}
-                  style={{ color: "black" }}
-                  leftIcon={<MdOutlineAdd />}
-                >
-                  Add Category
-                </Button>
-              ) : null
-            }
+            {roleId == 1 ? (
+              <Button
+                onClick={modalAdd.onOpen}
+                _hover={"none"}
+                bgColor={"#1BFD9C"}
+                style={{ color: "black" }}
+                leftIcon={<MdOutlineAdd />}
+              >
+                Add Category
+              </Button>
+            ) : null}
           </Flex>
 
           {/* ----------------------------------------------MODAL ADD------------------------------------------------ */}
@@ -396,7 +392,9 @@ function Category() {
                 <Button colorScheme="blue" mr={3} onClick={btnSaveCategory}>
                   Save
                 </Button>
-                <Button onClick={btnCancelAddCategory}>Cancel</Button>
+                <Button colorScheme="red" onClick={btnCancelAddCategory}>
+                  Cancel
+                </Button>
               </ModalFooter>
             </ModalContent>
           </Modal>
@@ -426,7 +424,9 @@ function Category() {
                 <Button onClick={btnSaveEditCategory} colorScheme="blue" mr={3}>
                   Save
                 </Button>
-                <Button onClick={btnCancelEditCategory}>Cancel</Button>
+                <Button colorScheme="red" onClick={btnCancelEditCategory}>
+                  Cancel
+                </Button>
               </ModalFooter>
             </ModalContent>
           </Modal>

@@ -192,7 +192,7 @@ function StockReport() {
     return stockList.map((val, idx) => {
       return (
         <Tr>
-          <Td textAlign={"center"}>{idx + 1}</Td>
+          <Td textAlign={"center"}>{idx + 1 + page * size}</Td>
           {!val.order ? (
             <Td textAlign={"center"}>-</Td>
           ) : (
@@ -362,7 +362,7 @@ function StockReport() {
               mx={"auto"}
               w={{ md: "680px", lg: "680px", xl: "980px" }}
               boxShadow={"dark-lg"}
-              border={"1px"}
+              border={"2px"}
               borderColor={"#34D399"}
               rounded={"lg"}
               justifyContent={"center"}

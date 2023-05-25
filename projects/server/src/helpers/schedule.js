@@ -18,34 +18,28 @@ module.exports = {
           const timeDiff = Math.abs(targetDate - today); // find difference of days
           const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24)); // converting from ms to days
 
-          switch (daysDiff) {
-            case 7:
-              await model.order.update(
-                {
-                  statusId: 13,
+          if (daysDiff >= 7) {
+            await model.order.update(
+              {
+                statusId: 13,
+              },
+              {
+                where: {
+                  statusId: 12,
                 },
-                {
-                  where: {
-                    statusId: 12,
-                  },
-                }
-              );
+              }
+            );
 
-              await model.stockMutation.update(
-                {
-                  statusId: 13,
+            await model.stockMutation.update(
+              {
+                statusId: 13,
+              },
+              {
+                where: {
+                  statusId: 12,
                 },
-                {
-                  where: {
-                    statusId: 12,
-                  },
-                }
-              );
-              break;
-
-            default:
-              console.log("lmao");
-              break;
+              }
+            );
           }
         }
       } else {

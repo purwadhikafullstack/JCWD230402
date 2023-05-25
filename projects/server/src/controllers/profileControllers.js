@@ -352,7 +352,7 @@ module.exports = {
 
       return res.status(200).send({
         status: true,
-        message: `primariy address has changed`
+        message: `primary address has changed`
       })
 
     } catch (error) {
