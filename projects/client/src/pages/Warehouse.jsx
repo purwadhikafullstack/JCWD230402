@@ -78,6 +78,8 @@ function Warehouse() {
   const [city_id, setCity_id] = React.useState("");
   const [uuid, setuuid] = React.useState("");
 
+  const [isEdit, setIsEdit] = React.useState(false);
+
   let token = localStorage.getItem("gadgetwarehouse_adminlogin");
 
   const getProvince = async () => {
@@ -92,8 +94,8 @@ function Warehouse() {
 
   const getCity = async () => {
     try {
+      // let provId = provinceId || selectedWarehouse?.province_id
       let res = await axios.get(`${API_URL}/rajaongkir/city/${provinceId}`);
-
       setCity(res.data.rajaongkir.results);
     } catch (error) {
       console.log("error getCity", error);
@@ -131,7 +133,7 @@ function Warehouse() {
   const printCity = () => {
     return city.map((val, idx) => {
       return (
-        <option
+        <option key={val.city_id}
           onClick={() => onClickPrintCity(val.city_name, val.postal_code)}
           value={`${val.city_id}`}
         >
@@ -190,6 +192,7 @@ function Warehouse() {
           setEmail("");
           setPhone("");
           setAddress("");
+          setIsEdit(false)
           getAllWarehouse();
         }
       }
@@ -221,6 +224,13 @@ function Warehouse() {
     setEmail("");
     setPhone("");
     setAddress("");
+    setCityName("");
+    setPostalCode("");
+    setProvinceId("");
+    setProvinceName("");
+    setCity_id("");
+    setCity([])
+    setIsEdit(false)
   };
 
   //----------------------------GET ALL WAREHOUSE--------------------------------------------------------
@@ -312,7 +322,6 @@ function Warehouse() {
     city_id,
     uuid
   ) => {
-    modalEdit.onOpen();
     setName(name);
     setEmail(email);
     setPhone(phone);
@@ -323,7 +332,14 @@ function Warehouse() {
     setProvinceName(province);
     setCity_id(city_id);
     setuuid(uuid);
+    setIsEdit(true);
   };
+
+  React.useEffect(() => {
+    if (city.length > 0 && isEdit == true) {
+      modalEdit.onOpen();
+    }
+  }, [city])
 
   //---------------------- SAVE EDIT AND CANCEL -------------------------------------------------------
 
@@ -371,6 +387,7 @@ function Warehouse() {
           setPhone("");
           setAddress("");
           setuuid("");
+          setIsEdit(false)
           getAllWarehouse();
         }
       }
@@ -402,7 +419,14 @@ function Warehouse() {
     setEmail("");
     setPhone("");
     setAddress("");
+    setCityName("");
+    setPostalCode("");
+    setProvinceId("");
+    setProvinceName("");
+    setCity_id("");
     setuuid("");
+    setCity([])
+    setIsEdit(false)
   };
 
   //---------------------- DELETE WAREHOUSE --------------------------
@@ -479,7 +503,6 @@ function Warehouse() {
       navigate({ search: params.toString() });
     }
   };
-
   return (
     <>
       {loading === true ? (
@@ -679,7 +702,7 @@ function Warehouse() {
                         onChange={(e) => {
                           setProvinceId(e.target.value);
                         }}
-                        defaultValue={`${provinceId}`}
+                        defaultValue={provinceId}
                       >
                         {printProvince()}
                       </Select>
@@ -693,7 +716,7 @@ function Warehouse() {
                         onChange={(e) => {
                           setCity_id(e.target.value);
                         }}
-                        defaultValue={`${city_id}`}
+                        defaultValue={city_id}
                       >
                         {printCity()}
                       </Select>
