@@ -256,6 +256,7 @@ function ProductPage() {
   };
 
   const printPrice = () => {
+    console.log("aaaaaaaaaaaaaaaaa", priceList);
     if (priceList?.data[0]?.discount === 0) {
       return (
         <Box mt={{ base: "5" }}>

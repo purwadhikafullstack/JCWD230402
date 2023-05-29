@@ -86,7 +86,6 @@ module.exports = {
         let result = 0;
 
         for (let j = 0; j < typeArr[i].length; j++) {
-          // console.log(`tttt`, typeArr[i][j].dataValues);
           result += typeArr[i][j].dataValues.available;
           tempArr.push(typeArr[i][j].dataValues.warehouse.dataValues);
         }
@@ -154,6 +153,8 @@ module.exports = {
         let allDistance = [];
         for (let i = 0; i < warehouseIdArr.length; i++) {
           let tempArr = [];
+
+          // untuk cari tau perbedaan jarak antara smua warehouse dibanding dengan warehouse yg betugas untk mengantar barangnya
           for (let j = 0; j < warehouseIdArr[i].length; j++) {
             let tempObj = {};
             const R = 6371; // km (change this constant to get miles)
@@ -170,6 +171,7 @@ module.exports = {
                 Math.cos((lat2 * Math.PI) / 180) *
                 Math.sin(dLon / 2) *
                 Math.sin(dLon / 2);
+
             let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
             let d = R * c;
 
@@ -206,17 +208,15 @@ module.exports = {
 
           // case 1: jika warehouse yg pling dkat dengan customer === warehouse yg membawa variant item tsb
           if (allDistance[i][0].id == chosenWarehouseId) {
-            // apakah qtynya cukup ?
+            // apakah qty yg diminta cart
             if (
               cart[i].dataValues.totalQty >
               findbooked[0].dataValues.stock - findbooked[0].dataValues.booked
             ) {
               // case 1-1: jika di warehouse pling dkat, availablenya tidak memenuhi qty yg diorder oleh customer
-              // console.log(
-              //   "warehouse yg pling dkat, availablenya kurang dri qty yg di order oleh customer"
-              // );
 
-              // update cart utk warehouse yg nganter diluar loop - krena cman skali saja dilakuinnya
+              // 1. update cart utk warehouse yg nganter diluar inner loop - krena cman skali saja dilakuinnya dan pasti dilakuin yg prtama.
+              // tidak prlu bikin sotck mutation disini krena akan dilakuin saat item diantar nanti di akhir proses order
               await model.cart.update(
                 {
                   totalQty:
@@ -235,6 +235,8 @@ module.exports = {
               );
 
               for (let k = 0; k < allDistance[i].length; k++) {
+                //cari tau value yg ada di cart yg connect dngan customer tsb
+
                 const updatedCart = await model.cart.findAll({
                   where: {
                     customerId: customerId,
@@ -267,7 +269,7 @@ module.exports = {
                   //  bikin stock mutation utk dri warehouse terdekat meminta warehouse yg punya item tsb
                   await model.stockmutation.create(
                     {
-                      typeId: findInfo[0].dataValues.id,
+                      typeId: updatedDelivererType.dataValues.id,
                       initialStock: updatedDelivererType.dataValues.stock,
                       addition:
                         findInfo[0].dataValues.stock -
@@ -345,7 +347,7 @@ module.exports = {
                   //  bikin stock mutation dri warehouse terdekat meminta warehouse yg punya item tsb
                   await model.stockmutation.create(
                     {
-                      typeId: findInfo[0].dataValues.id,
+                      typeId: updatedDelivererType.dataValues.id,
                       initialStock: updatedDelivererType.dataValues.stock,
                       addition: updatedCart[i].dataValues.totalQty,
                       supplierId: findInfo[0].dataValues.warehouseId,
@@ -454,9 +456,7 @@ module.exports = {
               }
             } else {
               // case 1-2: jika di warehouse pling dkat, availablenya memenuhi qty yg diorder oleh customer
-              // console.log(
-              //   "warehouse pling dkat, availablenya memenuhi qty yg diorder oleh customer"
-              // );
+
               // Step 1. ubah jumlah booked di warehouse yg ngirim.
               await model.type.update(
                 {
@@ -508,17 +508,13 @@ module.exports = {
             }
           }
 
-          // ===================================================================================================================================================
-
-          // case 2:  jika warehouse yg pling dkat dengan customer tidak bertanggung jawab untuk mengantar ke customer
+          // // case 2:  jika warehouse yg pling dkat dengan customer bukan warehouse yg membawa variant tersebut
           else {
             // case 2-1:  warehouse pertama tidak memenuhi kebutuhan customer
             if (
               cart[i].dataValues.totalQty >
               findbooked[0].dataValues.stock - findbooked[0].dataValues.booked
             ) {
-              // console.log("w2 tidak memenuhi kebutuhan -- loop");
-
               for (let k = 0; k < allDistance[i].length; k++) {
                 const updatedCart = await model.cart.findAll({
                   where: {
@@ -540,25 +536,76 @@ module.exports = {
                   updatedCart[i].dataValues.totalQty >
                   findInfo[0].dataValues.stock - findInfo[0].dataValues.booked
                 ) {
-                  //  bikin stock mutation dri warehouse terdekat meminta warehouse yg punya item tsb
-                  await model.stockmutation.create(
-                    {
-                      typeId: findInfo[0].dataValues.id,
-                      addition:
-                        findInfo[0].dataValues.stock -
-                        findInfo[0].dataValues.booked,
-                      supplierId: findInfo[0].dataValues.warehouseId,
-                      targetId: chosenWarehouseId,
-                      orderId: order.dataValues.id,
-                      statusId: 9,
-                      onLocation: 0,
-                      requestId: 1,
-                      creatorId: chosenWarehouseId,
+                  // check dlu typenya yg warehouseId == chosenWarehouseId dan bawa item yg user mau
+                  const checkType = await model.type.findAll({
+                    where: {
+                      colorId: cart[i].dataValues.colorId,
+                      memoryId: cart[i].dataValues.memoryId,
+                      productId: cart[i].dataValues.productId,
+                      warehouseId: chosenWarehouseId,
                     },
-                    {
-                      transaction: ormTransaction,
-                    }
-                  );
+                  });
+
+                  if (checkType.length > 0) {
+                    //  bikin stock mutation dri warehouse terdekat meminta warehouse yg punya item tsb
+                    await model.stockmutation.create(
+                      {
+                        typeId: checkType[0].dataValues.id,
+                        addition:
+                          findInfo[0].dataValues.stock -
+                          findInfo[0].dataValues.booked,
+                        supplierId: findInfo[0].dataValues.warehouseId,
+                        targetId: chosenWarehouseId,
+                        orderId: order.dataValues.id,
+                        statusId: 9,
+                        onLocation: 0,
+                        requestId: 1,
+                        creatorId: chosenWarehouseId,
+                      },
+                      {
+                        transaction: ormTransaction,
+                      }
+                    );
+                  } else {
+                    // create dlu type baru
+                    const createType = await model.type.create(
+                      {
+                        price: findbooked[0].dataValues.price,
+                        discount: findbooked[0].dataValues.discount,
+                        discountedPrice:
+                          findbooked[0].dataValues.discountedPrice,
+                        stock: cart[i].dataValues.totalQty,
+                        booked: cart[i].dataValues.totalQty,
+                        colorId: cart[i].dataValues.colorId,
+                        memoryId: cart[i].dataValues.memoryId,
+                        productId: cart[i].dataValues.productId,
+                        warehouseId: chosenWarehouseId,
+                        statusId: 3,
+                      },
+                      {
+                        transaction: ormTransaction,
+                      }
+                    );
+                    // create stock mutation
+                    await model.stockmutation.create(
+                      {
+                        typeId: createType.dataValues.id,
+                        addition:
+                          findInfo[0].dataValues.stock -
+                          findInfo[0].dataValues.booked,
+                        supplierId: findInfo[0].dataValues.warehouseId,
+                        targetId: chosenWarehouseId,
+                        orderId: order.dataValues.id,
+                        statusId: 9,
+                        onLocation: 0,
+                        requestId: 1,
+                        creatorId: chosenWarehouseId,
+                      },
+                      {
+                        transaction: ormTransaction,
+                      }
+                    );
+                  }
 
                   // bikin stock mutation dri warehouse yg bawa item ke warehouse yg pling dkat
                   await model.stockmutation.create(
@@ -617,25 +664,8 @@ module.exports = {
                     }
                   );
                 } else if (updatedCart[i].dataValues.totalQty > 0) {
-                  //  update stock supplier
-                  await model.type.update(
-                    {
-                      stock:
-                        findInfo[0].dataValues.stock -
-                        updatedCart[i].dataValues.totalQty,
-                    },
-                    {
-                      where: {
-                        id: findInfo[0].dataValues.id,
-                      },
-                    },
-                    {
-                      transaction: ormTransaction,
-                    }
-                  );
-
                   // check dlu typenya yg warehouseId == chosenWarehouseId dan bawa item yg user mau
-                  const checkType = await model.type.findOne({
+                  const checkType = await model.type.findAll({
                     where: {
                       colorId: cart[i].dataValues.colorId,
                       memoryId: cart[i].dataValues.memoryId,
@@ -644,14 +674,12 @@ module.exports = {
                     },
                   });
 
-                  if (checkType) {
-                    // klo ada
-
+                  if (checkType.length > 0) {
                     //  bikin stock mutation dri warehouse terdekat meminta warehouse yg punya item tsb
                     await model.stockmutation.create(
                       {
-                        typeId: findInfo[0].dataValues.id,
-                        initialStock: checkType.dataValues.stock,
+                        typeId: checkType[0].dataValues.id,
+                        initialStock: checkType[0].dataValues.stock,
                         addition: updatedCart[i].dataValues.totalQty,
                         supplierId: findInfo[0].dataValues.warehouseId,
                         targetId: chosenWarehouseId,
@@ -689,15 +717,15 @@ module.exports = {
                     await model.type.update(
                       {
                         stock:
-                          checkType.dataValues.stock +
+                          checkType[0].dataValues.stock +
                           cart[i].dataValues.totalQty,
                         booked:
-                          checkType.dataValues.booked +
+                          checkType[0].dataValues.booked +
                           cart[i].dataValues.totalQty,
                       },
                       {
                         where: {
-                          id: checkType.dataValues.id,
+                          id: checkType[0].dataValues.id,
                         },
                       },
                       {
@@ -713,7 +741,7 @@ module.exports = {
                         totalPrice:
                           findbooked[0].dataValues.discountedPrice *
                           cart[i].dataValues.totalQty,
-                        typeId: checkType.dataValues.id,
+                        typeId: checkType[0].dataValues.id,
                         warehouseId: chosenWarehouseId,
                         orderId: order.dataValues.id,
                       },
@@ -722,13 +750,30 @@ module.exports = {
                       }
                     );
                   } else {
-                    // klo tidak ada
+                    // bikin type di di warehouse terdekat
+                    const createType = await model.type.create(
+                      {
+                        price: findbooked[0].dataValues.price,
+                        discount: findbooked[0].dataValues.discount,
+                        discountedPrice:
+                          findbooked[0].dataValues.discountedPrice,
+                        stock: cart[i].dataValues.totalQty,
+                        booked: cart[i].dataValues.totalQty,
+                        colorId: cart[i].dataValues.colorId,
+                        memoryId: cart[i].dataValues.memoryId,
+                        productId: cart[i].dataValues.productId,
+                        warehouseId: chosenWarehouseId,
+                        statusId: 3,
+                      },
+                      {
+                        transaction: ormTransaction,
+                      }
+                    );
 
                     //  bikin stock mutation dri warehouse terdekat meminta warehouse yg punya item tsb
                     await model.stockmutation.create(
                       {
-                        typeId: findInfo[0].dataValues.id,
-
+                        typeId: createType.dataValues.id,
                         addition: updatedCart[i].dataValues.totalQty,
                         supplierId: findInfo[0].dataValues.warehouseId,
                         targetId: chosenWarehouseId,
@@ -762,26 +807,6 @@ module.exports = {
                       }
                     );
 
-                    // bikin type di di warehouse terdekat
-                    const createType = await model.type.create(
-                      {
-                        price: findbooked[0].dataValues.price,
-                        discount: findbooked[0].dataValues.discount,
-                        discountedPrice:
-                          findbooked[0].dataValues.discountedPrice,
-                        stock: cart[i].dataValues.totalQty,
-                        booked: cart[i].dataValues.totalQty,
-                        colorId: cart[i].dataValues.colorId,
-                        memoryId: cart[i].dataValues.memoryId,
-                        productId: cart[i].dataValues.productId,
-                        warehouseId: chosenWarehouseId,
-                        statusId: 3,
-                      },
-                      {
-                        transaction: ormTransaction,
-                      }
-                    );
-
                     // bikin order detail
                     await model.orderdetail.create(
                       {
@@ -800,6 +825,23 @@ module.exports = {
                     );
                   }
 
+                  //  update stock supplier
+                  await model.type.update(
+                    {
+                      stock:
+                        findInfo[0].dataValues.stock -
+                        updatedCart[i].dataValues.totalQty,
+                    },
+                    {
+                      where: {
+                        id: findInfo[0].dataValues.id,
+                      },
+                    },
+                    {
+                      transaction: ormTransaction,
+                    }
+                  );
+
                   // delete entry di cart buat order tsb.
                   await model.cart.destroy(
                     {
@@ -817,13 +859,10 @@ module.exports = {
                   break;
                 }
               }
-
-              // case 2-2:  warehouse pertama memenuhi kebutuhan customer
             } else {
-              // console.log("w2 memenuhi kebutuhan");
-
+              // case 2-2:  warehouse pertama tidak memenuhi kebutuhan customer
               // 3. check dlu typenya yg warehouseId == chosenWarehouseId dan bawa item yg user mau
-              const checkType = await model.type.findOne({
+              const checkType = await model.type.findAll({
                 where: {
                   colorId: cart[i].dataValues.colorId,
                   memoryId: cart[i].dataValues.memoryId,
@@ -832,14 +871,14 @@ module.exports = {
                 },
               });
 
-              if (checkType) {
+              if (checkType.length > 0) {
                 //klo ada
 
                 // 1. bikin stock mutation dri warehouse terdekat meminta warehouse yg punya item tsb
                 await model.stockmutation.create(
                   {
-                    typeId: findbooked[0].dataValues.id,
-                    initialStock: checkType.dataValues.stock,
+                    typeId: checkType[0].dataValues.id,
+                    initialStock: checkType[0].dataValues.stock,
                     addition: cart[i].dataValues.totalQty,
                     supplierId: allDistance[i][0].id,
                     targetId: chosenWarehouseId,
@@ -877,13 +916,15 @@ module.exports = {
                 await model.type.update(
                   {
                     stock:
-                      checkType.dataValues.stock + cart[i].dataValues.totalQty,
+                      checkType[0].dataValues.stock +
+                      cart[i].dataValues.totalQty,
                     booked:
-                      checkType.dataValues.booked + cart[i].dataValues.totalQty,
+                      checkType[0].dataValues.booked +
+                      cart[i].dataValues.totalQty,
                   },
                   {
                     where: {
-                      id: checkType.dataValues.id,
+                      id: checkType[0].dataValues.id,
                     },
                   },
                   {
@@ -899,7 +940,7 @@ module.exports = {
                     totalPrice:
                       findbooked[0].dataValues.discountedPrice *
                       cart[i].dataValues.totalQty,
-                    typeId: checkType.dataValues.id,
+                    typeId: checkType[0].dataValues.id,
                     warehouseId: chosenWarehouseId,
                     orderId: order.dataValues.id,
                   },
@@ -909,45 +950,7 @@ module.exports = {
                 );
               } else {
                 // klo tidak ada
-
-                // 1. bikin stock mutation dri warehouse terdekat meminta warehouse yg punya item tsb
-                await model.stockmutation.create(
-                  {
-                    typeId: findbooked[0].dataValues.id,
-                    addition: cart[i].dataValues.totalQty,
-                    supplierId: allDistance[i][0].id,
-                    targetId: chosenWarehouseId,
-                    orderId: order.dataValues.id,
-                    statusId: 9,
-                    onLocation: 0,
-                    requestId: 1,
-                    creatorId: chosenWarehouseId,
-                  },
-                  {
-                    transaction: ormTransaction,
-                  }
-                );
-
-                // 2. bikin stock mutation dri warehouse yg bawa item ke warehouse yg pling dkat
-                await model.stockmutation.create(
-                  {
-                    typeId: findbooked[0].dataValues.id,
-                    initialStock: findbooked[0].dataValues.stock,
-                    subtraction: cart[i].dataValues.totalQty,
-                    supplierId: allDistance[i][0].id,
-                    targetId: chosenWarehouseId,
-                    orderId: order.dataValues.id,
-                    statusId: 9,
-                    onLocation: 1,
-                    requestId: 2,
-                    creatorId: allDistance[i][0].id,
-                  },
-                  {
-                    transaction: ormTransaction,
-                  }
-                );
-
-                // 3b. bikin type di di warehouse terdekat
+                // 1. bikin type di di warehouse terdekat
                 const createType = await model.type.create(
                   {
                     price: findbooked[0].dataValues.price,
@@ -966,7 +969,44 @@ module.exports = {
                   }
                 );
 
-                // 5. bikin order detail
+                // 2. bikin stock mutation dri warehouse terdekat meminta warehouse yg punya item tsb
+                await model.stockmutation.create(
+                  {
+                    typeId: createType.dataValues.id,
+                    addition: cart[i].dataValues.totalQty,
+                    supplierId: allDistance[i][0].id,
+                    targetId: chosenWarehouseId,
+                    orderId: order.dataValues.id,
+                    statusId: 9,
+                    onLocation: 0,
+                    requestId: 1,
+                    creatorId: chosenWarehouseId,
+                  },
+                  {
+                    transaction: ormTransaction,
+                  }
+                );
+
+                // 3. bikin stock mutation dri warehouse yg bawa item ke warehouse yg pling dkat
+                await model.stockmutation.create(
+                  {
+                    typeId: findbooked[0].dataValues.id,
+                    initialStock: findbooked[0].dataValues.stock,
+                    subtraction: cart[i].dataValues.totalQty,
+                    supplierId: allDistance[i][0].id,
+                    targetId: chosenWarehouseId,
+                    orderId: order.dataValues.id,
+                    statusId: 9,
+                    onLocation: 1,
+                    requestId: 2,
+                    creatorId: allDistance[i][0].id,
+                  },
+                  {
+                    transaction: ormTransaction,
+                  }
+                );
+
+                // 4. bikin order detail
                 await model.orderdetail.create(
                   {
                     priceOnDate: findbooked[0].dataValues.discountedPrice,
@@ -983,7 +1023,8 @@ module.exports = {
                   }
                 );
               }
-              // 4. update stock supplier
+
+              // 5. update stock supplier
               await model.type.update(
                 {
                   stock:
@@ -1608,6 +1649,7 @@ module.exports = {
       next(error);
     }
   },
+
   paymentRejection: async (req, res, next) => {
     const ormTransaction = await model.sequelize.transaction();
     try {
@@ -1692,6 +1734,7 @@ module.exports = {
       next(error);
     }
   },
+
   sendProduct: async (req, res, next) => {
     const ormTransaction = await model.sequelize.transaction();
     try {
