@@ -4,7 +4,7 @@ const model = require("../models");
 
 module.exports = {
   statusUpdater: () => {
-    schedule.scheduleJob("16 17 * * *", async () => {
+    schedule.scheduleJob("26 14 * * *", async () => {
       const today = new Date();
       const findDate = await model.order.findAll({
         where: {
@@ -30,7 +30,7 @@ module.exports = {
               }
             );
 
-            await model.stockMutation.update(
+            await model.stockmutation.update(
               {
                 statusId: 13,
               },
